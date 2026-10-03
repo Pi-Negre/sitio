@@ -51,12 +51,9 @@ function startActualGame() {
     document.getElementById("name-zone").style.display = "none";
     document.getElementById("game-zone").style.display = "block";
     
-    initMap(); // Inizializza la mappa Leaflet
-    
-    // CORRETTO: Aggiunto [currentStage] per dire al codice di caricare la prima foto
+    initMap(); 
     document.getElementById("current-photo").src = tappe[currentStage].foto;
 }
-
 
 function initMap() {
     map = L.map('map').setView([44.0, 12.0], 4);
@@ -76,9 +73,7 @@ function handleButtonClick() {
         const d = calculateDistance(selectedLat, selectedLng, reale.lat, reale.lng);
         totalDistance += Math.round(d);
         
-        // ASSICURATEVI CHE LA RIGA SIA SCRITTA ESATTAMENTE COSÌ:
-    realMarker = L.marker([reale.lat, reale.lng], { icon: L.divIcon({className: 'real-point', html: '📍', iconSize: [30, 30], iconAnchor: [15, 30]}) }).addTo(map);
-
+        realMarker = L.marker([reale.lat, reale.lng], { icon: L.divIcon({className: 'real-point', html: '📍', iconSize: [30,30], iconAnchor: [15, 30]}) }).addTo(map);
         polyline = L.polyline([[selectedLat, selectedLng], [reale.lat, reale.lng]], {color: '#d4a373', dashArray: '5, 10'}).addTo(map);
         const group = new L.featureGroup([userMarker, realMarker]); map.fitBounds(group.getBounds().pad(0.2));
         
@@ -105,18 +100,19 @@ function resetStageForNext() {
     if(polyline) { map.removeLayer(polyline); polyline = null; }
     map.setView([44.0, 12.0], 4);
     document.getElementById("current-photo").src = tappe[currentStage].foto;
-    document.getElementById("result-box").style.display = "none"; updateTexts();
+    document.getElementById("result-box").style.display = "none"; 
+    updateTexts();
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371;
+    const R = 6371; // Raggio terrestre in km
     const dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
 }
 
 function salvaPunteggioSuGoogleSheet(nomeInvitato, kmTotali) {
-    if (GOOGLE_SCRIPT_URL === "https://script.google.com/macros/s/AKfycbwZL04nemGa7zkFajxKMpCO2LuzLCNIRHSInqbhMg1I8uwVy9hgy00wB3ocT1q7a63E/exec") { document.getElementById("loading-text").innerText = "Database URL missing."; return; }
+    if (!GOOGLE_SCRIPT_URL) { document.getElementById("loading-text").innerText = "Database URL missing."; return; }
     fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", cache: "no-cache", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nome: nomeInvitato, punteggio: kmTotali }) })
     .then(() => { setTimeout(caricaClassificaDaGoogleSheet, 1000); })
     .catch(() => { caricaClassificaDaGoogleSheet(); });
@@ -131,4 +127,5 @@ function caricaClassificaDaGoogleSheet() {
     }).catch(() => { document.getElementById("loading-text").innerText = "Error loading."; });
 }
 
-document.getElementById("lang-select").value = currentLang; updateTexts();
+document.getElementById("lang-select").value = currentLang; 
+updateTexts();
