@@ -50,9 +50,13 @@ function startActualGame() {
     playerName = input;
     document.getElementById("name-zone").style.display = "none";
     document.getElementById("game-zone").style.display = "block";
-    initMap();
+    
+    initMap(); // Inizializza la mappa Leaflet
+    
+    // CORRETTO: Aggiunto [currentStage] per dire al codice di caricare la prima foto
     document.getElementById("current-photo").src = tappe[currentStage].foto;
 }
+
 
 function initMap() {
     map = L.map('map').setView([44.0, 12.0], 4);
