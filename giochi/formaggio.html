@@ -22,8 +22,8 @@
 <body>
 
     <div class="quiz-container">
-        <h1>🧀 Che Formaggio Sei?</h1>
-        <p>Rispondi sinceramente alle domande per scoprire la tua vera identità casearia al matrimonio!</p>
+        <h1> Che Prodotto Lidl sei?</h1>
+        <p>Rispondi sinceramente alle domande per scoprire la tua vera identità!</p>
         
         <div id="quiz-game">
             <p id="progress" style="color: #888; font-weight: bold;"></p>
@@ -32,7 +32,7 @@
         </div>
 
         <div id="result-box">
-            <h2>Il tuo profilo caseario è... 🤔</h2>
+            <h2>Il tuo prodotto Lidl è...</h2>
             <div class="cheese-title" id="cheese-name"></div>
             <p class="cheese-desc" id="cheese-description"></p>
             <a href="../index.html" class="btn-home">Torna al Sito 🏠</a>
@@ -42,54 +42,90 @@
     <a href="index.html" class="back-link">⬅️ Torna all'Area Giochi</a>
 
     <script>
-        // Le domande del test. Ogni risposta assegna un "profilo" (parmigiano, gorgonzola, mozzarella, fontina)
+        // Le domande del test. Ogni risposta assegna un "profilo" (ceci, riso, latte condensato, verdurine)
         const domande = [
             {
-                q: "Qual è il tuo ruolo ideale durante una festa?",
+                q: "Oggi piove e allora...",
                 opts: [
-                    { text: "Al centro della pista a ballare e scatenarsi", profile: "mozzarella" },
-                    { text: "In un angolo a fare discorsi profondi e intellettuali", profile: "gorgonzola" },
-                    { text: "A controllare che tutto sia organizzato alla perfezione", profile: "parmigiano" },
-                    { text: "Al buffet ad assaggiare tutto con calma", profile: "fontina" }
+                    { text: "Scendo per strada e cominci a correre sotto la pioggia", profile: "ceci" },
+                    { text: "Sto in casa sotto le coperte", profile: "latte condensato" },
+                    { text: "Chiami i tuoi genitori per sapere se anche da loro piove", profile: "riso" },
+                    { text: "Fai delle foto per Instagram.", profile: "verdurine" }
                 ]
             },
             {
-                q: "Scegli il tuo outfit ideale per il matrimonio:",
+                q: "Un tuo collega ti invita fuori a pranzo ma non vuoi andarci, come rispondi?",
                 opts: [
-                    { text: "Elegante, classico, intramontabile. Un successo sicuro.", profile: "parmigiano" },
-                    { text: "Qualcosa di stravagante o colorato per farsi notare!", profile: "gorgonzola" },
-                    { text: "Fresco, leggero e comodo per muovermi liberamente.", profile: "mozzarella" },
-                    { text: "Caldo, avvolgente e rassicurante.", profile: "fontina" }
+                    { text: "'No, non ho voglia.'", profile: "ceci" },
+                    { text: "'Bellissima idea, vengo subito', ma poi non ti presenti all'appuntamento!", profile: "verdurine" },
+                    { text: "'Grazie mille per l'offerta, ma c'ho una cosa da fare'", profile: "latte condensato" },
+                    { text: "'Bellissima idea, vengo subito' ti unisci al pranzo e soffri in silenzio", profile: "riso" }
                 ]
             },
             {
-                q: "Cosa fai se lo sposo o la sposa si dimenticano le fedi?",
+                q: "Vuoi organizzare la tua festa di compleanno, cosa fai?",
                 opts: [
-                    { text: "Mantengo la calma e trovo una soluzione logica in 2 minuti.", profile: "parmigiano" },
-                    { text: "Inizio a ridere per smorzare la tensione.", profile: "mozzarella" },
-                    { text: "Faccio una battuta cinica o filosofica sull'amore.", profile: "gorgonzola" },
-                    { text: "Abbraccio gli sposi e vado io a cercarle correndo.", profile: "fontina" }
+                    { text: "Non ho tanta voglia, ma vedere i miei amici mi farà bene e quindi organizzo una cena a casa", profile: "riso" },
+                    { text: "Comincio a chiamare tutti i miei numeri in rubrica per dire che ho affittato la terrazza del Duomo per il compleanno.", profile: "verdurine" },
+                    { text: "Le feste di compleanno fanno schifo, compiere gli anni mi deprime, non organizzo nulla", profile: "ceci" },
+                    { text: "Invito tutti fuori per una birra che offrirò io", profile: "latte condensato" }
+                ]
+            },
+            {
+                q: "Devi arredare casa, a chi ti rivolgi?",
+                opts: [
+                    { text: "Al miglior studio di design di Milano, non mi importa del prezzo. L'estetica è l'unica cosa di cui mi importa", profile: "verdurine" },
+                    { text: "A nessuno, posso benissimo fare da solo.", profile: "ceci" },
+                    { text: "Al mio youtuber preferito. Guarderò tutti i suoi video in due giorni e poi mi costruirò tutti i mobilida solo.", profile: "latte condensato" },
+                    { text: "Ho un amico designer, gli scrivo un messaggio perchè chiamarlo mi sembra troppo.", profile: "riso" }
+                ]
+            },
+            {
+                q: "Devi fare la spesa per il mese, quale è il tuo budget?",
+                opts: [
+                    { text: "5€", profile: "ceci" },
+                    { text: "50€", profile: "riso" },
+                    { text: "100€", profile: "latte condensato" },
+                    { text: "200€", profile: "verdurine" }
+                ]
+            },
+            {
+                q: "Oggi è il primo giorno di scuola di tuo figlio, cosa gli dici?",
+                opts: [
+                    { text: "'Goditi questo giorno perchè sarà unico.'", profile: "riso" },
+                    { text: "'Goditela finchè sei alle elementari, perchè dopo è molto peggio.'", profile: "latte condensato" },
+                    { text: "Nulla, imparerà sbagliando", profile: "ceci" },
+                    { text: "'Cerca di dare il meggio e prendere il massimo in tutte le materie''", profile: "verdurine" }
+                ]
+            },
+            {
+                q: "La memoria del tuo telefono è piena e devi eliminare delle foto e video, cosa fai?",
+                opts: [
+                    { text: "Le foto sono troppo importanti per me, compro dello spazio di google cloud", profile: "verdurine"},
+                    { text: "Seleziona tutto ed elimina", profile: "ceci" },
+                    { text: "Faccio un backup ed elimino le foto", profile: "latte condensato" },
+                    { text: "Non so fare un backup quindi spendo 5 ore a selezionare le mie foto preferite ed elimino le altre", profile: "riso"  }
                 ]
             }
         ];
 
         // I profili dei formaggi con i loro risultati
         const profiliFormaggio = {
-            parmigiano: {
-                name: "Parmigiano Reggiano (Il Saggio Stagionato) 👑",
-                desc: "Sei un grande classico. Elegante, strutturato e affidabile. Al matrimonio sei l'invitato perfetto: non crei drammi, parli con tutti e dai quel tocco di classe che serve sempre. Senza di te, la festa non avrebbe lo stesso sapore!"
+            ceci: {
+                name: "Ceci secchi (Il Saggio Burbero)",
+                desc: "La tua educazione è stata dura ma sei quello che ogni studente con un budget ristretto vuole. Hai un grande futuro come educatore anche se non lo vuoi ammettere. Sei deciso, duro e ruvido come la vita."
             },
-            gorgonzola: {
-                name: "Gorgonzola (L'Intenso Alternativo) 🧫",
-                desc: "O ti si ama o ti si teme, non ci sono vie di mezzo! Hai una personalità forte, pungente e anticonformista. Al matrimonio sarai quello che fa i discorsi più memorabili (o più imbarazzanti) e che si riconosce da un chilometro."
+            riso: {
+                name: "Riso (Dal cuore d'oro)",
+                desc: "Ti sai adattare, ti fai andare bene tutto come accompagnamento, verdure, pollo, frutto, tutti stanno bene con te. Sei versatile, puoi essere un pregiato risotto o una calorosa insalata di riso. Eppure a volte vorresti stare un'po da solo."
             },
-            mozzarella: {
-                name: "Mozzarella di Bufala (La Star della Festa) 🪩",
-                desc: "Fresca, irresistibile e amata da chiunque! Sei l'anima della festa, quella persona che porta allegria appena entra in una stanza. Ti troveremo sicuramente al centro della pista da ballo a trascinare tutti nei trenini."
+            latte,condensato: {
+                name: "Latte condensato (L'anticonformista)",
+                desc: "Sei una rarità prelibata. Dal gusto deciso che non fa per tutti. La tua generosità è travolgente, ti farest in quattro per gli altri, ma non scendi a compromessi. A volte la gente ti considera un outsider ma a te non importa tanto."
             },
-            fontina: {
-                name: "Fontina Fusa (Il Cuore Tenero) 🫕",
-                desc: "Sei una persona dolce, calorosa e super affettuosa. Ti commuovi facilmente durante le promesse e sei sempre pronta a dare una mano. Al matrimonio sarai quella che si assicura che tutti stiano bene e si stiano divertendo."
+            verdurine: {
+                name: "Verdurine (La regina)",
+                desc: "Sei una persona dolce, calorosa e super affettuosa. Vuoi sempre il meglio per te e i tuoi amici, ma sei abbastanza picky e non tutti riescono a starti accanto. Ogni occasione è buona per migliorare la tua condizione. Sei decisa e agguerrita e non ti arrendi mai."
             }
         };
 
