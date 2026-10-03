@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Escape - Wedding Edition</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #fcfbfa; text-align: center; margin: 0; padding: 10px; color: #333; }
+        .game-container { max-width: 450px; margin: 10px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h1 { color: #d4a373; font-family: Georgia, serif; font-size: 1.8rem; margin-bottom: 5px; }
+        .setup-screen { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .options-group { display: flex; justify-content: center; gap: 10px; }
+        .btn-select { background: #f4f1de; border: 2px solid #e0dbcd; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; font-size: 0.9rem; }
+        .btn-select.active { background: #d4a373; color: white; border-color: #d4a373; }
+        #canvas-container { display: none; margin-top: 15px; position: relative; }
+        canvas { background: #e9ecef; border: 4px solid #333; border-radius: 8px; display: block; margin: 0 auto; max-width: 100%; }
+        .btn-start { background: #a7c957; color: white; border: none; padding: 12px; border-radius: 25px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 10px; }
+        .controls-info { font-size: 0.85rem; color: #666; margin-top: 10px; }
+        .mobile-btns { display: none; justify-content: center; gap: 20px; margin-top: 15px; }
+        .btn-dir { background: #d4a373; color: white; border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; font-weight: bold; cursor: pointer; }
+        @media (max-width: 768px) { .mobile-btns { display: flex; } }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1 id="game-title">🚲 Bike Escape</h1>
+        <p id="game-subtitle">Schiva gli ostacoli e porta il tuo personaggio al matrimonio!</p>
+
+        <div style="text-align: right; margin-bottom: 10px;">
+            <select id="lang-select" onchange="switchLanguage(this.value)" style="padding: 3px; border-radius: 4px;">
+                <option value="it">🇮🇹 IT</option>
+                <option value="en">🇬🇧 EN</option>
+            </select>
+        </div>
+
+        <div id="setup-screen" class="setup-screen">
+            <div>
+                <p style="font-weight: bold;" id="label-char">1. Scegli il Personaggio:</p>
+                <div class="options-group">
+                    <button class="btn-select active" id="btn-sposo" onclick="selectChar('sposo')">🤵 Sposo</button>
+                    <button class="btn-select" id="btn-sposa" onclick="selectChar('sposa')">👰 Sposa</button>
+                </div>
+            </div>
+            <div>
+                <p style="font-weight: bold;" id="label-city">2. Scegli l'Ambientazione:</p>
+                <div class="options-group">
+                    <button class="btn-select active" id="btn-milano" onclick="selectCity('milano')">🇮🇹 Milano</button>
+                    <button class="btn-select" id="btn-barcellona" onclick="selectCity('barcellona')">🇪🇸 Barcellona</button>
+                </div>
+            </div>
+            <button class="btn-start" id="btn-play" onclick="startGame()">Gioca! 🚀</button>
+        </div>
+
+        <div id="canvas-container">
+            <canvas id="gameCanvas" width="360" height="500"></canvas>
+            <div class="controls-info" id="controls-text">Usa le Frecce Sinistra / Destra della tastiera per muoverti.</div>
+            <div class="mobile-btns">
+                <button class="btn-dir" onclick="movePlayerLeft()">◀</button>
+                <button class="btn-dir" onclick="movePlayerRight()">▶</button>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" style="color: #888; text-decoration: none; font-size: 0.9rem; display: inline-block; margin-top: 15px;" id="link-back">⬅️ Torna all'Area Giochi</a>
+
+    <!-- Colleghiamo il file javascript esterno -->
+    <script src="bici-logic.js"></script>
+</body>
+</html>
