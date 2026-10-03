@@ -29,10 +29,13 @@
         .btn { background: #d4a373; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s; font-family: 'Segoe UI', sans-serif; }
         .btn:hover { background: #bc8a5f; }
         
-        /* Riquadro dei Risultati ed Emozione */
+        /* Riquadro dei Risultati */
         .result-box { display: none; margin-top: 20px; padding: 20px; background: #fdf0d5; border-radius: 12px; border-left: 6px solid #d4a373; text-align: left; }
         .result-box h3 { margin-top: 0; color: #bc8a5f; }
         .anecdote { font-style: italic; margin-top: 10px; color: #555; line-height: 1.5; }
+
+        /* Icona per il punto reale */
+        .real-point { font-size: 30px; text-align: center; line-height: 30px; }
 
         .back-link { display: inline-block; margin-top: 25px; color: #888; text-decoration: none; font-family: 'Segoe UI', sans-serif; font-size: 0.9rem; }
     </style>
@@ -54,7 +57,7 @@
         <div id="game-zone">
             <p id="progress-text" style="font-weight: bold; font-family: 'Segoe UI', sans-serif; color: #888;"></p>
             
-            <div id="game-layout" class="game-layout">
+            <div class="game-layout">
                 <!-- Foto da indovinare -->
                 <div class="photo-column">
                     <img id="current-photo" src="" class="wedding-photo" alt="Wedding Tappa">
@@ -107,11 +110,11 @@
             }
         };
 
-        // DATABASE DELLE 7 TAPPE (Coordinate precise incluse!)
+        // DATABASE DELLE 7 TAPPE
         const tappe = [
             {
                 foto: "assets/tappa1.jpg", 
-                lat: 45.4642, lng: 9.1900, // Milano (Duomo)
+                lat: 45.4642, lng: 9.1900, // Milano
                 it: "Milano! La città del nostro primo appuntamento, dove tutto è iniziato tra un caffè e mille risate.",
                 en: "Milan! The city of our very first date, where everything started over a coffee and a thousand smiles."
             },
@@ -123,19 +126,19 @@
             },
             {
                 foto: "assets/tappa3.jpg", 
-                lat: 37.4467, lng: 24.9427, // Syros (Grecia)
-                it: "L'isola di Syros! Un tramonto indimenticabile nel cuore delle Cicladi greche.",
-                en: "Syros Island! An unforgettable sunset in the heart of the Greek Cyclades."
+                lat: 37.4467, lng: 24.9427, // Syros
+                it: "L'isola di Syros! Un tramonto indimenticabile nel quale abbiamo vissuto il cuore delle Cicladi greche.",
+                en: "Syros Island! An unforgettable sunset experiencing the heart of the Greek Cyclades."
             },
             {
                 foto: "assets/tappa4.jpg", 
-                lat: 40.5824, lng: -0.2185, // Cinctorres (Spagna)
+                lat: 40.5824, lng: -0.2185, // Cinctorres
                 it: "Cinctorres! Quel fine settimana speciale immersi nella natura più autentica.",
                 en: "Cinctorres! That special weekend immersed in the most authentic nature."
             },
             {
                 foto: "assets/tappa5.jpg", 
-                lat: 46.5332, lng: 8.9392, // Olivone (Svizzera)
+                lat: 46.5332, lng: 8.9392, // Olivone
                 it: "Olivone! Tra le maestose montagne svizzere, dove i nostri gatti hanno guardato la neve per la prima volta dalla finestra.",
                 en: "Olivone! Among the majestic Swiss mountains, where our cats watched the snow from the window for the first time."
             },
@@ -147,7 +150,7 @@
             },
             {
                 foto: "assets/tappa7.jpg", 
-                lat: 46.4344, lng: 8.3294, // Blinnenhorn (Alpi Lepontine)
+                lat: 46.4344, lng: 8.3294, // Blinnenhorn
                 it: "Il Blinnenhorn! A quota 3374 metri, la vetta più alta che abbiamo conquistato insieme. Un'emozione immensa!",
                 en: "Blinnenhorn! At 3374 meters high, the highest mountain peak we conquered together. An immense emotion!"
             }
@@ -159,6 +162,7 @@
         let selectedLat = null, selectedLng = null;
         let hasGuessed = false;
         let totalDistance = 0;
+        let gameOverState = false;
 
         function updateTexts() {
             const t = langData[currentLang];
@@ -180,106 +184,112 @@
             currentLang = lang;
             localStorage.setItem('selectedLanguage', lang);
             updateTexts();
-            if(hasGuessed) {
+            if(hasGuessed && !gameOverState) {
                 document.getElementById("anecdote-text").innerText = tappe[currentStage][currentLang];
             }
         }
 
-        // INIZIALIZZAZIONE DELLA MAPPA INTERATTIVA
         function initMap() {
-            // Centriamo la mappa sul centro dell'Europa per mostrare tutte le mete
             map = L.map('map').setView([44.0, 12.0], 4);
             
-            // Stile grafico della mappa elegante e pulito (CartoDB Positron)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CARTO'
+            }).addTo(map);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-attribution: '© OpenStreetMap © CARTO'
-}).addTo(map);
-// Evento al clic sulla mappa
-map.on('click', function(e) {
-if (hasGuessed) return; // Blocca i clic dopo l'invio
-selectedLat = e.latlng.lat;
-selectedLng = e.latlng.lng;
-if (userMarker) {
-userMarker.setLatLng(e.latlng);
-} else {
-userMarker = L.marker(e.latlng).addTo(map);
-}
-});
-}
-let gameOverState = false;
-function handleButtonClick() {
-const t = langData[currentLang];
-if (!hasGuessed) {
-// FASE 1: VERIFICA RISPOSTA
-if (selectedLat === null) {
-alert(currentLang === 'it' ? "Clicca sulla mappa per indicare un punto!" : "Please click on the map to place your guess!");
-return;
-}
-hasGuessed = true;
-const reale = tappe[currentStage];
-// Calcola la distanza reale in km usando la formula del cerchio massimo
-const d = calculateDistance(selectedLat, selectedLng, reale.lat, reale.lng);
-totalDistance += Math.round(d);
-// Mostra il punto reale sulla mappa
-realMarker = L.marker([reale.lat, reale.lng], {
-icon: L.divIcon({className: 'real-point', html: '📍', iconSize: [30, 30]})
-}).addTo(map);
-// Traccia la linea tra la scelta dell'utente e il punto reale
-polyline = L.polyline([[selectedLat, selectedLng], [reale.lat, reale.lng]], {color: '#d4a373', dashArray: '5, 10'}).addTo(map);
-// Zoom automatico per mostrare entrambi i punti
-const group = new L.featureGroup([userMarker, realMarker]);
-map.fitBounds(group.getBounds().pad(0.2));
-// Mostra aneddoto e chilometri
-document.getElementById("distance-result").innerHTML = t.distText.replace("{dist}", Math.round(d));
-document.getElementById("anecdote-text").innerText = reale[currentLang];
-document.getElementById("result-box").style.display = "block";
-document.getElementById("action-btn").innerText = (currentStage === tappe.length - 1) ? t.btnFinish : t.btnNext;
-} else {
-// FASE 2: AVANZAMENTO O FINE GIOCO
-if (currentStage < tappe.length - 1) {
-currentStage++;
-resetStageForNext();
-} else {
-// FINE GIOCO ASSOLUTA
-gameOverState = true;
-document.getElementById("progress-text").style.display = "none";
-document.getElementById("game-layout").style.display = "none";
-document.getElementById("action-btn").style.display = "none";
-document.getElementById("distance-result").innerHTML = t.finalScore.replace("{total}", totalDistance);
-document.getElementById("anecdote-text").style.display = "none";
-document.getElementById("result-box").style.display = "block";
-}
-}
-}
-function resetStageForNext() {
-hasGuessed = false;
-selectedLat = null;
-selectedLng = null;
-// Rimuove i vecchi marker e linee dalla mappa
-if(userMarker) { map.removeLayer(userMarker); userMarker = null; }
-if(realMarker) { map.removeLayer(realMarker); realMarker = null; }
-if(polyline) { map.removeLayer(polyline); polyline = null; }
-// Ripristina la visualizzazione iniziale dell'Europa
-map.setView([44.0, 12.0], 4);
-// Aggiorna foto e testi
-document.getElementById("current-photo").src = tappe[currentStage].foto;
-document.getElementById("result-box").style.display = "none";
-updateTexts();
-}
-// Formula matematica per calcolare la distanza in KM partendo dalle coordinate GPS
-function calculateDistance(lat1, lon1, lat2, lon2) {
-const R = 6371; // Raggio della Terra in km
-const dLat = (lat2 - lat1) * Math.PI / 180;
-const dLon = (lon2 - lon1) * Math.PI / 180;
-const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-Math.sin(dLon/2) * Math.sin(dLon/2);
-const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-return R * c;
-}
-// Avvio del Gioco
-document.getElementById("lang-select").value = currentLang;
-document.getElementById("current-photo").src = tappe[0].foto;
-updateTexts();
-window.addEventListener('DOMContentLoaded', initMap);
+            map.on('click', function(e) {
+                if (hasGuessed) return; 
+                
+                selectedLat = e.latlng.lat;
+                selectedLng = e.latlng.lng;
+
+                if (userMarker) {
+                    userMarker.setLatLng(e.latlng);
+                } else {
+                    userMarker = L.marker(e.latlng).addTo(map);
+                }
+            });
+        }
+
+        function handleButtonClick() {
+            const t = langData[currentLang];
+            
+            if (!hasGuessed) {
+                if (selectedLat === null) {
+                    alert(currentLang === 'it' ? "Clicca sulla mappa per indicare un punto!" : "Please click on the map to place your guess!");
+                    return;
+                }
+                
+                hasGuessed = true;
+                const reale = tappe[currentStage];
+                
+                const d = calculateDistance(selectedLat, selectedLng, reale.lat, reale.lng);
+                totalDistance += Math.round(d);
+
+                realMarker = L.marker([reale.lat, reale.lng], {
+                    icon: L.divIcon({className: 'real-point', html: '📍', iconSize: [30, 30], iconAnchor: [15, 30]})
+                }).addTo(map);
+
+                polyline = L.polyline([[selectedLat, selectedLng], [reale.lat, reale.lng]], {color: '#d4a373', dashArray: '5, 10'}).addTo(map);
+                
+                const group = new L.featureGroup([userMarker, realMarker]);
+                map.fitBounds(group.getBounds().pad(0.2));
+
+                document.getElementById("distance-result").innerHTML = t.distText.replace("{dist}", Math.round(d));
+                document.getElementById("anecdote-text").innerText = reale[currentLang];
+                document.getElementById("result-box").style.display = "block";
+                
+                document.getElementById("action-btn").innerText = (currentStage === tappe.length - 1) ? t.btnFinish : t.btnNext;
+            } else {
+                if (currentStage < tappe.length - 1) {
+                    currentStage++;
+                    resetStageForNext();
+                } else {
+                    gameOverState = true;
+                    document.getElementById("progress-text").style.display = "none";
+                    document.getElementById("game-layout").style.display = "none";
+                    document.getElementById("action-btn").style.display = "none";
+                    
+                    document.getElementById("distance-result").innerHTML = t.finalScore.replace("{total}", totalDistance);
+                    document.getElementById("anecdote-text").style.display = "none";
+                    document.getElementById("result-box").style.display = "block";
+                }
+            }
+        }
+
+        function resetStageForNext() {
+            hasGuessed = false;
+            selectedLat = null;
+            selectedLng = null;
+            
+            if(userMarker) { map.removeLayer(userMarker); userMarker = null; }
+            if(realMarker) { map.removeLayer(realMarker); realMarker = null; }
+            if(polyline) { map.removeLayer(polyline); polyline = null; }
+            
+            map.setView([44.0, 12.0], 4);
+            
+            document.getElementById("current-photo").src = tappe[currentStage].foto;
+            document.getElementById("result-box").style.display = "none";
+            updateTexts();
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Avvio iniziale
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById("lang-select").value = currentLang;
+            document.getElementById("current-photo").src = tappe[currentStage].foto;
+            updateTexts();
+            initMap();
+        });
+    </script>
+</body>
+</html>
