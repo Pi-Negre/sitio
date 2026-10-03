@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Il Nostro Matrimonio</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Il nostro matrimonio: informazioni, conferma presenza e giochi per gli invitati.">
+    <meta name="theme-color" content="#1f4e8c">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke-width='8'%3E%3Ccircle cx='38' cy='50' r='24' stroke='%231f4e8c'/%3E%3Ccircle cx='62' cy='50' r='24' stroke='%23c8432f'/%3E%3C/svg%3E">
+    <!-- ?v=2 forces browsers to download the new stylesheet; bump it after future CSS edits -->
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
     <!-- 1. Selettore Lingua in alto a destra -->
-    <div class="lang-switcher" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
-        <select id="language-select" style="padding: 5px 10px; border-radius: 5px; border: 1px solid #ccc; background: white; font-weight: bold; cursor: pointer;" onchange="changeLanguage(this.value)">
-            <option value="it">🇮🇹 Italiano</option>
-            <option value="en">🇬🇧 English</option>
+    <div class="lang-switcher">
+        <select id="language-select" aria-label="Language" onchange="changeLanguage(this.value)">
+            <option value="it">Italiano</option>
+            <option value="en">English</option>
         </select>
     </div>
 
@@ -21,7 +25,7 @@
         <div class="hero-content">
             <h1 data-i18n="title">Sposo & Sposa</h1>
             <p class="date">00.00.2027</p>
-            <p class="location" data-i18n="location">📍 Roma, Italia</p>
+            <p class="location" data-i18n="location">Roma, Italia</p>
             <a href="#rsvp" class="btn" data-i18n="rsvp_btn">Conferma Presenza (RSVP)</a>
         </div>
     </header>
