@@ -1,131 +1,236 @@
-/* Reset e Font */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Instrument+Sans:wght@400;600&display=swap');
+
+/* ---------- Design tokens (shared with the GeoGuesser game) ---------- */
+:root {
+    --ink: #14233a;
+    --sea: #1f4e8c;
+    --stamp: #c8432f;
+    --paper: #fbfaf7;
+    --mist: #e6eef6;
+    --muted: #5d6b7e;
+    --line: #d9e1ea;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
+    --airmail: repeating-linear-gradient(135deg,
+        var(--stamp) 0 14px, #fff 14px 28px, var(--sea) 28px 42px, #fff 42px 56px);
+    /* Replace with the full URL of your cover photo */
+    --hero-image: url('https://unsplash.com');
 }
+
+/* ---------- Reset & base ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 70px; }
 
 body {
-    color: #333;
-    line-height: 1.6;
-    background-color: #fcfbfa;
+    font-family: var(--font-body);
+    color: var(--ink);
+    line-height: 1.65;
+    background-color: var(--paper);
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Copertina (Hero) */
+img { max-width: 100%; height: auto; }
+
+a:focus-visible, .btn:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+    outline: 3px solid var(--stamp);
+    outline-offset: 3px;
+}
+
+/* ---------- Hero ---------- */
 .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://unsplash.com') no-repeat center center/cover;
-    height: 80vh;
+    background-color: var(--sea);
+    background-image: linear-gradient(rgba(20, 35, 58, 0.45), rgba(20, 35, 58, 0.6)), var(--hero-image);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    min-height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    color: white;
+    color: #fff;
+    padding: 40px 20px;
 }
 
 .hero-content h1 {
-    font-size: 3.5rem;
-    margin-bottom: 10px;
-    font-family: Georgia, serif;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.6rem, 8vw, 4.6rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
 }
 
 .hero-content .date {
-    font-size: 1.8rem;
-    letter-spacing: 2px;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+    letter-spacing: 0.04em;
 }
 
-/* Bottone Elegante */
+/* ---------- Buttons ---------- */
 .btn {
     display: inline-block;
-    background-color: #d4a373; /* Colore oro/sabbia elegante */
-    color: white;
-    padding: 12px 30px;
+    background-color: var(--ink);
+    color: #fff;
+    padding: 13px 32px;
     text-decoration: none;
-    border-radius: 30px;
-    margin-top: 20px;
+    border-radius: 999px;
+    margin-top: 24px;
     border: none;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
+    font: inherit;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
-.btn:hover {
-    background-color: #bc8a5f;
-}
+.btn:hover { background-color: var(--stamp); transform: translateY(-1px); }
 
-/* Barra di Navigazione */
+/* On the hero the button needs to stand out from the photo */
+.hero .btn { background-color: #fff; color: var(--ink); }
+.hero .btn:hover { background-color: var(--stamp); color: #fff; }
+
+/* ---------- Navigation ---------- */
 .navbar {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    padding: 12px 15px;
+    border-bottom: 4px solid transparent;
+    border-image: var(--airmail) 4;
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
 .navbar a {
-    color: #555;
+    color: var(--ink);
     text-decoration: none;
-    margin: 0 15px;
     font-weight: 600;
+    font-size: 0.97rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.navbar a.nav-games {
-    color: #d4a373; /* Evidenzia l'area giochi */
+.navbar a:hover { background-color: var(--mist); }
+
+.navbar a.nav-games { color: var(--stamp); }
+
+@media (max-width: 520px) {
+    .navbar a { padding: 5px 9px; font-size: 0.9rem; }
 }
 
-/* Sezioni e Griglia */
+/* ---------- Sections & grid ---------- */
 .container {
-    padding: 60px 20px;
+    padding: 72px 20px;
     max-width: 1000px;
     margin: 0 auto;
     text-align: center;
 }
 
+.container h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 14px;
+}
+
+.container h2::after {
+    content: "";
+    display: block;
+    width: 56px;
+    height: 3px;
+    background: var(--stamp);
+    margin: 14px auto 0;
+}
+
+.container p { color: var(--muted); max-width: 62ch; margin-left: auto; margin-right: auto; }
+
 .bg-light {
-    background-color: #f4f1de;
-    border-radius: 10px;
+    background-color: var(--mist);
+    border-radius: 12px;
 }
 
 .grid {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
-    margin-top: 30px;
+    gap: 20px;
+    margin-top: 36px;
 }
 
 .card {
-    background: white;
-    padding: 30px;
-    margin: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    background: #fff;
+    padding: 30px 26px;
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--sea);
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(20, 35, 58, 0.07);
     flex: 1;
     min-width: 280px;
+    text-align: left;
 }
 
-/* Form RSVP */
+.card h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.card p { margin-left: 0; }
+
+/* ---------- RSVP form ---------- */
 .rsvp-form {
-    max-width: 500px;
-    margin: 30px auto 0 auto;
+    max-width: 520px;
+    margin: 32px auto 0;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 14px;
+    text-align: left;
 }
 
 .rsvp-form input, .rsvp-form select, .rsvp-form textarea {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
+    font: inherit;
+    color: var(--ink);
+    padding: 13px 14px;
+    background: #fff;
+    border: 1.5px solid #b9c5d3;
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.rsvp-form input:focus, .rsvp-form select:focus, .rsvp-form textarea:focus {
+    outline: none;
+    border-color: var(--sea);
+    box-shadow: 0 0 0 3px rgba(31, 78, 140, 0.18);
+}
+
+.rsvp-form textarea { min-height: 120px; resize: vertical; }
+
+.rsvp-form .btn { align-self: center; }
+
+/* ---------- Footer ---------- */
 footer {
-    padding: 20px;
+    padding: 28px 20px;
     text-align: center;
-    background-color: #333;
-    color: white;
+    background-color: var(--ink);
+    border-top: 6px solid transparent;
+    border-image: var(--airmail) 6;
+    color: #dbe6f3;
     font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .btn, .navbar a { transition: none; }
 }
