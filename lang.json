@@ -4,7 +4,7 @@
     "location": "📍 Roma, Italia",
     "rsvp_btn": "Conferma Presenza (RSVP)",
     "nav_info": "Info Utili",
-    "nav_games": "🎮 Area Giochi",
+    "nav_games": "Area Giochi",
     "details_title": "I Dettagli",
     "ceremony_title": "La Cerimonia",
     "ceremony_time": "Ore 16:00 - Chiesa di San Giovanni",
@@ -19,14 +19,14 @@
     "form_select_no": "Purtroppo non potrò esserci",
     "form_notes": "Allergie, intolleranze o note particolari...",
     "form_submit": "Invia Conferma",
-    "footer_text": "Fatto con ❤️ da Sposo & Sposa"
+    "footer_text": "Benvenuti!"
   },
   "en": {
     "title": "Groom & Bride",
     "location": "📍 Rome, Italy",
     "rsvp_btn": "Confirm Attendance (RSVP)",
     "nav_info": "Useful Info",
-    "nav_games": "🎮 Games Area",
+    "nav_games": "Games Area",
     "details_title": "The Details",
     "ceremony_title": "The Ceremony",
     "ceremony_time": "4:00 PM - San Giovanni Church",
@@ -41,6 +41,6 @@
     "form_select_no": "Unfortunately, I can't make it",
     "form_notes": "Dietary requirements, allergies or special notes...",
     "form_submit": "Submit RSVP",
-    "footer_text": "Made with ❤️ by Groom & Bride"
+    "footer_text": "Welcome"
   }
 }
