@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Che Formaggio Sei?</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #fcfbfa; color: #333; text-align: center; padding: 20px; }
+        .quiz-container { max-width: 600px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 8px solid #f4a261; }
+        h1 { color: #e76f51; font-family: Georgia, serif; }
+        .question { font-size: 1.3rem; font-weight: bold; margin: 25px 0; color: #264653; }
+        .options-grid { display: flex; flex-direction: column; gap: 12px; }
+        .btn-opt { background: #f4f1de; border: 2px solid #e0dbcd; padding: 14px; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: 0.2s; text-align: left; }
+        .btn-opt:hover { background: #ffe8d6; border-color: #f4a261; }
+        #result-box { display: none; padding: 20px; }
+        .cheese-title { font-size: 2rem; font-weight: bold; color: #e76f51; margin: 15px 0; }
+        .cheese-desc { font-size: 1.1rem; line-height: 1.6; color: #555; background: #fdf0d5; padding: 20px; border-radius: 8px; }
+        .btn-home { display: inline-block; background: #e76f51; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 25px; text-decoration: none; }
+        .back-link { display: inline-block; margin-top: 20px; color: #888; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>🧀 Che Formaggio Sei?</h1>
+        <p>Rispondi sinceramente alle domande per scoprire la tua vera identità casearia al matrimonio!</p>
+        
+        <div id="quiz-game">
+            <p id="progress" style="color: #888; font-weight: bold;"></p>
+            <div class="question" id="question-text">Caricamento...</div>
+            <div class="options-grid" id="options-container"></div>
+        </div>
+
+        <div id="result-box">
+            <h2>Il tuo profilo caseario è... 🤔</h2>
+            <div class="cheese-title" id="cheese-name"></div>
+            <p class="cheese-desc" id="cheese-description"></p>
+            <a href="../index.html" class="btn-home">Torna al Sito 🏠</a>
+        </div>
+    </div>
+    
+    <a href="index.html" class="back-link">⬅️ Torna all'Area Giochi</a>
+
+    <script>
+        // Le domande del test. Ogni risposta assegna un "profilo" (parmigiano, gorgonzola, mozzarella, fontina)
+        const domande = [
+            {
+                q: "Qual è il tuo ruolo ideale durante una festa?",
+                opts: [
+                    { text: "Al centro della pista a ballare e scatenarsi", profile: "mozzarella" },
+                    { text: "In un angolo a fare discorsi profondi e intellettuali", profile: "gorgonzola" },
+                    { text: "A controllare che tutto sia organizzato alla perfezione", profile: "parmigiano" },
+                    { text: "Al buffet ad assaggiare tutto con calma", profile: "fontina" }
+                ]
+            },
+            {
+                q: "Scegli il tuo outfit ideale per il matrimonio:",
+                opts: [
+                    { text: "Elegante, classico, intramontabile. Un successo sicuro.", profile: "parmigiano" },
+                    { text: "Qualcosa di stravagante o colorato per farsi notare!", profile: "gorgonzola" },
+                    { text: "Fresco, leggero e comodo per muovermi liberamente.", profile: "mozzarella" },
+                    { text: "Caldo, avvolgente e rassicurante.", profile: "fontina" }
+                ]
+            },
+            {
+                q: "Cosa fai se lo sposo o la sposa si dimenticano le fedi?",
+                opts: [
+                    { text: "Mantengo la calma e trovo una soluzione logica in 2 minuti.", profile: "parmigiano" },
+                    { text: "Inizio a ridere per smorzare la tensione.", profile: "mozzarella" },
+                    { text: "Faccio una battuta cinica o filosofica sull'amore.", profile: "gorgonzola" },
+                    { text: "Abbraccio gli sposi e vado io a cercarle correndo.", profile: "fontina" }
+                ]
+            }
+        ];
+
+        // I profili dei formaggi con i loro risultati
+        const profiliFormaggio = {
+            parmigiano: {
+                name: "Parmigiano Reggiano (Il Saggio Stagionato) 👑",
+                desc: "Sei un grande classico. Elegante, strutturato e affidabile. Al matrimonio sei l'invitato perfetto: non crei drammi, parli con tutti e dai quel tocco di classe che serve sempre. Senza di te, la festa non avrebbe lo stesso sapore!"
+            },
+            gorgonzola: {
+                name: "Gorgonzola (L'Intenso Alternativo) 🧫",
+                desc: "O ti si ama o ti si teme, non ci sono vie di mezzo! Hai una personalità forte, pungente e anticonformista. Al matrimonio sarai quello che fa i discorsi più memorabili (o più imbarazzanti) e che si riconosce da un chilometro."
+            },
+            mozzarella: {
+                name: "Mozzarella di Bufala (La Star della Festa) 🪩",
+                desc: "Fresca, irresistibile e amata da chiunque! Sei l'anima della festa, quella persona che porta allegria appena entra in una stanza. Ti troveremo sicuramente al centro della pista da ballo a trascinare tutti nei trenini."
+            },
+            fontina: {
+                name: "Fontina Fusa (Il Cuore Tenero) 🫕",
+                desc: "Sei una persona dolce, calorosa e super affettuosa. Ti commuovi facilmente durante le promesse e sei sempre pronta a dare una mano. Al matrimonio sarai quella che si assicura che tutti stiano bene e si stiano divertendo."
+            }
+        };
+
+        let currentQ = 0;
+        // Teniamo il conto di quante volte viene scelto ogni profilo
+        let punteggi = { parmigiano: 0, gorgonzola: 0, mozzarella: 0, fontina: 0 };
+
+        function loadQuestion() {
+            if (currentQ >= domande.length) {
+                showResult();
+                return;
+            }
+
+            document.getElementById("progress").innerText = `Domanda ${currentQ + 1} di ${domande.length}`;
+            const data = domande[currentQ];
+            document.getElementById("question-text").innerText = data.q;
+
+            const container = document.getElementById("options-container");
+            container.innerHTML = "";
+
+            data.opts.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.className = "btn-opt";
+                btn.innerText = opt.text;
+                btn.onclick = () => {
+                    punteggi[opt.profile]++; // Aggiunge un punto al profilo corrispondente
+                    currentQ++;
+                    loadQuestion();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function showResult() {
+            document.getElementById("quiz-game").style.display = "none";
+            document.getElementById("result-box").style.display = "block";
+
+            // Trova il profilo con il punteggio più alto
+            let formaggioVincente = Object.keys(punteggi).reduce((a, b) => punteggi[a] > punteggi[b] ? a : b);
+            const risultato = profiliFormaggio[formaggioVincente];
+
+            document.getElementById("cheese-name").innerText = risultato.name;
+            document.getElementById("cheese-description").innerText = risultato.desc;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
