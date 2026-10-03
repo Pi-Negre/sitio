@@ -115,44 +115,44 @@
             {
                 foto: "assets/tappa1.jpg", 
                 lat: 45.4642, lng: 9.1900, // Milano
-                it: "Milano! La città del nostro primo appuntamento, dove tutto è iniziato tra un caffè e mille risate.",
-                en: "Milan! The city of our very first date, where everything started over a coffee and a thousand smiles."
+                it: "Milano! La nostra città natale, dove si puo mangiare il miglior gelato e la migliore pizza.",
+                en: "Milan! Our hometown, where you can eat the best ice cream and the best pizza."
             },
             {
                 foto: "assets/tappa2.jpg", 
                 lat: 41.3851, lng: 2.1734, // Barcellona
-                it: "Barcellona! La nostra fuga romantica preferita, immersi tra arte, mare e tapas spettacolari.",
-                en: "Barcelona! Our favorite romantic escape, surrounded by art, the sea, and amazing tapas."
+                it: "Barcellona! Dove abbiamo vissuto negli ultimi anni e dove abbiamo trovato una seconda casa.",
+                en: "Barcelona! Where we have lived for the past few years and where we found a second home."
             },
             {
                 foto: "assets/tappa3.jpg", 
                 lat: 37.4467, lng: 24.9427, // Syros
-                it: "L'isola di Syros! Un tramonto indimenticabile nel quale abbiamo vissuto il cuore delle Cicladi greche.",
-                en: "Syros Island! An unforgettable sunset experiencing the heart of the Greek Cyclades."
+                it: "Syros! Un paradiso delle Cicladi, unica isola greca in cui si trovi una Lidl.",
+                en: "Syros! A paradise in the Cyclades, and the only Greek island where you can actually find a Lidl."
             },
             {
                 foto: "assets/tappa4.jpg", 
                 lat: 40.5824, lng: -0.2185, // Cinctorres
-                it: "Cinctorres! Quel fine settimana speciale immersi nella natura più autentica.",
-                en: "Cinctorres! That special weekend immersed in the most authentic nature."
+                it: "Cinctorres! Dove abbiamo visto la nostra prima eclissi totale. Ci sono anche i dinosauri.",
+                en: "Cinctorres! Where we saw our very first total solar eclipse. There are also dinosaurs here."
             },
             {
                 foto: "assets/tappa5.jpg", 
                 lat: 46.5332, lng: 8.9392, // Olivone
-                it: "Olivone! Tra le maestose montagne svizzere, dove i nostri gatti hanno guardato la neve per la prima volta dalla finestra.",
-                en: "Olivone! Among the majestic Swiss mountains, where our cats watched the snow from the window for the first time."
+                it: "Olivone! Tra le maestose montagne svizzere, dove si puo trovare la pace e la gioia.",
+                en: "Olivone! Among the majestic Swiss mountains, where you can find peace and joy."
             },
             {
                 foto: "assets/tappa6.jpg", 
                 lat: 47.4979, lng: 19.0402, // Budapest
-                it: "Budapest! Quel viaggio d'inverno magico, camminando lungo il Danubio illuminato.",
-                en: "Budapest! That magical winter trip, walking along the beautifully illuminated Danube."
+                it: "Budapest! Ci siamo passati per solo otto ore... È carina.",
+                en: "Budapest! We only stopped by for eight hours... It's nice."
             },
             {
                 foto: "assets/tappa7.jpg", 
                 lat: 46.4344, lng: 8.3294, // Blinnenhorn
-                it: "Il Blinnenhorn! A quota 3374 metri, la vetta più alta che abbiamo conquistato insieme. Un'emozione immensa!",
-                en: "Blinnenhorn! At 3374 meters high, the highest mountain peak we conquered together. An immense emotion!"
+                it: "Il Blinnenhorn! Dove abbiamo deciso di sposarci.",
+                en: "The Blinnenhorn! Where we decided to get married."
             }
         ];
 
@@ -190,14 +190,18 @@
         }
 
         function initMap() {
+            // Centriamo la mappa sul centro dell'Europa per mostrare tutte le mete
             map = L.map('map').setView([44.0, 12.0], 4);
             
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OpenStreetMap &copy; CARTO'
+            // NUOVO: Sfondo ufficiale OpenStreetMap (Gratuito, aperto e senza chiavi API!)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            // Evento al clic sulla mappa
             map.on('click', function(e) {
-                if (hasGuessed) return; 
+                if (hasGuessed) return; // Se ha già risposto, blocca i clic
                 
                 selectedLat = e.latlng.lat;
                 selectedLng = e.latlng.lng;
