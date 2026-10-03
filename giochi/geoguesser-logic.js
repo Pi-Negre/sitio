@@ -11,11 +11,11 @@ const langData = {
 };
 
 const tappe = [
-    { foto: "assets/tappa1.jpg", lat: 45.4642, lng: 9.1900, it: "Milano! La nostra città natale, dove si puo mangiare il miglior gelato e la migliore pizza.", en: "Milan! Our hometown, where you can eat the best ice cream and the best pizza." },
+    { foto: "assets/tappa1.jpg", lat: 45.4642, lng: 9.1900, it: "Milano! La nostra città natale, dove si può mangiare il miglior gelato e la migliore pizza.", en: "Milan! Our hometown, where you can eat the best ice cream and the best pizza." },
     { foto: "assets/tappa2.jpg", lat: 41.3851, lng: 2.1734, it: "Barcellona! Dove abbiamo vissuto negli ultimi anni e dove abbiamo trovato una seconda casa.", en: "Barcelona! Where we have lived for the past few years and where we found a second home." },
     { foto: "assets/tappa3.jpg", lat: 37.4467, lng: 24.9427, it: "Syros! Un paradiso delle Cicladi, unica isola greca in cui si trovi una Lidl.", en: "Syros! A paradise in the Cyclades, and the only Greek island where you can actually find a Lidl." },
     { foto: "assets/tappa4.jpg", lat: 40.5824, lng: -0.2185, it: "Cinctorres! Dove abbiamo visto la nostra prima eclissi totale. Ci sono anche i dinosauri.", en: "Cinctorres! Where we saw our very first total solar eclipse. There are also dinosaurs here." },
-    { foto: "assets/tappa5.jpg", lat: 46.5332, lng: 8.9392, it: "Olivone! Tra le majestic montagne svizzere, dove si puo trovare la pace e la gioia.", en: "Olivone! Among the majestic Swiss mountains, where you can find peace and joy." },
+    { foto: "assets/tappa5.jpg", lat: 46.5332, lng: 8.9392, it: "Olivone! Tra le maestose montagne svizzere, dove si può trovare la pace e la gioia.", en: "Olivone! Among the majestic Swiss mountains, where you can find peace and joy." },
     { foto: "assets/tappa6.jpg", lat: 47.4979, lng: 19.0402, it: "Budapest! Ci siamo passati per solo otto ore... È carina.", en: "Budapest! We only stopped by for eight hours... It's nice." },
     { foto: "assets/tappa7.jpg", lat: 46.4344, lng: 8.3294, it: "Il Blinnenhorn! Dove abbiamo deciso di sposarci.", en: "The Blinnenhorn! Where we decided to get married." }
 ];
@@ -51,7 +51,8 @@ function startActualGame() {
     document.getElementById("name-zone").style.display = "none";
     document.getElementById("game-zone").style.display = "block";
     
-    initMap(); 
+    initMap();
+    setTimeout(() => map.invalidateSize(), 100);
     document.getElementById("current-photo").src = tappe[currentStage].foto;
 }
 
@@ -112,20 +113,25 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 function salvaPunteggioSuGoogleSheet(nomeInvitato, kmTotali) {
-    if (!GOOGLE_SCRIPT_URL) { document.getElementById("loading-text").innerText = "Database URL missing."; return; }
-    fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", cache: "no-cache", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nome: nomeInvitato, punteggio: kmTotali }) })
+    if (!GOOGLE_SCRIPT_URL) { document.getElementById("leaderboard-body").innerHTML = `<tr><td colspan="3">Database URL missing.</td></tr>`; return; }
+    fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", cache: "no-cache", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ nome: nomeInvitato, punteggio: kmTotali }) })
     .then(() => { setTimeout(caricaClassificaDaGoogleSheet, 1000); })
     .catch(() => { caricaClassificaDaGoogleSheet(); });
 }
 
-function caricaClassificaDaGoogleSheet() {
-    document.getElementById("loading-text").innerText = langData[currentLang].loading;
-    fetch(GOOGLE_SCRIPT_URL).then(r => r.json()).then(data => {
-        const tbody = document.getElementById("leaderboard-body"); tbody.innerHTML = "";
-        if(data.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No scores.</td></tr>`; return; }
-        data.forEach((row, idx) => { tbody.innerHTML += `<tr><td><strong>${idx + 1}</strong></td><td>${row.nome}</td><td>${row.punteggio} km</td></tr>`; });
-    }).catch(() => { document.getElementById("loading-text").innerText = "Error loading."; });
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-document.getElementById("lang-select").value = currentLang; 
+function caricaClassificaDaGoogleSheet() {
+    const tbody = document.getElementById("leaderboard-body");
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${langData[currentLang].loading}</td></tr>`;
+    fetch(GOOGLE_SCRIPT_URL).then(r => r.json()).then(data => {
+        tbody.innerHTML = "";
+        if (!Array.isArray(data) || data.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No scores.</td></tr>`; return; }
+        data.forEach((row, idx) => { tbody.innerHTML += `<tr><td><strong>${idx + 1}</strong></td><td>${escapeHtml(row.nome)}</td><td>${escapeHtml(row.punteggio)} km</td></tr>`; });
+    }).catch(() => { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Error loading.</td></tr>`; });
+}
+
+document.getElementById("lang-select").value = currentLang;
 updateTexts();

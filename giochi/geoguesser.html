@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wedding GeoGuesser</title>
     <!-- CORRETTO: Inserito il link completo al foglio di stile CSS di Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Colleghiamo lo stile grafico personalizzato esterno -->
     <link rel="stylesheet" href="geoguesser-style.css" />
 </head>
@@ -34,7 +34,7 @@
         <div id="game-zone" style="display: none;">
             <p id="progress-text" class="progress-label"></p>
             
-            <div class="game-layout">
+            <div class="game-layout" id="game-layout">
                 <div class="photo-column">
                     <img id="current-photo" src="" class="wedding-photo" alt="Tappa">
                 </div>
@@ -72,7 +72,7 @@
     <a href="index.html" class="back-link" id="link-back">⬅️ Torna all'Area Giochi</a>
     
     <!-- CORRETTO: Inserito il link completo al file JavaScript di Leaflet prima della logica -->
-    <script src="https://unpkg.com"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="geoguesser-logic.js"></script>
 </body>
 </html>
