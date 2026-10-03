@@ -1,193 +1,218 @@
-body { 
-    font-family: 'Georgia', serif; 
-    background-color: #fcfbfa; 
-    color: #333; 
-    margin: 0; 
-    padding: 15px; 
-    text-align: center; 
+:root {
+    --ink: #14233a;
+    --sea: #1f4e8c;
+    --stamp: #c8432f;
+    --paper: #fbfaf7;
+    --mist: #e6eef6;
+    --muted: #5d6b7e;
 }
 
-.game-container { 
-    max-width: 800px; 
-    margin: 10px auto; 
-    background: white; 
-    padding: 25px; 
-    border-radius: 16px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Instrument Sans', 'Segoe UI', sans-serif;
+    background: var(--sea);
+    background-image: radial-gradient(circle at 20% 0%, #2b64ab 0%, var(--sea) 55%, #173d6e 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    margin: 0;
+    padding: 20px 14px 40px;
+    text-align: center;
+    min-height: 100vh;
 }
 
-h1 { 
-    color: #d4a373; 
-    font-size: 2.2rem; 
-    margin-bottom: 5px; 
+/* The postcard: airmail-striped border around a paper card */
+.game-container {
+    max-width: 880px;
+    margin: 10px auto;
+    background: var(--paper);
+    padding: 28px 28px 32px;
+    border: 12px solid transparent;
+    border-image: repeating-linear-gradient(135deg,
+        var(--stamp) 0 16px, #fff 16px 32px, var(--sea) 32px 48px, #fff 48px 64px) 12;
+    box-shadow: 0 20px 50px rgba(8, 20, 40, 0.35);
 }
 
-.subtitle { 
-    font-family: 'Segoe UI', sans-serif; 
-    color: #666; 
-    font-size: 0.95rem; 
-    margin-bottom: 20px; 
+h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.1rem);
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 4px 0 6px;
 }
 
-.lang-switcher-container { 
-    text-align: right; 
-    margin-bottom: 10px; 
+.subtitle {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin: 0 auto 18px;
+    max-width: 46ch;
+    line-height: 1.5;
 }
 
-.lang-switcher-container select { 
-    padding: 5px; 
-    border-radius: 5px; 
-    font-family: sans-serif; 
+.lang-switcher-container { text-align: right; margin-bottom: 6px; }
+
+.lang-switcher-container select {
+    padding: 6px 10px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
 }
 
-.name-screen { 
-    padding: 30px 10px; 
+.name-screen { padding: 34px 10px 20px; }
+.name-screen p { font-size: 1.1rem; margin-bottom: 18px; }
+
+.input-name {
+    padding: 12px 8px;
+    width: 80%;
+    max-width: 340px;
+    border: none;
+    border-bottom: 2px solid var(--ink);
+    background: transparent;
+    font-size: 1.15rem;
+    text-align: center;
+    margin-bottom: 18px;
+    outline: none;
+    font-family: 'Fraunces', Georgia, serif;
+    color: var(--ink);
+}
+.input-name:focus { border-bottom-color: var(--stamp); }
+.input-name::placeholder { color: #9aa6b5; font-style: italic; }
+
+/* Progress shown as a postage stamp */
+.progress-label {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--stamp);
+    padding: 7px 16px;
+    border: 2px dashed var(--stamp);
+    transform: rotate(-2deg);
+    margin: 6px 0 4px;
 }
 
-.name-screen p {
-    font-family: 'Segoe UI', sans-serif;
+.game-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    margin-top: 18px;
+    align-items: center;
+}
+@media (min-width: 768px) {
+    .game-layout { flex-direction: row; align-items: stretch; }
 }
 
-.input-name { 
-    padding: 12px 20px; 
-    width: 80%; 
-    max-width: 300px; 
-    border: 2px solid #d4a373; 
-    border-radius: 25px; 
-    font-size: 1rem; 
-    text-align: center; 
-    margin-bottom: 15px; 
-    outline: none; 
-    font-family: 'Segoe UI', sans-serif; 
+.photo-column { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
+
+/* Photo as a snapshot with a white border */
+.wedding-photo {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    background: #fff;
+    padding: 10px 10px 34px;
+    border: 1px solid #e3e0d8;
+    box-shadow: 0 8px 22px rgba(20, 35, 58, 0.22);
+    transform: rotate(-1.5deg);
 }
 
-.progress-label { 
-    font-weight: bold; 
-    font-family: 'Segoe UI', sans-serif; 
-    color: #888; 
+.map-column { flex: 1; width: 100%; }
+
+#map {
+    height: 360px;
+    width: 100%;
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--mist);
 }
 
-.game-layout { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 20px; 
-    margin-top: 15px; 
+.btn {
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 13px 30px;
+    font-size: 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 22px;
+    transition: background 0.2s, transform 0.2s;
+    font-family: inherit;
+}
+.btn:hover { background: var(--stamp); transform: translateY(-1px); }
+.btn:focus-visible, .lang-switcher-container select:focus-visible, .back-link:focus-visible {
+    outline: 3px solid var(--stamp);
+    outline-offset: 3px;
 }
 
-@media (min-width: 768px) { 
-    .game-layout { flex-direction: row; } 
+.result-box {
+    display: none;
+    margin-top: 26px;
+    padding: 22px 24px;
+    background: var(--mist);
+    border-left: 6px solid var(--stamp);
+    text-align: left;
 }
 
-.photo-column { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
+.result-box h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 1.35rem;
+    line-height: 1.35;
+    margin: 0;
+    color: var(--ink);
 }
 
-.wedding-photo { 
-    width: 100%; 
-    max-height: 350px; 
-    object-fit: cover; 
-    border-radius: 12px; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
-    border: 1px solid #eee; 
+.anecdote {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    margin-top: 12px;
+    color: var(--muted);
+    line-height: 1.65;
+    max-width: 62ch;
 }
 
-.map-column { 
-    flex: 1; 
-    position: relative; 
+.board-heading {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 8px;
 }
 
-#map { 
-    height: 350px; 
-    width: 100%; 
-    border-radius: 12px; 
-    border: 2px solid #d4a373; 
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 0.97rem;
+    background: var(--paper);
 }
-
-.btn { 
-    background: #d4a373; 
-    color: white; 
-    border: none; 
-    padding: 12px 25px; 
-    font-size: 1rem; 
-    border-radius: 25px; 
-    font-weight: bold; 
-    cursor: pointer; 
-    margin-top: 15px; 
-    transition: 0.3s; 
-    font-family: 'Segoe UI', sans-serif; 
+.leaderboard-table th {
+    background: var(--ink);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
 }
-
-.btn:hover { 
-    background: #bc8a5f; 
+.leaderboard-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #dde5ee;
+    text-align: left;
 }
+.leaderboard-table tbody tr:first-child td { font-weight: 700; color: var(--stamp); }
 
-.result-box { 
-    display: none; 
-    margin-top: 20px; 
-    padding: 20px; 
-    background: #fdf0d5; 
-    border-radius: 12px; 
-    border-left: 6px solid #d4a373; 
-    text-align: left; 
+.real-point { font-size: 30px; text-align: center; line-height: 30px; }
+
+.back-link {
+    display: inline-block;
+    margin-top: 24px;
+    color: #dbe6f3;
+    text-decoration: none;
+    font-size: 0.95rem;
 }
+.back-link:hover { color: #fff; text-decoration: underline; }
 
-.result-box h3 { 
-    margin-top: 0; 
-    color: #bc8a5f; 
-}
-
-.anecdote { 
-    font-style: italic; 
-    margin-top: 10px; 
-    color: #555; 
-    line-height: 1.5; 
-}
-
-.board-heading { 
-    border-bottom: 2px solid #d4a373; 
-    padding-bottom: 5px; 
-}
-
-.leaderboard-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    margin-top: 15px; 
-    font-family: 'Segoe UI', sans-serif; 
-    font-size: 0.95rem; 
-}
-
-.leaderboard-table th { 
-    background-color: #d4a373; 
-    color: white; 
-    padding: 10px; 
-    text-align: left; 
-}
-
-.leaderboard-table td { 
-    padding: 10px; 
-    border-bottom: 1px solid #eee; 
-    text-align: left; 
-}
-
-.leaderboard-table tr:nth-child(even) { 
-    background-color: #fbf9f6; 
-}
-
-.real-point { 
-    font-size: 30px; 
-    text-align: center; 
-    line-height: 30px; 
-}
-
-.back-link { 
-    display: inline-block; 
-    margin-top: 25px; 
-    color: #888; 
-    text-decoration: none; 
-    font-family: 'Segoe UI', sans-serif; 
-    font-size: 0.9rem; 
+@media (max-width: 520px) {
+    .game-container { padding: 18px 14px 24px; border-width: 9px; }
+    #map, .wedding-photo { max-height: 280px; height: 280px; }
 }

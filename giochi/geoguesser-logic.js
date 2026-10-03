@@ -1,5 +1,5 @@
 // ⚠️ IMPORTANTE: Sostituisci questo testo con il tuo URL reale di Google Apps Script (lascia le virgolette)
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzeRf5-HyXYqula6r3t03VkgZYcjIQk30gxEtbVG9rXDeGiOOUm7nK7dBZTkMhr8GV8/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZL04nemGa7zkFajxKMpCO2LuzLCNIRHSInqbhMg1I8uwVy9hgy00wB3ocT1q7a63E/exec";
 
 const langData = {
     it: {
@@ -75,7 +75,7 @@ function handleButtonClick() {
         totalDistance += Math.round(d);
         
         realMarker = L.marker([reale.lat, reale.lng], { icon: L.divIcon({className: 'real-point', html: '📍', iconSize: [30,30], iconAnchor: [15, 30]}) }).addTo(map);
-        polyline = L.polyline([[selectedLat, selectedLng], [reale.lat, reale.lng]], {color: '#d4a373', dashArray: '5, 10'}).addTo(map);
+        polyline = L.polyline([[selectedLat, selectedLng], [reale.lat, reale.lng]], {color: '#c8432f', dashArray: '5, 10'}).addTo(map);
         const group = new L.featureGroup([userMarker, realMarker]); map.fitBounds(group.getBounds().pad(0.2));
         
         document.getElementById("distance-result").innerHTML = t.distText.replace("{dist}", Math.round(d));
