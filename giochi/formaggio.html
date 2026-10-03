@@ -1,177 +1,324 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Che Prodotto Lidl Sei?</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #fcfbfa; color: #333; text-align: center; padding: 20px; }
-        .quiz-container { max-width: 600px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 8px solid #f4a261; }
-        h1 { color: #e76f51; font-family: Georgia, serif; }
-        .question { font-size: 1.3rem; font-weight: bold; margin: 25px 0; color: #264653; }
-        .options-grid { display: flex; flex-direction: column; gap: 12px; }
-        .btn-opt { background: #f4f1de; border: 2px solid #e0dbcd; padding: 14px; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: 0.2s; text-align: left; }
-        .btn-opt:hover { background: #ffe8d6; border-color: #f4a261; }
-        #result-box { display: none; padding: 20px; }
-        .cheese-title { font-size: 2rem; font-weight: bold; color: #e76f51; margin: 15px 0; }
-        .cheese-desc { font-size: 1.1rem; line-height: 1.6; color: #555; background: #fdf0d5; padding: 20px; border-radius: 8px; }
-        .btn-home { display: inline-block; background: #e76f51; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 25px; text-decoration: none; }
-        .back-link { display: inline-block; margin-top: 20px; color: #888; text-decoration: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Che Prodotto Lidl Sei?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0050aa;--navy:#00306b;--yellow:#fff000;--red:#e60a14;--bg:#eef2f8;--ink:#10243f;--muted:#5a6b82;--line:#cfd9e6;
+--font:'Instrument Sans','Segoe UI',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{font-family:var(--font);color:var(--ink);background:var(--bg);text-align:center;min-height:100vh;padding-bottom:40px}
+svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Header band */
+.band{background:var(--blue);color:#fff;padding:34px 20px 92px;border-bottom:8px solid var(--yellow)}
+.band h1{font-weight:700;font-size:clamp(1.8rem,6vw,2.7rem);letter-spacing:-.02em;line-height:1.1}
+.band p{margin:10px auto 0;max-width:46ch;opacity:.9;line-height:1.5}
+
+.quiz-container{max-width:640px;margin:-62px auto 0;background:#fff;padding:28px 26px 32px;border-radius:16px;
+box-shadow:0 18px 40px rgba(0,48,107,.18);position:relative;animation:rise-in .7s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise-in{from{opacity:0;transform:translateY(24px)}}
+
+/* Progress: 7 segments + sticker pill */
+.steps{display:flex;gap:6px}
+.steps i{flex:1;height:7px;border-radius:99px;background:var(--line);position:relative;overflow:hidden}
+.steps i::after{content:"";position:absolute;inset:0;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.3,.8,.3,1)}
+.steps i.done::after{transform:scaleX(1)}
+.steps i.now::after{background:var(--yellow);transform:scaleX(1);box-shadow:inset 0 0 0 1px rgba(0,80,170,.25)}
+#progress{display:inline-block;margin:16px 0 4px;background:var(--red);color:#fff;font-weight:700;font-size:.82rem;padding:5px 14px;border-radius:99px}
+
+.card.enter{animation:in .5s cubic-bezier(.2,.8,.2,1) both}
+.card.leave{animation:out .35s ease-in both}
+@keyframes in{from{opacity:0;transform:translateX(40px)}}
+@keyframes out{to{opacity:0;transform:translateX(-40px)}}
+.badge{width:78px;height:78px;margin:12px auto 0;border-radius:50%;background:var(--yellow);color:var(--blue);display:grid;place-items:center;box-shadow:0 0 0 6px #fff,0 0 0 8px var(--yellow)}
+.badge svg{width:38px;height:38px;stroke-width:1.7}
+.card.enter .badge{animation:bounce .7s .1s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes bounce{from{transform:scale(0) rotate(-40deg)}}
+.question{font-weight:700;font-size:clamp(1.2rem,4.5vw,1.5rem);line-height:1.3;letter-spacing:-.01em;margin:20px 0 22px}
+.options-grid{display:flex;flex-direction:column;gap:11px}
+.btn-opt{display:flex;align-items:center;gap:14px;text-align:left;font:inherit;color:var(--ink);background:#fff;border:1.5px solid var(--line);
+padding:13px 16px;border-radius:12px;cursor:pointer;line-height:1.4;
+transition:transform .2s,border-color .2s,background .2s,box-shadow .2s,opacity .3s;
+animation:in .5s calc(var(--i)*70ms + .15s) cubic-bezier(.2,.8,.2,1) both}
+.chip{flex:none;width:30px;height:30px;border-radius:50%;background:var(--bg);color:var(--blue);font-weight:700;font-size:.9rem;display:grid;place-items:center;transition:background .2s,color .2s,transform .25s}
+.btn-opt:hover{transform:translateX(5px);border-color:var(--blue);background:#f5f8fd;box-shadow:-4px 0 0 var(--blue)}
+.btn-opt:hover .chip{background:var(--blue);color:#fff;transform:scale(1.1)}
+.btn-opt:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.btn-opt.chosen{background:var(--blue);color:#fff;border-color:var(--blue);transform:scale(1.02);box-shadow:none}
+.btn-opt.chosen .chip{background:var(--yellow);color:var(--blue)}
+.btn-opt.chosen::after{content:"\2713";margin-left:auto;font-weight:700;color:var(--yellow)}
+.btn-opt.dim{opacity:.35;transform:scale(.97)}
+.locked{pointer-events:none}
+
+/* Checkout scan */
+#scan-box{padding:40px 0 20px}
+.scanner{position:relative;width:210px;height:98px;margin:0 auto 22px;background:#fff;border:2px solid var(--blue);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.bars{display:flex;align-items:stretch;gap:2px;height:60px}
+.bars i{display:block;background:var(--ink)}
+.scanner::after{content:"";position:absolute;left:0;right:0;height:3px;background:var(--red);box-shadow:0 0 12px 3px rgba(230,10,20,.5);animation:laser 1s ease-in-out infinite alternate}
+@keyframes laser{from{top:6px}to{top:88px}}
+#scan-text{color:var(--muted);font-size:1.1rem;font-weight:600}
+
+/* Result: price tag */
+.tag{position:relative;max-width:340px;margin:34px auto 0;background:var(--yellow);color:var(--blue);padding:58px 24px 26px;border-radius:14px 14px 22px 22px;
+box-shadow:0 14px 30px rgba(0,48,107,.25);transform-origin:50% 0;opacity:0}
+.tag::before{content:"";position:absolute;top:16px;left:50%;width:18px;height:18px;margin-left:-9px;background:#fff;border-radius:50%;box-shadow:inset 0 2px 4px rgba(0,0,0,.3)}
+.tag::after{content:"";position:absolute;bottom:100%;left:50%;width:2px;height:34px;background:var(--blue)}
+.tag.show{animation:swing 1.4s cubic-bezier(.3,.7,.4,1) forwards}
+@keyframes swing{0%{opacity:0;transform:translateY(-60px) rotate(-16deg)}25%{opacity:1}45%{transform:rotate(9deg)}65%{transform:rotate(-5deg)}85%{transform:rotate(2deg)}100%{opacity:1;transform:rotate(0)}}
+.kicker{font-size:.95rem;font-weight:600}
+.product-art{width:84px;height:84px;margin:12px auto 10px;border-radius:50%;background:#fff;display:grid;place-items:center;animation:float 3s ease-in-out infinite}
+.product-art svg{width:46px;height:46px}
+@keyframes float{50%{transform:translateY(-7px)}}
+.cheese-title{font-weight:700;font-size:2rem;line-height:1.1;letter-spacing:-.02em}
+.nick{font-weight:600;font-size:1.05rem;margin-top:5px;color:var(--navy)}
+.price{position:absolute;top:-20px;right:-16px;width:86px;height:86px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-content:center;
+font-weight:700;font-size:1.35rem;line-height:1.1;transform:rotate(12deg);box-shadow:0 0 0 3px #fff,0 6px 14px rgba(0,0,0,.25)}
+.price small{font-weight:600;font-size:.6rem;opacity:.95}
+.tag .bars{height:38px;justify-content:center;margin-top:18px}
+.tag .bars i{background:var(--blue)}
+.note{font-size:.7rem;font-weight:600;letter-spacing:.05em;margin-top:6px;opacity:.8}
+.cheese-desc{text-align:left;line-height:1.7;color:var(--muted);background:#f3f6fb;border-left:6px solid var(--blue);border-radius:0 10px 10px 0;padding:18px 20px;margin:28px 0 8px}
+.match{margin:22px auto 0;text-align:left}
+.match h3{font-size:1.05rem;margin-bottom:10px;border-bottom:2px solid var(--blue);padding-bottom:6px}
+.row{display:grid;grid-template-columns:130px 1fr 42px;gap:10px;align-items:center;font-size:.9rem;margin:9px 0}
+.meter{height:10px;background:var(--bg);border-radius:99px;overflow:hidden}
+.meter b{display:block;height:100%;width:0;background:var(--blue);border-radius:99px;transition:width 1s cubic-bezier(.3,.8,.3,1)}
+.row.win{font-weight:700}.row.win .meter b{background:var(--red)}
+.row span:last-child{text-align:right;color:var(--muted)}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-block;font:inherit;font-weight:700;background:var(--yellow);color:var(--blue);border:none;padding:13px 28px;border-radius:999px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s,transform .2s}
+.btn:hover{background:var(--blue);color:#fff;transform:translateY(-2px)}
+.btn.ghost{background:transparent;box-shadow:inset 0 0 0 2px var(--blue)}
+.btn.ghost:hover{background:var(--blue)}
+.btn:focus-visible,.back-link:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.back-link{display:inline-block;margin-top:24px;color:var(--muted);text-decoration:none;font-size:.95rem}
+.back-link:hover{color:var(--blue);text-decoration:underline}
+
+/* Confetti in the three brand colours */
+.fx{position:fixed;z-index:50;pointer-events:none;width:9px;height:14px;border-radius:2px;animation:pop 1s ease-out forwards}
+@keyframes pop{0%{transform:translate(-50%,-50%) scale(.5);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy) + 80px)) rotate(var(--rot));opacity:0}}
+@media(max-width:520px){.quiz-container{margin-left:12px;margin-right:12px;padding:20px 14px 26px}.row{grid-template-columns:105px 1fr 38px}.band{padding-bottom:84px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
+<header class="band">
+  <h1>Che prodotto Lidl sei?</h1>
+  <p>Rispondi sinceramente alle domande per scoprire la tua vera identità!</p>
+</header>
 
-    <div class="quiz-container">
-        <h1> Che Prodotto Lidl sei?</h1>
-        <p>Rispondi sinceramente alle domande per scoprire la tua vera identità!</p>
-        
-        <div id="quiz-game">
-            <p id="progress" style="color: #888; font-weight: bold;"></p>
-            <div class="question" id="question-text">Caricamento...</div>
-            <div class="options-grid" id="options-container"></div>
-        </div>
-
-        <div id="result-box">
-            <h2>Il tuo prodotto Lidl è...</h2>
-            <div class="cheese-title" id="cheese-name"></div>
-            <p class="cheese-desc" id="cheese-description"></p>
-            <a href="../index.html" class="btn-home">Torna al Sito 🏠</a>
-        </div>
+<main class="quiz-container">
+  <section id="quiz-game">
+    <div class="steps" id="steps" aria-hidden="true"></div>
+    <p id="progress"></p>
+    <div class="card" id="card">
+      <div class="badge" id="badge" aria-hidden="true"></div>
+      <h2 class="question" id="question-text" aria-live="polite"></h2>
+      <div class="options-grid" id="options-container"></div>
     </div>
-    
-    <a href="index.html" class="back-link">⬅️ Torna all'Area Giochi</a>
+  </section>
 
-    <script>
-        // Le domande del test. Ogni risposta assegna un "profilo" (ceci, riso, latte condensato, verdurine)
-        const domande = [
-            {
-                q: "Oggi piove e allora...",
-                opts: [
-                    { text: "Scendo per strada e cominci a correre sotto la pioggia.", profile: "ceci" },
-                    { text: "Sto in casa sotto le coperte.", profile: "latte_condensato" },
-                    { text: "Chiamo i miei genitori per sapere se anche da loro piove.", profile: "riso" },
-                    { text: "Faccio delle foto per Instagram.", profile: "verdurine" }
-                ]
-            },
-            {
-                q: "Un tuo collega ti invita fuori a pranzo ma non vuoi andarci, come rispondi?",
-                opts: [
-                    { text: "'No, non ho voglia.'", profile: "ceci" },
-                    { text: "'Bellissima idea, vengo subito', ma poi non mi presento all'appuntamento!", profile: "verdurine" },
-                    { text: "'Grazie mille per l'offerta, ma c'ho una cosa da fare.'", profile: "latte_condensato" },
-                    { text: "'Bellissima idea, vengo subito' ti unisci al pranzo e soffri in silenzio.", profile: "riso" }
-                ]
-            },
-            {
-                q: "Vuoi organizzare la tua festa di compleanno, cosa fai?",
-                opts: [
-                    { text: "Non ho tanta voglia, ma vedere i miei amici mi farà bene e quindi organizzo una cena a casa.", profile: "riso" },
-                    { text: "Comincio a chiamare tutti i miei numeri in rubrica per dire che ho affittato la terrazza del Duomo per il compleanno.", profile: "verdurine" },
-                    { text: "Le feste di compleanno fanno schifo, compiere gli anni mi deprime, non organizzo nulla.", profile: "ceci" },
-                    { text: "Invito tutti fuori per una birra che offrirò io.", profile: "latte_condensato" }
-                ]
-            },
-            {
-                q: "Devi arredare casa, a chi ti rivolgi?",
-                opts: [
-                    { text: "Al miglior studio di design di Milano, non mi importa del prezzo. L'estetica è l'unica cosa di cui mi importa.", profile: "verdurine" },
-                    { text: "A nessuno, posso benissimo fare da solo.", profile: "ceci" },
-                    { text: "Al mio youtuber preferito. Guarderò tutti i suoi video in due giorni e poi mi costruirò tutti i mobilida solo.", profile: "latte_condensato" },
-                    { text: "Ho un amico designer, gli scrivo un messaggio perchè chiamarlo mi sembra troppo.", profile: "riso" }
-                ]
-            },
-            {
-                q: "Devi fare la spesa per il mese, quale è il tuo budget?",
-                opts: [
-                    { text: "5€", profile: "ceci" },
-                    { text: "50€", profile: "riso" },
-                    { text: "100€", profile: "latte_condensato" },
-                    { text: "200€", profile: "verdurine" }
-                ]
-            },
-            {
-                q: "Oggi è il primo giorno di scuola di tuo figlio, cosa gli dici?",
-                opts: [
-                    { text: "'Goditi questo giorno perchè sarà unico.'", profile: "riso" },
-                    { text: "'Goditela finchè sei alle elementari, perchè dopo è molto peggio.'", profile: "latte_condensato" },
-                    { text: "Nulla, imparerà sbagliando.", profile: "ceci" },
-                    { text: "'Cerca di dare il meggio e prendere il massimo in tutte le materie, ma sii gentile con gli altri.''", profile: "verdurine" }
-                ]
-            },
-            {
-                q: "La memoria del tuo telefono è piena e devi eliminare delle foto e video, cosa fai?",
-                opts: [
-                    { text: "Le foto sono troppo importanti per me, compro dello spazio su google cloud.", profile: "verdurine"},
-                    { text: "Formatto il telefono.", profile: "ceci" },
-                    { text: "Faccio un backup ed elimino le foto.", profile: "latte_condensato" },
-                    { text: "Non so fare un backup quindi spendo 5 ore a selezionare le mie foto preferite ed elimino le altre.", profile: "riso"  }
-                ]
-            }
-        ];
+  <section id="scan-box" hidden>
+    <div class="scanner"><div class="bars" id="scan-bars"></div></div>
+    <p id="scan-text">Passo il tuo profilo alla cassa…</p>
+  </section>
 
-        // I profili dei formaggi con i loro risultati
-        const profiliFormaggio = {
-            ceci: {
-                name: "Ceci secchi (Il Saggio Burbero)",
-                desc: "La tua educazione è stata dura ma sei quello che ogni studente con un budget ristretto vuole. Hai un grande futuro come educatore anche se non lo vuoi ammettere. Sei deciso, duro e ruvido come la vita."
-            },
-            riso: {
-                name: "Riso (Dal cuore d'oro)",
-                desc: "Ti sai adattare, ti fai andare bene tutto come accompagnamento, verdure, pollo, frutto, tutti stanno bene con te. Sei versatile, puoi essere un pregiato risotto o una calorosa insalata di riso. Eppure a volte vorresti stare un'po da solo."
-            },
-            latte_condensato: {
-                name: "Latte condensato (L'anticonformista)",
-                desc: "Sei una rarità prelibata. Dal gusto deciso che non fa per tutti. La tua generosità è travolgente, ti farest in quattro per gli altri, ma non scendi a compromessi. A volte la gente ti considera un outsider o una persona bizzarra, ma a te non importa tanto."
-            },
-            verdurine: {
-                name: "Verdurine (La regina)",
-                desc: "Sei una persona dolce, calorosa e super affettuosa. Vuoi sempre il meglio per te e i tuoi amici, ma sei abbastanza picky e non tutti riescono a starti accanto. Ogni occasione è buona per migliorare la tua condizione. Sei decisa e agguerrita e non ti arrendi mai."
-            }
-        };
+  <section id="result-box" hidden>
+    <div class="tag" id="tag">
+      <div class="price" id="price"></div>
+      <p class="kicker">Il tuo prodotto Lidl è…</p>
+      <div class="product-art" id="product-art"></div>
+      <div class="cheese-title" id="cheese-name"></div>
+      <div class="nick" id="cheese-nick"></div>
+      <div class="bars" id="tag-bars"></div>
+      <p class="note" id="cheese-note"></p>
+    </div>
+    <p class="cheese-desc" id="cheese-description"></p>
+    <div class="match"><h3>Compatibilità con gli altri prodotti</h3><div id="match-rows"></div></div>
+    <div class="actions">
+      <button class="btn ghost" id="restart">Rifai il test</button>
+      <a href="../index.html" class="btn">Torna al Sito</a>
+    </div>
+  </section>
+</main>
 
-        let currentQ = 0;
-        // Teniamo il conto di quante volte viene scelto ogni profilo
-        let punteggi = { ceci: 0, riso: 0, latte_condensato: 0, verdurine: 0 };
+<a href="index.html" class="back-link">← Torna all'Area Giochi</a>
 
-        function loadQuestion() {
-            if (currentQ >= domande.length) {
-                showResult();
-                return;
-            }
+<script>
+const svg = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+const ICONS = {
+  rain: svg('<path d="M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.5 8.2"/><path d="M16 14v6M8 14v6M12 16v6"/>'),
+  lunch: svg('<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>'),
+  party: svg('<path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1M2 21h20M7 8v3M12 8v3M17 8v3M7 4h.01M12 4h.01M17 4h.01"/>'),
+  sofa: svg('<path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0ZM4 18v2M20 18v2"/>'),
+  cart: svg('<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>'),
+  school: svg('<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'),
+  phone: svg('<rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/>'),
+  ceci: svg('<circle cx="8" cy="9" r="3.5"/><circle cx="16" cy="9" r="3.5"/><circle cx="12" cy="16" r="3.5"/>'),
+  riso: svg('<path d="M3 12h18a9 9 0 0 1-18 0Z"/><path d="M8 8c0-1.5 1-2 1-4M12 8c0-1.5 1-2 1-4M16 8c0-1.5 1-2 1-4"/>'),
+  latte: svg('<path d="M7 3h10l1 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7z"/><path d="M6 7h12M9 12h6M9 16h6"/>'),
+  verdura: svg('<path d="M12 22V12M12 12C12 7 8 4 4 4c0 4 3 8 8 8ZM12 14c0-4 3-7 8-7 0 4-3 7-8 7Z"/>')
+};
 
-            document.getElementById("progress").innerText = `Domanda ${currentQ + 1} di ${domande.length}`;
-            const data = domande[currentQ];
-            document.getElementById("question-text").innerText = data.q;
+// Ogni risposta assegna un "profilo"; icon = dettaglio visivo legato alla domanda.
+const domande = [
+  { q: "Oggi piove e allora...", icon: "rain", opts: [
+    { text: "Scendo per strada e comincio a correre sotto la pioggia.", profile: "ceci" },
+    { text: "Sto in casa sotto le coperte.", profile: "latte_condensato" },
+    { text: "Chiamo i miei genitori per sapere se anche da loro piove.", profile: "riso" },
+    { text: "Faccio delle foto per Instagram.", profile: "verdurine" } ] },
+  { q: "Un tuo collega ti invita fuori a pranzo ma non vuoi andarci, come rispondi?", icon: "lunch", opts: [
+    { text: "'No, non ho voglia.'", profile: "ceci" },
+    { text: "'Bellissima idea, vengo subito', ma poi non mi presento all'appuntamento!", profile: "verdurine" },
+    { text: "'Grazie mille per l'offerta, ma ho una cosa da fare.'", profile: "latte_condensato" },
+    { text: "'Bellissima idea, vengo subito', ti unisci al pranzo e soffri in silenzio.", profile: "riso" } ] },
+  { q: "Vuoi organizzare la tua festa di compleanno, cosa fai?", icon: "party", opts: [
+    { text: "Non ho tanta voglia, ma vedere i miei amici mi farà bene e quindi organizzo una cena a casa.", profile: "riso" },
+    { text: "Comincio a chiamare tutti i miei numeri in rubrica per dire che ho affittato la terrazza del Duomo per il compleanno.", profile: "verdurine" },
+    { text: "Le feste di compleanno fanno schifo, compiere gli anni mi deprime, non organizzo nulla.", profile: "ceci" },
+    { text: "Invito tutti fuori per una birra che offrirò io.", profile: "latte_condensato" } ] },
+  { q: "Devi arredare casa, a chi ti rivolgi?", icon: "sofa", opts: [
+    { text: "Al miglior studio di design di Milano, non mi importa del prezzo. L'estetica è l'unica cosa di cui mi importa.", profile: "verdurine" },
+    { text: "A nessuno, posso benissimo fare da solo.", profile: "ceci" },
+    { text: "Al mio youtuber preferito. Guarderò tutti i suoi video in due giorni e poi mi costruirò tutti i mobili da solo.", profile: "latte_condensato" },
+    { text: "Ho un amico designer, gli scrivo un messaggio perché chiamarlo mi sembra troppo.", profile: "riso" } ] },
+  { q: "Devi fare la spesa per il mese, qual è il tuo budget?", icon: "cart", opts: [
+    { text: "5€", profile: "ceci" }, { text: "50€", profile: "riso" },
+    { text: "100€", profile: "latte_condensato" }, { text: "200€", profile: "verdurine" } ] },
+  { q: "Oggi è il primo giorno di scuola di tuo figlio, cosa gli dici?", icon: "school", opts: [
+    { text: "'Goditi questo giorno perché sarà unico.'", profile: "riso" },
+    { text: "'Goditela finché sei alle elementari, perché dopo è molto peggio.'", profile: "latte_condensato" },
+    { text: "Nulla, imparerà sbagliando.", profile: "ceci" },
+    { text: "'Cerca di dare il meglio e prendere il massimo in tutte le materie, ma sii gentile con gli altri.'", profile: "verdurine" } ] },
+  { q: "La memoria del tuo telefono è piena e devi eliminare delle foto e video, cosa fai?", icon: "phone", opts: [
+    { text: "Le foto sono troppo importanti per me, compro dello spazio su Google Cloud.", profile: "verdurine" },
+    { text: "Formatto il telefono.", profile: "ceci" },
+    { text: "Faccio un backup ed elimino le foto.", profile: "latte_condensato" },
+    { text: "Non so fare un backup quindi spendo 5 ore a selezionare le mie foto preferite ed elimino le altre.", profile: "riso" } ] }
+];
 
-            const container = document.getElementById("options-container");
-            container.innerHTML = "";
+const profili = {
+  ceci: { icon: "ceci", name: "Ceci secchi", nick: "Il Saggio Burbero", price: "0,89", note: "SCADENZA: MAI · TEMPO DI COTTURA: LUNGO",
+    desc: "La tua educazione è stata dura ma sei quello che ogni studente con un budget ristretto vuole. Hai un grande futuro come educatore anche se non lo vuoi ammettere. Sei deciso, duro e ruvido come la vita." },
+  riso: { icon: "riso", name: "Riso", nick: "Dal cuore d'oro", price: "1,29", note: "OTTIMO CON TUTTO · ADATTABILE A OGNI OCCASIONE",
+    desc: "Ti sai adattare, ti fai andare bene tutto come accompagnamento, verdure, pollo, frutto, tutti stanno bene con te. Sei versatile, puoi essere un pregiato risotto o una calorosa insalata di riso. Eppure a volte vorresti stare un po' da solo." },
+  latte_condensato: { icon: "latte", name: "Latte condensato", nick: "L'anticonformista", price: "2,49", note: "EDIZIONE RARA · NON PER TUTTI I PALATI",
+    desc: "Sei una rarità prelibata. Dal gusto deciso che non fa per tutti. La tua generosità è travolgente, ti faresti in quattro per gli altri, ma non scendi a compromessi. A volte la gente ti considera un outsider o una persona bizzarra, ma a te non importa tanto." },
+  verdurine: { icon: "verdura", name: "Verdurine", nick: "La regina", price: "1,99", note: "QUALITÀ PREMIUM · SOLO LE MIGLIORI",
+    desc: "Sei una persona dolce, calorosa e super affettuosa. Vuoi sempre il meglio per te e i tuoi amici, ma sei abbastanza picky e non tutti riescono a starti accanto. Ogni occasione è buona per migliorare la tua condizione. Sei decisa e agguerrita e non ti arrendi mai." }
+};
 
-            data.opts.forEach(opt => {
-                const btn = document.createElement("button");
-                btn.className = "btn-opt";
-                btn.innerText = opt.text;
-                btn.onclick = () => {
-                    punteggi[opt.profile]++; // Aggiunge un punto al profilo corrispondente
-                    currentQ++;
-                    loadQuestion();
-                };
-                container.appendChild(btn);
-            });
-        }
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const COLORS = ["#0050aa", "#fff000", "#e60a14"];
+let currentQ = 0, lock = false, punteggi = {};
 
-        function showResult() {
-            document.getElementById("quiz-game").style.display = "none";
-            document.getElementById("result-box").style.display = "block";
+function resetScores() { punteggi = { ceci: 0, riso: 0, latte_condensato: 0, verdurine: 0 }; }
 
-            // Trova il profilo con il punteggio più alto
-            let formaggioVincente = Object.keys(punteggi).reduce((a, b) => punteggi[a] > punteggi[b] ? a : b);
-            const risultato = profiliFormaggio[formaggioVincente];
+function burst(x, y, n = 14) {
+  if (reduce) return;
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement("span"); s.className = "fx";
+    const a = Math.random() * Math.PI * 2, r = 70 + Math.random() * 120;
+    s.style.cssText = `left:${x}px;top:${y}px;background:${COLORS[i % 3]};--dx:${Math.cos(a) * r}px;--dy:${Math.sin(a) * r - 80}px;--rot:${(Math.random() - .5) * 540}deg`;
+    s.addEventListener("animationend", () => s.remove());
+    document.body.appendChild(s);
+  }
+}
 
-            document.getElementById("cheese-name").innerText = risultato.name;
-            document.getElementById("cheese-description").innerText = risultato.desc;
-        }
+function setSteps(done, now) {
+  [...$("steps").children].forEach((s, i) => { s.className = i < done ? "done" : (i === now ? "now" : ""); });
+}
 
-        loadQuestion();
-    </script>
+function loadQuestion() {
+  if (currentQ >= domande.length) { startScan(); return; }
+  const d = domande[currentQ], card = $("card");
+  $("progress").textContent = `Domanda ${currentQ + 1} di ${domande.length}`;
+  $("badge").innerHTML = ICONS[d.icon]; $("question-text").textContent = d.q;
+  setSteps(currentQ, currentQ);
+  card.classList.remove("enter", "leave"); void card.offsetWidth; card.classList.add("enter");
+
+  const box = $("options-container"); box.innerHTML = ""; box.classList.remove("locked");
+  d.opts.forEach((opt, i) => {
+    const b = document.createElement("button");
+    b.className = "btn-opt"; b.style.setProperty("--i", i);
+    b.innerHTML = `<span class="chip">${"ABCD"[i]}</span><span class="txt"></span>`;
+    b.querySelector(".txt").textContent = opt.text;
+    b.onclick = ev => choose(b, opt, ev);
+    box.appendChild(b);
+  });
+  lock = false;
+}
+
+function choose(btn, opt, ev) {
+  if (lock) return; lock = true;
+  const box = $("options-container"); box.classList.add("locked");
+  [...box.children].forEach(c => c.classList.add(c === btn ? "chosen" : "dim"));
+  const r = btn.getBoundingClientRect();
+  burst(ev.clientX || r.left + r.width / 2, ev.clientY || r.top + r.height / 2, 10);
+  punteggi[opt.profile]++; setSteps(currentQ + 1, -1);
+  setTimeout(() => {
+    $("card").classList.remove("enter"); $("card").classList.add("leave");
+    setTimeout(() => { currentQ++; loadQuestion(); }, 350);
+  }, 750);
+}
+
+function makeBars(el, n) {
+  el.innerHTML = "";
+  for (let i = 0; i < n; i++) { const b = document.createElement("i"); b.style.width = (1 + Math.floor(Math.random() * 4)) + "px"; el.appendChild(b); }
+}
+
+function startScan() {
+  $("quiz-game").hidden = true; $("scan-box").hidden = false;
+  makeBars($("scan-bars"), 34);
+  const texts = ["Passo il tuo profilo alla cassa…", "Bip… bip…", "Calcolo il prezzo…"];
+  let i = 0; const t = setInterval(() => { $("scan-text").textContent = texts[++i % texts.length]; }, 650);
+  setTimeout(() => { clearInterval(t); showResult(); }, 2000);
+}
+
+function showResult() {
+  const win = Object.keys(punteggi).reduce((a, b) => punteggi[a] > punteggi[b] ? a : b);
+  const p = profili[win];
+  $("scan-box").hidden = true; $("result-box").hidden = false;
+  $("product-art").innerHTML = ICONS[p.icon]; $("cheese-name").textContent = p.name; $("cheese-nick").textContent = p.nick;
+  $("cheese-note").textContent = p.note; $("cheese-description").textContent = p.desc;
+  $("price").innerHTML = `${p.price}€<small>solo per te</small>`;
+  makeBars($("tag-bars"), 40);
+
+  const rows = $("match-rows"); rows.innerHTML = "";
+  Object.keys(profili).sort((a, b) => punteggi[b] - punteggi[a]).forEach(k => {
+    const pct = Math.round(punteggi[k] / domande.length * 100);
+    const row = document.createElement("div"); row.className = "row" + (k === win ? " win" : "");
+    row.innerHTML = `<span>${profili[k].name}</span><div class="meter"><b data-w="${pct}"></b></div><span>${pct}%</span>`;
+    rows.appendChild(row);
+  });
+
+  const tag = $("tag"); tag.classList.remove("show"); void tag.offsetWidth; tag.classList.add("show");
+  setTimeout(() => { const r = tag.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 30); }, 900);
+  setTimeout(() => rows.querySelectorAll("b").forEach(b => b.style.width = b.dataset.w + "%"), 700);
+  window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+}
+
+$("restart").onclick = () => {
+  resetScores(); currentQ = 0; $("result-box").hidden = true; $("quiz-game").hidden = false;
+  $("tag").classList.remove("show"); loadQuestion();
+};
+
+// Scorciatoie da tastiera: 1-4 per rispondere
+document.addEventListener("keydown", e => {
+  if ($("quiz-game").hidden || lock) return;
+  const b = $("options-container").children[+e.key - 1]; if (b) b.click();
+});
+
+$("steps").innerHTML = domande.map(() => "<i></i>").join("");
+resetScores(); loadQuestion();
+</script>
 </body>
 </html>
