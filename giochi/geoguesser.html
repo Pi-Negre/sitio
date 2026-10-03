@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding GeoGuesser</title>
+    <!-- CSS di Leaflet per la mappa interattiva -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { font-family: 'Georgia', serif; background-color: #fcfbfa; color: #333; margin: 0; padding: 15px; text-align: center; }
+        .game-container { max-width: 800px; margin: 10px auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+        h1 { color: #d4a373; font-size: 2.2rem; margin-bottom: 5px; }
+        .subtitle { font-family: 'Segoe UI', sans-serif; color: #666; font-size: 0.95rem; margin-bottom: 20px; }
+        
+        /* Layout a due colonne per schermi grandi */
+        .game-layout { display: flex; flex-direction: column; gap: 20px; margin-top: 15px; }
+        @media (min-width: 768px) {
+            .game-layout { flex-direction: row; }
+        }
+
+        /* Colonna della Foto */
+        .photo-column { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .wedding-photo { width: 100%; max-height: 350px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #eee; }
+        
+        /* Colonna della Mappa */
+        .map-column { flex: 1; position: relative; }
+        #map { height: 350px; width: 100%; border-radius: 12px; border: 2px solid #d4a373; }
+
+        .btn { background: #d4a373; color: white; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s; font-family: 'Segoe UI', sans-serif; }
+        .btn:hover { background: #bc8a5f; }
+        
+        /* Riquadro dei Risultati ed Emozione */
+        .result-box { display: none; margin-top: 20px; padding: 20px; background: #fdf0d5; border-radius: 12px; border-left: 6px solid #d4a373; text-align: left; }
+        .result-box h3 { margin-top: 0; color: #bc8a5f; }
+        .anecdote { font-style: italic; margin-top: 10px; color: #555; line-height: 1.5; }
+
+        .back-link { display: inline-block; margin-top: 25px; color: #888; text-decoration: none; font-family: 'Segoe UI', sans-serif; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1 id="game-title">🗺️ Wedding GeoGuesser</h1>
+        <p id="game-subtitle" class="subtitle">Indovina dove abbiamo scattato questa foto della nostra storia!</p>
+
+        <!-- Selettore di Lingua rapido -->
+        <div style="text-align: right; margin-bottom: 10px;">
+            <select id="lang-select" onchange="switchLanguage(this.value)" style="padding: 5px; border-radius: 5px; font-family: sans-serif;">
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="en">🇬🇧 English</option>
+            </select>
+        </div>
+
+        <div id="game-zone">
+            <p id="progress-text" style="font-weight: bold; font-family: 'Segoe UI', sans-serif; color: #888;"></p>
+            
+            <div id="game-layout" class="game-layout">
+                <!-- Foto da indovinare -->
+                <div class="photo-column">
+                    <img id="current-photo" src="" class="wedding-photo" alt="Wedding Tappa">
+                </div>
+                
+                <!-- Mappa interattiva su cui cliccare -->
+                <div class="map-column">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <button id="action-btn" class="btn" onclick="handleButtonClick()">Invia Risposta 📍</button>
+
+            <!-- Box informativo post-risposta -->
+            <div id="result-box" class="result-box">
+                <h3 id="distance-result">Distanza...</h3>
+                <p id="anecdote-text" class="anecdote"></p>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link" id="link-back">⬅️ Torna all'Area Giochi</a>
+
+    <!-- Libreria JavaScript di Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // TESTI BILINGUE GIOCO
+        const langData = {
+            it: {
+                title: "🗺️ Wedding GeoGuesser",
+                subtitle: "Indovina dove abbiamo scattato questa foto della nostra storia!",
+                progress: "Tappa {current} di {total}",
+                btnCheck: "Invia Risposta 📍",
+                btnNext: "Prossima Tappa ➡️",
+                btnFinish: "Scopri il Risultato Finale 🎉",
+                back: "⬅️ Torna all'Area Giochi",
+                distText: "Ci sei andato vicino! La tua scelta dista <strong>{dist} km</strong> dal punto reale.",
+                finalScore: "Gioco Terminato! Distanza totale accumulata: <strong>{total} km</strong>. Più è bassa, più ci conosci! 😉"
+            },
+            en: {
+                title: "🗺️ Wedding GeoGuesser",
+                subtitle: "Guess where this photo from our story was taken!",
+                progress: "Stage {current} of {total}",
+                btnCheck: "Submit Guess 📍",
+                btnNext: "Next Stage ➡️",
+                btnFinish: "See Final Results 🎉",
+                back: "⬅️ Back to Games Area",
+                distText: "Nice try! Your guess is <strong>{dist} km</strong> away from the actual location.",
+                finalScore: "Game Over! Total accumulated distance: <strong>{total} km</strong>. The lower, the better you know us! 😉"
+            }
+        };
+
+        // DATABASE DELLE 7 TAPPE (Coordinate precise incluse!)
+        const tappe = [
+            {
+                foto: "assets/tappa1.jpg", 
+                lat: 45.4642, lng: 9.1900, // Milano (Duomo)
+                it: "Milano! La città del nostro primo appuntamento, dove tutto è iniziato tra un caffè e mille risate.",
+                en: "Milan! The city of our very first date, where everything started over a coffee and a thousand smiles."
+            },
+            {
+                foto: "assets/tappa2.jpg", 
+                lat: 41.3851, lng: 2.1734, // Barcellona
+                it: "Barcellona! La nostra fuga romantica preferita, immersi tra arte, mare e tapas spettacolari.",
+                en: "Barcelona! Our favorite romantic escape, surrounded by art, the sea, and amazing tapas."
+            },
+            {
+                foto: "assets/tappa3.jpg", 
+                lat: 37.4467, lng: 24.9427, // Syros (Grecia)
+                it: "L'isola di Syros! Un tramonto indimenticabile nel cuore delle Cicladi greche.",
+                en: "Syros Island! An unforgettable sunset in the heart of the Greek Cyclades."
+            },
+            {
+                foto: "assets/tappa4.jpg", 
+                lat: 40.5824, lng: -0.2185, // Cinctorres (Spagna)
+                it: "Cinctorres! Quel fine settimana speciale immersi nella natura più autentica.",
+                en: "Cinctorres! That special weekend immersed in the most authentic nature."
+            },
+            {
+                foto: "assets/tappa5.jpg", 
+                lat: 46.5332, lng: 8.9392, // Olivone (Svizzera)
+                it: "Olivone! Tra le maestose montagne svizzere, dove i nostri gatti hanno guardato la neve per la prima volta dalla finestra.",
+                en: "Olivone! Among the majestic Swiss mountains, where our cats watched the snow from the window for the first time."
+            },
+            {
+                foto: "assets/tappa6.jpg", 
+                lat: 47.4979, lng: 19.0402, // Budapest
+                it: "Budapest! Quel viaggio d'inverno magico, camminando lungo il Danubio illuminato.",
+                en: "Budapest! That magical winter trip, walking along the beautifully illuminated Danube."
+            },
+            {
+                foto: "assets/tappa7.jpg", 
+                lat: 46.4344, lng: 8.3294, // Blinnenhorn (Alpi Lepontine)
+                it: "Il Blinnenhorn! A quota 3374 metri, la vetta più alta che abbiamo conquistato insieme. Un'emozione immensa!",
+                en: "Blinnenhorn! At 3374 meters high, the highest mountain peak we conquered together. An immense emotion!"
+            }
+        ];
+
+        let currentStage = 0;
+        let currentLang = localStorage.getItem('selectedLanguage') || 'it';
+        let map, userMarker, realMarker, polyline;
+        let selectedLat = null, selectedLng = null;
+        let hasGuessed = false;
+        let totalDistance = 0;
+
+        function updateTexts() {
+            const t = langData[currentLang];
+            document.getElementById("game-title").innerText = t.title;
+            document.getElementById("game-subtitle").innerText = t.subtitle;
+            document.getElementById("link-back").innerText = t.back;
+            
+            if (!gameOverState) {
+                document.getElementById("progress-text").innerText = t.progress.replace("{current}", currentStage + 1).replace("{total}", tappe.length);
+                if (!hasGuessed) {
+                    document.getElementById("action-btn").innerText = t.btnCheck;
+                } else {
+                    document.getElementById("action-btn").innerText = (currentStage === tappe.length - 1) ? t.btnFinish : t.btnNext;
+                }
+            }
+        }
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('selectedLanguage', lang);
+            updateTexts();
+            if(hasGuessed) {
+                document.getElementById("anecdote-text").innerText = tappe[currentStage][currentLang];
+            }
+        }
+
+        // INIZIALIZZAZIONE DELLA MAPPA INTERATTIVA
+        function initMap() {
+            // Centriamo la mappa sul centro dell'Europa per mostrare tutte le mete
+            map = L.map('map').setView([44.0, 12.0], 4);
+            
+            // Stile grafico della mappa elegante e pulito (CartoDB Positron)
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+attribution: '© OpenStreetMap © CARTO'
+}).addTo(map);
+// Evento al clic sulla mappa
+map.on('click', function(e) {
+if (hasGuessed) return; // Blocca i clic dopo l'invio
+selectedLat = e.latlng.lat;
+selectedLng = e.latlng.lng;
+if (userMarker) {
+userMarker.setLatLng(e.latlng);
+} else {
+userMarker = L.marker(e.latlng).addTo(map);
+}
+});
+}
+let gameOverState = false;
+function handleButtonClick() {
+const t = langData[currentLang];
+if (!hasGuessed) {
+// FASE 1: VERIFICA RISPOSTA
+if (selectedLat === null) {
+alert(currentLang === 'it' ? "Clicca sulla mappa per indicare un punto!" : "Please click on the map to place your guess!");
+return;
+}
+hasGuessed = true;
+const reale = tappe[currentStage];
+// Calcola la distanza reale in km usando la formula del cerchio massimo
+const d = calculateDistance(selectedLat, selectedLng, reale.lat, reale.lng);
+totalDistance += Math.round(d);
+// Mostra il punto reale sulla mappa
+realMarker = L.marker([reale.lat, reale.lng], {
+icon: L.divIcon({className: 'real-point', html: '📍', iconSize: [30, 30]})
+}).addTo(map);
+// Traccia la linea tra la scelta dell'utente e il punto reale
+polyline = L.polyline([[selectedLat, selectedLng], [reale.lat, reale.lng]], {color: '#d4a373', dashArray: '5, 10'}).addTo(map);
+// Zoom automatico per mostrare entrambi i punti
+const group = new L.featureGroup([userMarker, realMarker]);
+map.fitBounds(group.getBounds().pad(0.2));
+// Mostra aneddoto e chilometri
+document.getElementById("distance-result").innerHTML = t.distText.replace("{dist}", Math.round(d));
+document.getElementById("anecdote-text").innerText = reale[currentLang];
+document.getElementById("result-box").style.display = "block";
+document.getElementById("action-btn").innerText = (currentStage === tappe.length - 1) ? t.btnFinish : t.btnNext;
+} else {
+// FASE 2: AVANZAMENTO O FINE GIOCO
+if (currentStage < tappe.length - 1) {
+currentStage++;
+resetStageForNext();
+} else {
+// FINE GIOCO ASSOLUTA
+gameOverState = true;
+document.getElementById("progress-text").style.display = "none";
+document.getElementById("game-layout").style.display = "none";
+document.getElementById("action-btn").style.display = "none";
+document.getElementById("distance-result").innerHTML = t.finalScore.replace("{total}", totalDistance);
+document.getElementById("anecdote-text").style.display = "none";
+document.getElementById("result-box").style.display = "block";
+}
+}
+}
+function resetStageForNext() {
+hasGuessed = false;
+selectedLat = null;
+selectedLng = null;
+// Rimuove i vecchi marker e linee dalla mappa
+if(userMarker) { map.removeLayer(userMarker); userMarker = null; }
+if(realMarker) { map.removeLayer(realMarker); realMarker = null; }
+if(polyline) { map.removeLayer(polyline); polyline = null; }
+// Ripristina la visualizzazione iniziale dell'Europa
+map.setView([44.0, 12.0], 4);
+// Aggiorna foto e testi
+document.getElementById("current-photo").src = tappe[currentStage].foto;
+document.getElementById("result-box").style.display = "none";
+updateTexts();
+}
+// Formula matematica per calcolare la distanza in KM partendo dalle coordinate GPS
+function calculateDistance(lat1, lon1, lat2, lon2) {
+const R = 6371; // Raggio della Terra in km
+const dLat = (lat2 - lat1) * Math.PI / 180;
+const dLon = (lon2 - lon1) * Math.PI / 180;
+const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+Math.sin(dLon/2) * Math.sin(dLon/2);
+const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+return R * c;
+}
+// Avvio del Gioco
+document.getElementById("lang-select").value = currentLang;
+document.getElementById("current-photo").src = tappe[0].foto;
+updateTexts();
+window.addEventListener('DOMContentLoaded', initMap);
