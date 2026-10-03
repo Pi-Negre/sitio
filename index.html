@@ -7,8 +7,9 @@
     <meta name="description" content="Il nostro matrimonio: informazioni, conferma presenza e giochi per gli invitati.">
     <meta name="theme-color" content="#1f4e8c">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke-width='8'%3E%3Ccircle cx='38' cy='50' r='24' stroke='%231f4e8c'/%3E%3Ccircle cx='62' cy='50' r='24' stroke='%23c8432f'/%3E%3C/svg%3E">
-    <!-- ?v=2 forces browsers to download the new stylesheet; bump it after future CSS edits -->
-    <link rel="stylesheet" href="style.css?v=2">
+    <script>document.documentElement.classList.add("js")</script>
+    <!-- ?v=3 forces browsers to download the new stylesheet; bump it after future CSS edits -->
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
@@ -58,17 +59,19 @@
         <h2 data-i18n="rsvp_title">Ci sarai?</h2>
         <p data-i18n="rsvp_subtitle">Ti preghiamo di confermare la tua presenza entro il 30 Aprile.</p>
         
-        <form class="rsvp-form">
+        <form class="rsvp-form" id="rsvp-form">
             <!-- Nota: per gli input usiamo data-i18n-placeholder per tradurre il testo interno -->
-            <input type="text" data-i18n-placeholder="form_name" placeholder="Nome e Cognome" required>
-            <input type="email" data-i18n-placeholder="form_email" placeholder="La tua Email" required>
-            <select required>
+            <input type="text" name="nome" autocomplete="name" maxlength="100" data-i18n-placeholder="form_name" placeholder="Nome e Cognome" required>
+            <input type="email" name="email" autocomplete="email" maxlength="120" data-i18n-placeholder="form_email" placeholder="La tua Email" required>
+            <select name="presenza" required>
                 <option value="" disabled selected data-i18n="form_select_default">Parteciperai?</option>
                 <option value="si" data-i18n="form_select_yes">Sì, verrò con gioia!</option>
                 <option value="no" data-i18n="form_select_no">Purtroppo non potrò esserci</option>
             </select>
-            <textarea data-i18n-placeholder="form_notes" placeholder="Allergie, intolleranze o note particolari..."></textarea>
+            <textarea name="note" maxlength="500" data-i18n-placeholder="form_notes" placeholder="Allergie, intolleranze o note particolari..."></textarea>
+            <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
             <button type="submit" class="btn" data-i18n="form_submit">Invia Conferma</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>
     </section>
 
@@ -118,6 +121,56 @@
         }
 
         window.addEventListener('DOMContentLoaded', loadTranslations);
+    </script>
+
+    <!-- Animazioni, RSVP -> Google Sheet -->
+    <script>
+        // 1) Incolla qui l'URL /exec del tuo Google Apps Script per le conferme (RSVP)
+        const RSVP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0jAJ3EqsdIt_wEyQf3s-CM9SGQ7Xm51rfMruCpFllTc3dzXqG8Xw0hgTp4KWnVcdwhQ/exec";
+
+        const rsvpText = {
+            it: { sending: "Invio in corso…", ok: "Grazie! La tua risposta è stata inviata.", error: "Qualcosa è andato storto. Riprova tra poco.", config: "Il modulo non è ancora collegato al foglio Google." },
+            en: { sending: "Sending…", ok: "Thank you! Your reply has been sent.", error: "Something went wrong. Please try again shortly.", config: "The form is not connected to the Google Sheet yet." }
+        };
+
+        (function () {
+            const form = document.getElementById("rsvp-form");
+            const status = document.getElementById("form-status");
+            const lang = () => localStorage.getItem("selectedLanguage") || "it";
+            const say = (key, cls) => { status.className = "form-status " + (cls || ""); status.textContent = rsvpText[lang()][key]; };
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                if (!RSVP_SCRIPT_URL) { say("config", "err"); return; }
+                const f = new FormData(form);
+                const btn = form.querySelector("button[type=submit]");
+                btn.disabled = true; say("sending");
+                try {
+                    await fetch(RSVP_SCRIPT_URL, {
+                        method: "POST", mode: "no-cors", cache: "no-cache",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: JSON.stringify({ nome: f.get("nome"), email: f.get("email"), presenza: f.get("presenza"), note: f.get("note"), website: f.get("website") })
+                    });
+                    form.reset(); say("ok", "ok");
+                } catch (err) { say("error", "err"); }
+                btn.disabled = false;
+            });
+        })();
+
+        // Scroll reveal + navbar shadow
+        (function () {
+            const nav = document.querySelector(".navbar");
+            const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 10);
+            addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+            if (!("IntersectionObserver" in window)) return;
+            const els = document.querySelectorAll(".container h2, .container > p, .card, .rsvp-form");
+            document.querySelectorAll(".grid").forEach(g => [...g.children].forEach((c, i) => c.style.setProperty("--d", i * 0.15 + "s")));
+            const io = new IntersectionObserver((entries) => entries.forEach(en => {
+                if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+            }), { threshold: 0.15 });
+            els.forEach(el => { el.classList.add("reveal"); io.observe(el); });
+        })();
     </script>
 
 </body>
