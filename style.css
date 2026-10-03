@@ -1,0 +1,131 @@
+/* Reset e Font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    color: #333;
+    line-height: 1.6;
+    background-color: #fcfbfa;
+}
+
+/* Copertina (Hero) */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://unsplash.com') no-repeat center center/cover;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+    font-family: Georgia, serif;
+}
+
+.hero-content .date {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+}
+
+/* Bottone Elegante */
+.btn {
+    display: inline-block;
+    background-color: #d4a373; /* Colore oro/sabbia elegante */
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 30px;
+    margin-top: 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background-color: #bc8a5f;
+}
+
+/* Barra di Navigazione */
+.navbar {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar a {
+    color: #555;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+}
+
+.navbar a.nav-games {
+    color: #d4a373; /* Evidenzia l'area giochi */
+}
+
+/* Sezioni e Griglia */
+.container {
+    padding: 60px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.bg-light {
+    background-color: #f4f1de;
+    border-radius: 10px;
+}
+
+.grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    flex: 1;
+    min-width: 280px;
+}
+
+/* Form RSVP */
+.rsvp-form {
+    max-width: 500px;
+    margin: 30px auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.rsvp-form input, .rsvp-form select, .rsvp-form textarea {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+footer {
+    padding: 20px;
+    text-align: center;
+    background-color: #333;
+    color: white;
+    font-size: 0.9rem;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quanto conosci gli Sposi?</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #fcfbfa; color: #333; text-align: center; padding: 20px; }
+        .quiz-container { max-width: 600px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h1 { color: #d4a373; font-family: Georgia, serif; }
+        .question { font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; }
+        .options-grid { display: flex; flex-direction: column; gap: 10px; }
+        .btn-opt { background: #f4f1de; border: 2px solid #e0dbcd; padding: 12px; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        .btn-opt:hover { background: #e0dbcd; }
+        .correct { background-color: #a7c957 !important; color: white; border-color: #a7c957; }
+        .wrong { background-color: #f28482 !important; color: white; border-color: #f28482; }
+        #next-btn, #back-btn { background: #d4a373; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 20px; display: none; }
+        #result-box { display: none; font-size: 1.5rem; font-weight: bold; color: #d4a373; }
+        .back-link { display: inline-block; margin-top: 20px; color: #888; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Quanto conosci gli Sposi? 💍</h1>
+        <div id="quiz-game">
+            <p id="question-number" style="color: #888;"></p>
+            <div class="question" id="question-text">Caricamento domanda...</div>
+            <div class="options-grid" id="options-container"></div>
+            <button id="next-btn" onclick="nextQuestion()">Prossima Domanda ➡️</button>
+        </div>
+
+        <div id="result-box">
+            <h2>Gioco Finito! 🎉</h2>
+            <p id="score-text"></p>
+            <a href="../index.html" id="back-btn" style="display:inline-block; text-decoration:none;">Torna al Sito</a>
+        </div>
+    </div>
+    <a href="../index.html" class="back-link">⬅️ Torna alla Home</a>
+
+    <script>
+        // Personalizza qui le tue domande, opzioni e la risposta corretta (indice da 0 a 3)
+        const quizData = [
+            { q: "Dove si sono conosciuti gli sposi?", opts: ["All'Università", "In vacanza al mare", "Tramite amici comuni", "In palestra"], correct: 2 },
+            { q: "Chi ha fatto la proposta di matrimonio?", opts: ["Lui, in modo romantico", "Lei, stufa di aspettare", "È stata una decisione comune", "Il cane con un biglietto"], correct: 0 },
+            { q: "Qual è il piatto preferito di lei?", opts: ["Sushi", "Pizza Margherita", "Carbonara", "Lasagna della mamma"], correct: 1 },
+            { q: "Qual è il viaggio dei loro sogni (e meta della luna di miele)?", opts: ["Giappone", "New York", "Safari in Africa", "Maldive"], correct: 0 }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            document.getElementById("next-btn").style.display = "none";
+            const current = quizData[currentIdx];
+            document.getElementById("question-number").innerText = `Domanda ${currentIdx + 1} di ${quizData.length}`;
+            document.getElementById("question-text").innerText = current.q;
+            
+            const container = document.getElementById("options-container");
+            container.innerHTML = "";
+            
+            current.opts.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.className = "btn-opt";
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(btn, index);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectOption(btn, index) {
+            if (answered) return; // Evita doppi clic
+            answered = true;
+            const correctIdx = quizData[currentIdx].correct;
+            const buttons = document.querySelectorAll(".btn-opt");
+            
+            if (index === correctIdx) {
+                btn.classList.add("correct");
+                score++;
+            } else {
+                btn.classList.add("wrong");
+                buttons[correctIdx].classList.add("correct"); // mostra quella giusta
+            }
+            document.getElementById("next-btn").style.display = "inline-block";
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < quizData.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-game").style.display = "none";
+                document.getElementById("result-box").style.display = "block";
+                document.getElementById("score-text").innerText = `Hai indovinato ${score} risposte su ${quizData.length}!`;
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>

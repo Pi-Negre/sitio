@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Wordle</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #fcfbfa; text-align: center; padding: 20px; }
+        .wordle-container { max-width: 500px; margin: 30px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h1 { color: #d4a373; font-family: Georgia, serif; margin-bottom: 5px; }
+        .grid { display: grid; grid-template-rows: repeat(6, 1fr); gap: 5px; max-width: 300px; margin: 20px auto; }
+        .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+        .tile { width: 100%; aspect-ratio: 1; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; font-weight: bold; text-transform: uppercase; border-radius: 4px; }
+        .correct { background-color: #a7c957 !important; color: white; border-color: #a7c957; }
+        .present { background-color: #f4a261 !important; color: white; border-color: #f4a261; }
+        .absent { background-color: #777 !important; color: white; border-color: #777; }
+        #input-box { width: 160px; padding: 10px; font-size: 1.1rem; text-transform: uppercase; text-align: center; border: 2px solid #d4a373; border-radius: 5px; }
+        .btn { background: #d4a373; color: white; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #message { margin-top: 15px; font-weight: bold; font-size: 1.2rem; color: #bc8a5f; }
+    </style>
+</head>
+<body>
+
+    <div class="wordle-container">
+        <h1>Wedding Wordle 🧩</h1>
+        <p>Indovina la parola di 5 lettere legata al matrimonio!</p>
+        
+        <div class="grid" id="wordle-grid"></div>
+
+        <div id="controls">
+            <input type="text" id="input-box" maxlength="5" placeholder="PAROLA">
+            <button class="btn" onclick="submitGuess()">Invia</button>
+        </div>
+        <div id="message"></div>
+    </div>
+    <a href="../index.html" style="color:#888; text-decoration:none;">⬅️ Torna alla Home</a>
+
+    <script>
+        const SECRET_WORD = "SPOSI"; // Puoi cambiarla con altre parole di 5 lettere (es. ANELLI, FESTA, AMORE)
+        const MAX_ATTEMPTS = 6;
+        let currentAttempt = 0;
+
+        // Genera la griglia visiva dei tasselli
+        const grid = document.getElementById("wordle-grid");
+        for (let i = 0; i < MAX_ATTEMPTS; i++) {
+            const row = document.createElement("div");
+            row.className = "row";
+            for (let j = 0; j < 5; j++) {
+                const tile = document.createElement("div");
+                tile.className = "tile";
+                tile.id = `tile-${i}-${j}`;
+                row.appendChild(tile);
+            }
+            grid.appendChild(row);
+        }
+
+        function submitGuess() {
+            const inputBox = document.getElementById("input-box");
+            const guess = inputBox.value.toUpperCase();
+            const message = document.getElementById("message");
+
+            if (guess.length !== 5) {
+                message.innerText = "La parola deve essere di 5 lettere!";
+                return;
+            }
+
+            message.innerText = ""; // Resetta messaggi di errore
+
+            // Riempi i tasselli della riga corrente
+            for (let i = 0; i < 5; i++) {
+                const tile = document.getElementById(`tile-${currentAttempt}-${i}`);
+                tile.innerText = guess[i];
+
+                if (guess[i] === SECRET_WORD[i]) {
+                    tile.classList.add("correct");
+                } else if (SECRET_WORD.includes(guess[i])) {
+                    tile.classList.add("present");
+                } else {
+                    tile.classList.add("absent");
+                }
+            }
+
+            if (guess === SECRET_WORD) {
+                message.innerText = "Complimenti! Hai indovinato! 🎉💍";
+                document.getElementById("controls").style.display = "none";
+                return;
+            }
+
+            currentAttempt++;
+            inputBox.value = "";
+
+            if (currentAttempt >= MAX_ATTEMPTS) {
+                message.innerText = `Tentativi finiti! La parola era: ${SECRET_WORD} ❤️`;
+                document.getElementById("controls").style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

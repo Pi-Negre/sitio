@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Nostro Matrimonio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Intestazione / Copertina -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>A & B</h1>
+            <p class="date">00.00.2027</p>
+            <p class="location">📍 Roma, Italia</p>
+            <a href="#rsvp" class="btn">Conferma Presenza (RSVP)</a>
+        </div>
+    </header>
+
+    <!-- Menu di Navigazione -->
+    <nav class="navbar">
+        <a href="#info">Info Utili</a>
+        <a href="#programma">Programma</a>
+        <a href="giochi/index.html" class="nav-games">🎮 Area Giochi</a>
+    </nav>
+
+    <!-- Sezione Informazioni -->
+    <section id="info" class="container">
+        <h2>I Dettagli</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>La Cerimonia</h3>
+                <p>Ore 16:00 - Chiesa di San Giovanni</p>
+                <p>Via del Corso, Roma</p>
+            </div>
+            <div class="card">
+                <h3>Il Ricevimento</h3>
+                <p>Ore 18:00 - Villa Bellavista</p>
+                <p>Via Appia Antica, Roma</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sezione RSVP (Form di conferma) -->
+    <section id="rsvp" class="container bg-light">
+        <h2>Ci sarai?</h2>
+        <p>Ti preghiamo di confermare la tua presenza entro il 30 Aprile.</p>
+        
+        <!-- Nota: Questo è un form d'esempio. Per farlo funzionare senza database 
+             potete usare servizi gratuiti come Formspree o un link a Google Moduli -->
+        <form class="rsvp-form">
+            <input type="text" placeholder="Nome e Cognome" required>
+            <input type="email" placeholder="La tua Email" required>
+            <select required>
+                <option value="" disabled selected>Parteciperai?</option>
+                <option value="si">Sì, verrò con gioia!</option>
+                <option value="no">Purtroppo non potrò esserci</option>
+            </select>
+            <textarea placeholder="Allergie, intolleranze o note particolari..."></textarea>
+            <button type="submit" class="btn">Invia Conferma</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>Fatto con ❤️ da Sposo & Sposa</p>
+    </footer>
+
+</body>
+</html>
