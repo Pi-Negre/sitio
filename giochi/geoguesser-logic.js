@@ -1,5 +1,5 @@
 // ⚠️ IMPORTANTE: Sostituisci questo testo con il tuo URL reale di Google Apps Script (lascia le virgolette)
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZL04nemGa7zkFajxKMpCO2LuzLCNIRHSInqbhMg1I8uwVy9hgy00wB3ocT1q7a63E/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzeRf5-HyXYqula6r3t03VkgZYcjIQk30gxEtbVG9rXDeGiOOUm7nK7dBZTkMhr8GV8/exec";
 
 const langData = {
     it: {
