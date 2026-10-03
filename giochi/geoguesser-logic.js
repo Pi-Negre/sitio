@@ -11,13 +11,13 @@ const langData = {
 };
 
 const tappe = [
-    { foto: "assets/tappa1.jpg", lat: 45.4642, lng: 9.1900, it: "Milano! La nostra città natale, dove si può mangiare il miglior gelato e la migliore pizza.", en: "Milan! Our hometown, where you can eat the best ice cream and the best pizza." },
-    { foto: "assets/tappa2.jpg", lat: 41.3851, lng: 2.1734, it: "Barcellona! Dove abbiamo vissuto negli ultimi anni e dove abbiamo trovato una seconda casa.", en: "Barcelona! Where we have lived for the past few years and where we found a second home." },
-    { foto: "assets/tappa3.jpg", lat: 37.4467, lng: 24.9427, it: "Syros! Un paradiso delle Cicladi, unica isola greca in cui si trovi una Lidl.", en: "Syros! A paradise in the Cyclades, and the only Greek island where you can actually find a Lidl." },
+    { foto: "assets/tappa1.jpg", lat: 45.491706516674256, lng: 9.1530605076123, it: "Milano! La nostra città natale, dove si può mangiare il miglior gelato e la migliore pizza.", en: "Milan! Our hometown, where you can eat the best ice cream and the best pizza." },
+    { foto: "assets/tappa2.jpg", lat: 41.42492065563975, lng: 2.185793910563726, it: "Barcellona! Dove abbiamo vissuto negli ultimi anni e dove abbiamo trovato una seconda casa.", en: "Barcelona! Where we have lived for the past few years and where we found a second home." },
+    { foto: "assets/tappa3.jpg", lat: 37.445704140675474, lng: 24.94366071688098, it: "Syros! Un paradiso delle Cicladi, unica isola greca in cui si trovi una Lidl.", en: "Syros! A paradise in the Cyclades, and the only Greek island where you can actually find a Lidl." },
     { foto: "assets/tappa4.jpg", lat: 40.5824, lng: -0.2185, it: "Cinctorres! Dove abbiamo visto la nostra prima eclissi totale. Ci sono anche i dinosauri.", en: "Cinctorres! Where we saw our very first total solar eclipse. There are also dinosaurs here." },
-    { foto: "assets/tappa5.jpg", lat: 46.5332, lng: 8.9392, it: "Olivone! Tra le maestose montagne svizzere, dove si può trovare la pace e la gioia.", en: "Olivone! Among the majestic Swiss mountains, where you can find peace and joy." },
+    { foto: "assets/tappa5.jpg", lat: 46.57378272007491, lng: 8.988843794065533, it: "Olivone! Tra le maestose montagne svizzere, dove si può trovare la pace e la gioia.", en: "Olivone! Among the majestic Swiss mountains, where you can find peace and joy." },
     { foto: "assets/tappa6.jpg", lat: 47.4979, lng: 19.0402, it: "Budapest! Ci siamo passati per solo otto ore... È carina.", en: "Budapest! We only stopped by for eight hours... It's nice." },
-    { foto: "assets/tappa7.jpg", lat: 46.4344, lng: 8.3294, it: "Il Blinnenhorn! Dove abbiamo deciso di sposarci.", en: "The Blinnenhorn! Where we decided to get married." }
+    { foto: "assets/tappa7.jpg", lat: 46.42629399216806, lng: 8.307930134573258, it: "Il Blinnenhorn! Dove abbiamo deciso di sposarci.", en: "The Blinnenhorn! Where we decided to get married." }
 ];
 
 let currentStage = 0, currentLang = localStorage.getItem('selectedLanguage') || 'it';
