@@ -39,13 +39,34 @@ h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,8vw,2.7rem);l
 .choice{background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 8px 12px;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;
 transition:transform .3s cubic-bezier(.3,1.4,.5,1),border-color .25s,box-shadow .25s,background .25s}
 .choice:hover{transform:translateY(-3px)}
-.choice svg.art{width:100%;max-width:120px;height:64px;stroke:none}
+/* foto reali (assets/*.jpg) sopra l'illustrazione di riserva */
+.pic{position:relative;width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--soft)}
+.pic svg,.pic img{position:absolute;inset:0;width:100%;height:100%;stroke:none}
+.pic img{object-fit:cover;transition:transform .5s}
+.choice:hover .pic img{transform:scale(1.06)}
+.char .pic{aspect-ratio:1/1}
+.char .pic img{object-fit:contain;object-position:center bottom}
+.namebox{margin-bottom:18px}
+.namebox input{font:inherit;font-family:var(--display);font-size:1.15rem;text-align:center;width:80%;max-width:300px;padding:10px 8px;border:none;border-bottom:2px solid var(--ink);background:transparent;color:var(--ink);outline:none}
+.namebox input:focus{border-bottom-color:var(--accent)}
+.namebox input.bad{animation:shake .4s;border-bottom-color:var(--accent)}
+#name-err{color:var(--accent);font-size:.85rem;min-height:1.3em;margin-top:4px;font-weight:600}
+.hud #hud-lvl{color:var(--hero)}
+.toast{position:absolute;top:14px;left:50%;translate:-50% 0;background:var(--accent);color:#fff;font-weight:700;padding:6px 18px;border-radius:999px;opacity:0;pointer-events:none}
+.toast.show{animation:toast 1.6s ease both}
+@keyframes toast{0%{opacity:0;translate:-50% -14px}15%,75%{opacity:1;translate:-50% 0}100%{opacity:0;translate:-50% -8px}}
+#end .score{font-family:var(--display);font-size:1.5rem;font-weight:700;opacity:1;animation:up .5s .25s both}
+.board{margin-top:18px}
+.board table{width:100%;border-collapse:collapse;font-size:.95rem;margin-top:6px}
+.board th{background:var(--ink);color:#fff;padding:9px 10px;text-align:left}
+.board td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+.board tbody tr:first-child td{font-weight:700;color:var(--accent)}
+.board tr.me td{background:var(--soft);font-weight:700}
 .choice strong{font-family:var(--display);font-size:1.05rem}
 .choice small{color:var(--muted);font-size:.8rem;line-height:1.3}
 .choice[aria-pressed=true]{border-color:var(--accent);background:var(--soft);box-shadow:0 8px 20px rgba(0,0,0,.12);transform:translateY(-3px)}
 .choice[aria-pressed=true]::after{content:"";position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L19 7'/%3E%3C/svg%3E") center/11px no-repeat;animation:pop .35s cubic-bezier(.3,1.8,.5,1)}
 @keyframes pop{from{scale:0}}
-.char .art{max-width:64px}
 
 .btn{display:inline-block;background:var(--accent);color:#fff;border:none;border-radius:999px;padding:14px 38px;font-weight:700;font-size:1.05rem;cursor:pointer;transition:background .25s,transform .25s,box-shadow .25s}
 .btn:hover{background:var(--accent-d);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.2)}
@@ -100,14 +121,15 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:360/500}
   <p class="sub" data-i="subtitle"></p>
 
   <section id="setup" class="panel enter">
+    <div class="namebox"><p class="step" data-i="nameLabel"></p><input id="player-name" type="text" maxlength="30" autocomplete="name"><p id="name-err" role="alert"></p></div>
     <p class="step" data-i="char"></p>
     <div class="choices char" role="group">
       <button class="choice" data-char="sposo" aria-pressed="true">
-        <svg class="art" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 64c0-14 10-22 24-22s24 8 24 22Z" fill="#1d2a44"/><path d="M26 42l6 12 6-12Z" fill="#fff"/><path d="M28 47l4 2-4 2ZM36 47l-4 2 4 2Z" fill="#a82e3a"/><circle cx="32" cy="26" r="11" fill="#f1c7a0"/><path d="M21 25c0-9 6-13 11-13s11 4 11 13c-3-5-8-6-11-6s-8 1-11 6Z" fill="#2b2118"/></svg>
+        <div class="pic"><svg class="art" preserveAspectRatio="xMidYMax slice" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 64c0-14 10-22 24-22s24 8 24 22Z" fill="#1d2a44"/><path d="M26 42l6 12 6-12Z" fill="#fff"/><path d="M28 47l4 2-4 2ZM36 47l-4 2 4 2Z" fill="#a82e3a"/><circle cx="32" cy="26" r="11" fill="#f1c7a0"/><path d="M21 25c0-9 6-13 11-13s11 4 11 13c-3-5-8-6-11-6s-8 1-11 6Z" fill="#2b2118"/></svg><img src="assets/sposo.png" alt="" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/sposo.jpg'}else{this.remove()}"></div>
         <strong data-i="sposo"></strong><small data-i="sposoSub"></small>
       </button>
       <button class="choice" data-char="sposa" aria-pressed="false">
-        <svg class="art" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6C18 6 12 20 12 36c0 8 4 14 4 14l6-8V26c0-6 5-10 10-10s10 4 10 10v16l6 8s4-6 4-14C52 20 46 6 32 6Z" fill="#fff" stroke="#d9cfc0" stroke-width="1.2"/><path d="M10 64c0-10 6-16 14-18h16c8 2 14 8 14 18Z" fill="#fdfaf3" stroke="#d9cfc0" stroke-width="1.2"/><circle cx="32" cy="29" r="10" fill="#f1c7a0"/><path d="M22 28c0-8 5-12 10-12s10 4 10 12c-3-4-7-5-10-5s-7 1-10 5Z" fill="#6b4226"/><circle cx="32" cy="15" r="4" fill="#6b4226"/><circle cx="26" cy="50" r="2.6" fill="#e58aa5"/><circle cx="32" cy="52" r="2.6" fill="#f4c6d2"/><circle cx="38" cy="50" r="2.6" fill="#e58aa5"/></svg>
+        <div class="pic"><svg class="art" preserveAspectRatio="xMidYMax slice" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6C18 6 12 20 12 36c0 8 4 14 4 14l6-8V26c0-6 5-10 10-10s10 4 10 10v16l6 8s4-6 4-14C52 20 46 6 32 6Z" fill="#fff" stroke="#d9cfc0" stroke-width="1.2"/><path d="M10 64c0-10 6-16 14-18h16c8 2 14 8 14 18Z" fill="#fdfaf3" stroke="#d9cfc0" stroke-width="1.2"/><circle cx="32" cy="29" r="10" fill="#f1c7a0"/><path d="M22 28c0-8 5-12 10-12s10 4 10 12c-3-4-7-5-10-5s-7 1-10 5Z" fill="#6b4226"/><circle cx="32" cy="15" r="4" fill="#6b4226"/><circle cx="26" cy="50" r="2.6" fill="#e58aa5"/><circle cx="32" cy="52" r="2.6" fill="#f4c6d2"/><circle cx="38" cy="50" r="2.6" fill="#e58aa5"/></svg><img src="assets/sposa.png" alt="" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/sposa.jpg'}else{this.remove()}"></div>
         <strong data-i="sposa"></strong><small data-i="sposaSub"></small>
       </button>
     </div>
@@ -115,11 +137,11 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:360/500}
     <p class="step" data-i="city"></p>
     <div class="choices" role="group">
       <button class="choice" data-city="milano" aria-pressed="true">
-        <svg class="art" viewBox="0 0 120 64" aria-hidden="true"><g fill="#8d939c"><rect x="12" y="44" width="96" height="20"/><path d="M12 44V36l12-6 12 6 12-8 12 8h24l12-8 12 8 12 6v8Z" fill="#a7adb5"/><path d="M20 44V26l3-14 3 14v18ZM32 44V22l3-16 3 16v18ZM44 44V20l3-14 3 14v24ZM56 44V16l4-12 4 12v28ZM70 44V20l3-14 3 14v24ZM82 44V22l3-16 3 16v22ZM94 44V26l3-14 3 14v18Z"/></g><circle cx="60" cy="4" r="2.4" fill="#d9a441"/><g fill="#6c727a"><rect x="30" y="50" width="6" height="10" rx="3"/><rect x="57" y="50" width="6" height="14" rx="3"/><rect x="84" y="50" width="6" height="10" rx="3"/></g></svg>
+        <div class="pic"><svg class="art" preserveAspectRatio="xMidYMax slice" viewBox="0 0 120 64" aria-hidden="true"><g fill="#8d939c"><rect x="12" y="44" width="96" height="20"/><path d="M12 44V36l12-6 12 6 12-8 12 8h24l12-8 12 8 12 6v8Z" fill="#a7adb5"/><path d="M20 44V26l3-14 3 14v18ZM32 44V22l3-16 3 16v18ZM44 44V20l3-14 3 14v24ZM56 44V16l4-12 4 12v28ZM70 44V20l3-14 3 14v24ZM82 44V22l3-16 3 16v22ZM94 44V26l3-14 3 14v18Z"/></g><circle cx="60" cy="4" r="2.4" fill="#d9a441"/><g fill="#6c727a"><rect x="30" y="50" width="6" height="10" rx="3"/><rect x="57" y="50" width="6" height="14" rx="3"/><rect x="84" y="50" width="6" height="10" rx="3"/></g></svg><img src="assets/milano.jpg" alt="" onerror="this.remove()"></div>
         <strong data-i="milano"></strong><small data-i="milanoSub"></small>
       </button>
       <button class="choice" data-city="barcellona" aria-pressed="false">
-        <svg class="art" viewBox="0 0 120 64" aria-hidden="true"><circle cx="96" cy="16" r="11" fill="#f4b94a"/><g fill="#c9784a"><rect x="30" y="20" width="9" height="44" rx="2"/><rect x="45" y="10" width="9" height="54" rx="2"/><rect x="60" y="14" width="9" height="50" rx="2"/><rect x="75" y="24" width="9" height="40" rx="2"/><ellipse cx="34.5" cy="20" rx="4.5" ry="8"/><ellipse cx="49.5" cy="10" rx="4.5" ry="9"/><ellipse cx="64.5" cy="14" rx="4.5" ry="9"/><ellipse cx="79.5" cy="24" rx="4.5" ry="8"/></g><g fill="#e0584a"><circle cx="34.5" cy="10" r="2"/><circle cx="49.5" cy="0" r="2"/><circle cx="64.5" cy="4" r="2"/><circle cx="79.5" cy="14" r="2"/></g><path d="M14 64V34" stroke="#7a5230" stroke-width="3" fill="none"/><g fill="#3f8f55"><ellipse cx="6" cy="34" rx="9" ry="3.5" transform="rotate(-20 6 34)"/><ellipse cx="22" cy="34" rx="9" ry="3.5" transform="rotate(20 22 34)"/><ellipse cx="14" cy="28" rx="3.5" ry="9"/></g></svg>
+        <div class="pic"><svg class="art" preserveAspectRatio="xMidYMax slice" viewBox="0 0 120 64" aria-hidden="true"><circle cx="96" cy="16" r="11" fill="#f4b94a"/><g fill="#c9784a"><rect x="30" y="20" width="9" height="44" rx="2"/><rect x="45" y="10" width="9" height="54" rx="2"/><rect x="60" y="14" width="9" height="50" rx="2"/><rect x="75" y="24" width="9" height="40" rx="2"/><ellipse cx="34.5" cy="20" rx="4.5" ry="8"/><ellipse cx="49.5" cy="10" rx="4.5" ry="9"/><ellipse cx="64.5" cy="14" rx="4.5" ry="9"/><ellipse cx="79.5" cy="24" rx="4.5" ry="8"/></g><g fill="#e0584a"><circle cx="34.5" cy="10" r="2"/><circle cx="49.5" cy="0" r="2"/><circle cx="64.5" cy="4" r="2"/><circle cx="79.5" cy="14" r="2"/></g><path d="M14 64V34" stroke="#7a5230" stroke-width="3" fill="none"/><g fill="#3f8f55"><ellipse cx="6" cy="34" rx="9" ry="3.5" transform="rotate(-20 6 34)"/><ellipse cx="22" cy="34" rx="9" ry="3.5" transform="rotate(20 22 34)"/><ellipse cx="14" cy="28" rx="3.5" ry="9"/></g></svg><img src="assets/barcellona.jpg" alt="" onerror="this.remove()"></div>
         <strong data-i="barcellona"></strong><small data-i="barcellonaSub"></small>
       </button>
     </div>
@@ -127,20 +149,24 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:360/500}
   </section>
 
   <section id="stage" class="panel" hidden>
-    <div class="hud"><span id="hud-city"></span><span id="hud-dist"></span></div>
+    <div class="hud"><span id="hud-city"></span><span id="hud-lvl"></span><span id="hud-dist"></span></div>
     <div class="track" aria-hidden="true"><div class="fill" id="fill"></div><div class="dot" id="dot"></div></div>
     <div class="canvas-wrap" id="wrap">
       <canvas id="gameCanvas" width="360" height="500"></canvas>
-      <div class="flash"></div>
+      <div class="flash"></div><div class="toast" id="toast"></div>
       <div class="overlay" id="count"><div class="big" id="count-n"></div></div>
       <div class="overlay" id="end">
         <svg id="end-icon" viewBox="0 0 24 24" aria-hidden="true"></svg>
-        <h2 id="end-title"></h2><p id="end-msg"></p>
+        <h2 id="end-title"></h2><p id="end-msg"></p><p class="score" id="end-score"></p>
         <div class="row"><button class="btn" id="btn-again" data-i="again"></button><button class="btn ghost" id="btn-change" data-i="change"></button></div>
       </div>
     </div>
     <p class="hint kbd" data-i="controls"></p><p class="hint touch" data-i="touch"></p>
     <div class="pad"><button id="pad-l" aria-label="Left"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button id="pad-r" aria-label="Right"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
+  </section>
+
+  <section id="board" class="panel board"><h2 class="step" data-i="boardTitle"></h2>
+    <table><thead><tr><th data-i="thPos"></th><th data-i="thName"></th><th data-i="thCity"></th><th data-i="thScore"></th></tr></thead><tbody id="board-body"></tbody></table>
   </section>
 </main>
 

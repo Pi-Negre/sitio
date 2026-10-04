@@ -1,6 +1,8 @@
 (function () {
 'use strict';
-const W = 360, H = 500, RL = 44, RR = 316, TARGET = 1500, PY = 430, MAXV = 260;
+const W = 360, H = 500, RL = 44, RR = 316, TARGET = 3600, PY = 430, MAXV = 260;
+// Incolla qui l'URL /exec del tuo Google Apps Script per la classifica (vedi istruzioni)
+const BICI_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRap5Szo01QEmwXEave2ZLNWZHPtWhkSsehzKOaYAijTa_pnAw8sB1_Jf8KcWMR9KU/exec";
 const $ = id => document.getElementById(id);
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = a => a[Math.floor(Math.random() * a.length)];
@@ -11,14 +13,14 @@ const T = {
   it: { title: "Bike Escape", subtitle: "Schiva gli ostacoli e arriva al matrimonio in tempo!", char: "1. Scegli il personaggio", city: "2. Scegli l'ambientazione",
     sposo: "Sposo", sposoSub: "Giacca blu notte", sposa: "Sposa", sposaSub: "Abito e velo", milano: "Milano", milanoSub: "Tra Duomo e nebbia", barcellona: "Barcellona", barcellonaSub: "Sole e Sagrada Família",
     play: "Gioca", back: "← Torna all'Area Giochi", controls: "Frecce sinistra e destra (oppure A / D) per muoverti.", touch: "Tieni premuti i tasti o trascina sulla strada.",
-    dest: "Al matrimonio", go: "Via!", finish: "Arrivo", again: "Rigioca", change: "Cambia scelta",
+    dest: "Al matrimonio", go: "Via!", finish: "Arrivo", again: "Rigioca", change: "Cambia scelta", level: "Livello", score: "Punteggio", nameLabel: "Il tuo nome", namePh: "Es. Mario Rossi", nameReq: "Inserisci il tuo nome per giocare", boardTitle: "Classifica", thPos: "Pos.", thName: "Giocatore", thCity: "Città", thScore: "Punti", boardLoading: "Caricamento classifica…", boardEmpty: "Ancora nessun punteggio.", boardError: "Classifica non disponibile.", boardOff: "Classifica non ancora collegata.",
     winTitle_m: "Ce l'hai fatto!", winTitle_f: "Ce l'hai fatta!", winMsg_m: "Sei arrivato in tempo: gli invitati ti aspettano.", winMsg_f: "Sei arrivata in tempo: gli invitati ti aspettano.",
     loseTitle: "Game over", loseMsg_m: "Ti sei scontrato con {o}.", loseMsg_f: "Ti sei scontrata con {o}.",
     ob: { ped: "un pedone", dog: "un cane", bin: "un cestino", hog: "un riccio", tram: "un tram", palm: "una palma", scooter: "un monopattino" } },
   en: { title: "Bike Escape", subtitle: "Dodge the obstacles and reach the wedding on time!", char: "1. Choose your character", city: "2. Choose the location",
     sposo: "Groom", sposoSub: "Midnight blue suit", sposa: "Bride", sposaSub: "Dress and veil", milano: "Milan", milanoSub: "Duomo and fog", barcellona: "Barcelona", barcellonaSub: "Sun and Sagrada Família",
     play: "Play", back: "← Back to Games Area", controls: "Left and right arrow keys (or A / D) to move.", touch: "Hold the buttons or drag on the road.",
-    dest: "To the wedding", go: "Go!", finish: "Finish", again: "Play again", change: "Change selection",
+    dest: "To the wedding", go: "Go!", finish: "Finish", again: "Play again", change: "Change selection", level: "Level", score: "Score", nameLabel: "Your name", namePh: "E.g. John Smith", nameReq: "Enter your name to play", boardTitle: "Leaderboard", thPos: "Pos.", thName: "Player", thCity: "City", thScore: "Points", boardLoading: "Loading leaderboard…", boardEmpty: "No scores yet.", boardError: "Leaderboard unavailable.", boardOff: "Leaderboard not connected yet.",
     winTitle: "You made it!", winMsg: "You arrived on time: the guests are waiting.", loseTitle: "Game over", loseMsg: "You crashed into {o}.",
     ob: { ped: "a pedestrian", dog: "a dog", bin: "a bin", hog: "a hedgehog", tram: "a tram", palm: "a palm tree", scooter: "a scooter" } }
 };
@@ -30,9 +32,9 @@ const tx = k => { const L = T[lang]; const v = L[k + '_' + g$()] !== undefined ?
 /* ---------- Temi città ---------- */
 const CITY = {
   milano: { road: '#4b5059', edge: '#d8cfc6', line: '#f1ede6', accent: '#b3202a', roofs: ['#b8a9a0', '#cdbfb4', '#9ea3a8', '#c9aeb0'],
-    coats: ['#222a35', '#6b7280', '#8c3b3b', '#3f5f7a', '#4b4b4b'], conf: ['#b3202a', '#ffffff', '#d9a441', '#1f2933'], pool: ['ped', 'ped', 'dog', 'bin', 'hog', 'tram'] },
+    coats: ['#e0b04a', '#c0392b', '#f1f1f1', '#4a8bd0', '#e58aa5'], conf: ['#b3202a', '#ffffff', '#d9a441', '#1f2933'], pool: ['tram', 'tram', 'ped', 'ped', 'dog', 'bin', 'hog'], bin: '#2f8f5b', tram: '#e07b2b' },
   barcellona: { road: '#6a5a55', edge: '#efd9a8', line: '#ffe08a', accent: '#d65a31', roofs: ['#d9683a', '#e8a24a', '#c6502f', '#f0c27a'],
-    coats: ['#e07a3f', '#f2c14e', '#2e9aa0', '#d9577b', '#f4f1e8'], conf: ['#d65a31', '#f4b94a', '#1c8c8c', '#ffffff'], pool: ['ped', 'ped', 'dog', 'bin', 'palm', 'scooter'] }
+    coats: ['#e07a3f', '#f2c14e', '#2e9aa0', '#d9577b', '#f4f1e8'], conf: ['#d65a31', '#f4b94a', '#1c8c8c', '#ffffff'], pool: ['dog', 'dog', 'scooter', 'scooter', 'palm', 'ped', 'bin'], bin: '#2f7fb5' }
 };
 
 /* ---------- Canvas ---------- */
@@ -54,33 +56,33 @@ function palm(t, ph, s) {
 
 /* ---------- Ostacoli (visti dall'alto) ---------- */
 const OB = {
-  ped: { w: 30, h: 30, sp: [110, 200], draw(o, t) {
+  ped: { w: 30, h: 30, rel: [-40, 50], draw(o, t) {
     ell(2, 3, 13, 8, SH); const s = Math.sin(t * 9 + o.ph) * 3;
     ell(-13, s, 3, 5, o.col); ell(13, -s, 3, 5, o.col); ell(0, 0, 12, 7, o.col);
     ell(0, 0, 6, 6, SKIN); ell(0, -1.5, 6, 5, o.hair); } },
-  dog: { w: 22, h: 32, sp: [120, 220], draw(o, t) {
+  dog: { w: 22, h: 32, rel: [90, 170], draw(o, t) {
     ell(2, 3, 10, 15, SH); line(0, -12, Math.sin(t * 16 + o.ph) * 5, -21, o.col, 3);
     ell(0, 0, 8, 13, o.col); ell(0, 13, 6, 6, o.col); ell(-5.5, 11, 2.5, 4, 'rgba(0,0,0,.35)'); ell(5.5, 11, 2.5, 4, 'rgba(0,0,0,.35)'); ell(0, 18, 1.8, 1.6, '#222'); } },
-  bin: { w: 26, h: 26, sp: [100, 170], draw() {
-    ell(2, 3, 13, 13, SH); ell(0, 0, 12, 12, '#5d6772'); ell(0, 0, 9, 9, '#8a949f'); ell(0, 0, 3, 3, '#454d56'); } },
-  hog: { w: 24, h: 20, sp: [110, 190], draw(o) {
+  bin: { w: 26, h: 26, rel: [0, 0], draw(o) {
+    ell(2, 3, 13, 13, SH); ell(0, 0, 12, 12, o.col); ell(0, 0, 9, 9, 'rgba(255,255,255,.3)'); ell(0, 0, 3, 3, 'rgba(0,0,0,.35)'); } },
+  hog: { w: 24, h: 20, rel: [-15, 15], draw(o) {
     ell(1, 2, 12, 9, SH); ell(0, 0, 11, 8.5, '#6e5240');
     for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2; line(Math.cos(a) * 8, Math.sin(a) * 6, Math.cos(a) * 13, Math.sin(a) * 10.5, '#3d2c20', 1.6); }
     ell(0, 8, 3.5, 3, '#c9a88a'); ell(-1.6, 9.5, .9, .9, '#222'); ell(1.6, 9.5, .9, .9, '#222'); } },
-  tram: { w: 44, h: 116, sp: [140, 175], draw(o) {
+  tram: { w: 44, h: 116, rel: [90, 130], draw(o) {
     rr(-20, -54, 46, 118, 9, SH); rr(-22, -58, 44, 116, 8, o.col); rr(-14, -51, 28, 102, 6, 'rgba(255,255,255,.28)');
     for (let i = 0; i < 6; i++) rr(-5, -44 + i * 17, 10, 6, 2, 'rgba(0,0,0,.25)');
     line(-22, 0, 22, 0, 'rgba(0,0,0,.35)', 2); line(-8, -6, 8, 6, '#222', 1.6); line(8, -6, -8, 6, '#222', 1.6);
     ell(-13, 55, 4, 3, '#ffe9a8'); ell(13, 55, 4, 3, '#ffe9a8'); } },
-  palm: { w: 40, h: 40, sp: [100, 170], draw(o, t) { ell(3, 4, 18, 18, SH); palm(t, o.ph, 1); } },
-  scooter: { w: 20, h: 46, sp: [150, 250], draw(o) {
+  palm: { w: 40, h: 40, rel: [0, 0], draw(o, t) { ell(3, 4, 18, 18, SH); palm(t, o.ph, 1); } },
+  scooter: { w: 20, h: 46, rel: [-80, -40], draw(o) {
     ell(2, 3, 9, 24, SH); rr(-4, -10, 8, 32, 3, '#1c8c8c'); rr(-1.5, 20, 3, 6, 1.5, '#222');
     line(0, -9, 0, -17, '#333', 2); rr(-11, -20, 22, 3, 1.5, '#333');
     ell(0, -4, 8, 5, o.col); ell(0, -5, 5, 5, o.hair); } }
 };
 
 /* ---------- Stato ---------- */
-const g = { mode: 'setup', t: 0, sf: 0, dist: 0, roadOff: 0, cd: 0, cdN: -1, endT: 0, shown: false, raf: 0, last: 0, drag: null,
+const g = { mode: 'setup', t: 0, sf: 0, dist: 0, elapsed: 0, level: 1, score: 0, lostTo: null, roadOff: 0, cd: 0, cdN: -1, endT: 0, shown: false, raf: 0, last: 0, drag: null,
   p: { x: W / 2, vx: 0, tilt: 0 }, obs: [], sc: { l: [], r: [] }, conf: [], keys: { l: 0, r: 0 }, lastHud: -1 };
 
 function mkItem() {
@@ -93,7 +95,7 @@ function fillScene(arr) {
 }
 
 function resetRun() {
-  g.mode = 'count'; g.cd = 3.4; g.cdN = -1; g.dist = 0; g.sf = 0.3; g.endT = 0; g.shown = false;
+  g.mode = 'count'; g.cd = 3.4; g.cdN = -1; g.dist = 0; g.elapsed = 0; g.level = 1; g.score = 0; g.sf = 0.3; g.endT = 0; g.shown = false;
   g.obs = []; g.conf = []; g.sc.l = []; g.sc.r = []; g.p.x = W / 2; g.p.vx = 0; g.p.tilt = 0; g.lastHud = -1;
   fillScene(g.sc.l); fillScene(g.sc.r);
   $('end').classList.remove('show'); wrap.classList.remove('hit');
@@ -102,8 +104,9 @@ function resetRun() {
 
 function spawn() {
   const C = CITY[city], type = pick(C.pool), d = OB[type];
-  g.obs.push({ type, x: rnd(RL + d.w / 2 + 4, RR - d.w / 2 - 4), y: -d.h, sp: rnd(d.sp[0], d.sp[1]), ph: Math.random() * 6,
-    col: type === 'tram' ? '#cf6a2c' : pick(C.coats), hair: pick(['#2b2118', '#6b4226', '#a8793f', '#1a1a1a']) });
+  const col = type === 'tram' ? C.tram : type === 'bin' ? C.bin : type === 'dog' ? pick(['#8b5a2b', '#e0b979', '#f3ede0', '#3b2a20']) : pick(C.coats);
+  g.obs.push({ type, x: rnd(RL + d.w / 2 + 4, RR - d.w / 2 - 4), y: -d.h, rel: rnd(d.rel[0], d.rel[1]), ph: Math.random() * 6, col,
+    hair: pick(['#2b2118', '#6b4226', '#a8793f', '#1a1a1a']) });
 }
 
 function setCount(n) {
@@ -113,11 +116,11 @@ function setCount(n) {
 }
 
 function lose(o) {
-  g.mode = 'lose'; g.endT = 0; g.lostTo = o.type;
+  g.mode = 'lose'; g.endT = 0; g.lostTo = o.type; finishRun(false);
   wrap.classList.remove('hit'); void wrap.offsetWidth; wrap.classList.add('hit');
 }
 function win() {
-  g.mode = 'win'; g.endT = 0;
+  g.mode = 'win'; g.endT = 0; finishRun(true);
   const C = CITY[city];
   for (let i = 0; i < 90; i++) g.conf.push({ x: W / 2 + rnd(-40, 40), y: H * 0.45, vx: rnd(-170, 170), vy: rnd(-380, -120), r: rnd(0, 6), vr: rnd(-8, 8), w: rnd(5, 9), h: rnd(3, 6), c: pick(C.conf) });
 }
@@ -127,15 +130,24 @@ function showEnd(won) {
   $('end-icon').innerHTML = won ? '<circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.5 3.5L17 9"/>' : '<circle cx="12" cy="12" r="10"/><path d="M9 9l6 6M15 9l-6 6"/>';
   $('end-title').textContent = won ? tx('winTitle') : tx('loseTitle');
   $('end-msg').textContent = won ? tx('winMsg') : tx('loseMsg').replace('{o}', L.ob[g.lostTo]);
+  $('end-score').textContent = tx('score') + ': ' + g.score;
   const el = $('end-icon'); el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
   $('end').classList.add('show'); g.shown = true;
 }
 
 /* ---------- Aggiornamento ---------- */
+function toast() {
+  const el = $('toast'); el.textContent = tx('level') + ' ' + g.level;
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+}
+
 function update(dt) {
   g.t += dt;
-  const tgt = { count: 0.3, play: 1, win: 0.3, lose: 0, setup: 0 }[g.mode];
+  const tgt = { ready: 0.3, count: 0.3, play: 1, win: 0.3, lose: 0, setup: 0 }[g.mode] || 0;
   g.sf += (tgt - g.sf) * Math.min(1, dt * 3);
+  if (!isFinite(g.sf)) g.sf = 0;
+  // La difficolta' cresce con la strada fatta: velocita' da 1x a 1.8x, piu' ostacoli al secondo
+  const lvl = clamp(g.dist / TARGET, 0, 1), spd = 1 + 0.8 * lvl;
 
   const p = g.p, can = g.mode === 'play' || g.mode === 'count';
   let vt = 0;
@@ -147,7 +159,7 @@ function update(dt) {
   p.x = clamp(p.x + p.vx * dt, RL + 14, RR - 14);
   p.tilt = p.vx / MAXV * 0.28;
 
-  const v = 180 * g.sf * dt;
+  const v = 200 * spd * g.sf * dt;
   g.roadOff = (g.roadOff + v) % 40;
   ['l', 'r'].forEach(s => { const a = g.sc[s]; a.forEach(i => { i.y += v; }); g.sc[s] = a.filter(i => i.y < H + 20); fillScene(g.sc[s]); });
 
@@ -157,12 +169,15 @@ function update(dt) {
     if (g.cd <= 0.4 && g.cdN <= 0) g.mode = 'play';
   }
   if (g.mode === 'play') {
-    const rem = TARGET - g.dist;
-    if (rem > 160 && Math.random() < dt * (0.9 + g.dist / TARGET * 0.8)) spawn();
+    g.elapsed += dt;
+    const level = Math.min(5, Math.floor(lvl * 4.99) + 1);
+    if (level > g.level) { g.level = level; toast(); }
+    const last = g.obs[g.obs.length - 1];
+    if (TARGET - g.dist > 220 && (!last || last.y > 70) && Math.random() < dt * (1.3 + 1.7 * lvl)) spawn();
   }
-  if (g.mode === 'play' || g.mode === 'win') g.dist += 100 * dt * g.sf;
+  if (g.mode === 'play' || g.mode === 'win') g.dist += 100 * spd * g.sf * dt;
 
-  g.obs.forEach(o => { o.y += o.sp * g.sf * dt; });
+  g.obs.forEach(o => { o.y += (200 * spd + o.rel) * g.sf * dt; });
   g.obs = g.obs.filter(o => o.y < H + 80);
 
   if (g.mode === 'play') {
@@ -179,12 +194,44 @@ function update(dt) {
   g.conf.forEach(c => { c.vy += 420 * dt; c.x += c.vx * dt; c.y += c.vy * dt; c.r += c.vr * dt; });
   g.conf = g.conf.filter(c => c.y < H + 20);
 
-  const rem = Math.max(0, TARGET - Math.floor(g.dist));
-  if (rem !== g.lastHud) {
-    g.lastHud = rem;
+  const rem = Math.max(0, TARGET - Math.floor(g.dist)), key = rem + '|' + g.level;
+  if (key !== g.lastHud) {
+    g.lastHud = key;
     $('hud-dist').textContent = tx('dest') + ': ' + rem + ' m';
+    $('hud-lvl').textContent = tx('level') + ' ' + g.level + '/5';
     const pc = (1 - rem / TARGET) * 100; $('fill').style.width = pc + '%'; $('dot').style.left = pc + '%';
   }
+}
+
+/* ---------- Classifica ---------- */
+let playerName = localStorage.getItem('bikePlayer') || '';
+function finishRun(won) {
+  g.score = Math.round(Math.min(g.dist, TARGET)) + (won ? Math.max(0, Math.round((60 - g.elapsed) * 20)) : 0);
+  saveScore(g.score, won);
+}
+function boardMsg(key) {
+  const b = $('board-body'); b.innerHTML = '';
+  const tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 4; td.textContent = tx(key); tr.appendChild(td); b.appendChild(tr);
+}
+function saveScore(score, won) {
+  if (!BICI_SCRIPT_URL) return;
+  fetch(BICI_SCRIPT_URL, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ nome: playerName, punteggio: score, citta: city, personaggio: ch, esito: won ? 'arrivo' : 'incidente' }) })
+    .then(() => setTimeout(loadBoard, 1000)).catch(loadBoard);
+}
+function loadBoard() {
+  if (!BICI_SCRIPT_URL) { boardMsg('boardOff'); return; }
+  boardMsg('boardLoading');
+  fetch(BICI_SCRIPT_URL).then(r => r.json()).then(data => {
+    const b = $('board-body'); b.innerHTML = '';
+    if (!Array.isArray(data) || !data.length) { boardMsg('boardEmpty'); return; }
+    data.forEach((row, i) => {
+      const tr = document.createElement('tr');
+      if (row.nome === playerName && Number(row.punteggio) === g.score) tr.className = 'me';
+      [i + 1, row.nome, T[lang][row.citta] || row.citta || '', row.punteggio].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+      b.appendChild(tr);
+    });
+  }).catch(() => boardMsg('boardError'));
 }
 
 /* ---------- Disegno ---------- */
@@ -241,7 +288,7 @@ function draw() {
     ctx.fillStyle = '#fff'; ctx.font = '700 13px "Instrument Sans",sans-serif'; ctx.textAlign = 'center';
     ctx.fillText(tx('finish').toUpperCase(), W / 2, fy - 13); ctx.textAlign = 'start';
   }
-  g.obs.forEach(o => { ctx.save(); ctx.translate(o.x, o.y); OB[o.type].draw(o, g.t); ctx.restore(); });
+  g.obs.forEach(o => { const d = OB[o.type]; ctx.save(); ctx.translate(o.x, o.y); if (o.type !== 'tram') ell(0, 0, d.w * 0.75, d.h * 0.62, 'rgba(255,255,255,.16)'); d.draw(o, g.t); ctx.restore(); });
   drawPlayer();
   g.conf.forEach(c => { ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(c.r); ctx.fillStyle = c.c; ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h); ctx.restore(); });
 
@@ -267,6 +314,9 @@ function swap(from, to, done) {
   }, 280);
 }
 function startGame() {
+  const inp = $('player-name'), name = inp.value.trim();
+  if (!name) { inp.classList.remove('bad'); void inp.offsetWidth; inp.classList.add('bad'); $('name-err').textContent = tx('nameReq'); inp.focus(); return; }
+  playerName = name; localStorage.setItem('bikePlayer', name); $('name-err').textContent = '';
   g.mode = 'ready'; resetRun(); g.mode = 'ready';
   swap($('setup'), $('stage'), () => { g.mode = 'count'; });
   if (!g.raf) { g.last = performance.now(); g.raf = requestAnimationFrame(loop); }
@@ -278,7 +328,7 @@ function toSetup() {
 
 function texts() {
   document.querySelectorAll('[data-i]').forEach(e => { e.textContent = tx(e.dataset.i); });
-  document.documentElement.lang = lang; $('lang-select').value = lang;
+  document.documentElement.lang = lang; $('lang-select').value = lang; $('player-name').placeholder = tx('namePh');
   if (g.mode !== 'setup') { $('hud-city').textContent = tx(city); g.lastHud = -1; }
   if (g.shown && (g.mode === 'win' || g.mode === 'lose')) showEnd(g.mode === 'win');
 }
@@ -298,7 +348,7 @@ $('btn-change').addEventListener('click', toSetup);
 $('lang-select').addEventListener('change', e => { lang = e.target.value; localStorage.setItem('selectedLanguage', lang); texts(); });
 
 const kmap = { ArrowLeft: 'l', a: 'l', A: 'l', ArrowRight: 'r', d: 'r', D: 'r' };
-addEventListener('keydown', e => { const k = kmap[e.key]; if (k) { g.keys[k] = 1; if (e.key.startsWith('Arrow')) e.preventDefault(); } });
+addEventListener('keydown', e => { if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; const k = kmap[e.key]; if (k) { g.keys[k] = 1; if (e.key.startsWith('Arrow')) e.preventDefault(); } });
 addEventListener('keyup', e => { const k = kmap[e.key]; if (k) g.keys[k] = 0; });
 addEventListener('blur', () => { g.keys.l = g.keys.r = 0; });
 [['pad-l', 'l'], ['pad-r', 'r']].forEach(([id, k]) => {
@@ -311,5 +361,7 @@ cv.addEventListener('pointerdown', e => { g.drag = toX(e); if (cv.setPointerCapt
 cv.addEventListener('pointermove', e => { if (g.drag !== null) g.drag = toX(e); });
 ['pointerup', 'pointercancel'].forEach(ev => cv.addEventListener(ev, () => { g.drag = null; }));
 
+$('player-name').value = playerName;
 texts();
+loadBoard();
 })();
