@@ -2,7 +2,7 @@
 'use strict';
 const W = 360, H = 500, RL = 44, RR = 316, TARGET = 3600, PY = 430, MAXV = 260;
 // Incolla qui l'URL /exec del tuo Google Apps Script per la classifica (vedi istruzioni)
-const BICI_SCRIPT_URL = "";
+const BICI_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRap5Szo01QEmwXEave2ZLNWZHPtWhkSsehzKOaYAijTa_pnAw8sB1_Jf8KcWMR9KU/exec";
 const $ = id => document.getElementById(id);
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = a => a[Math.floor(Math.random() * a.length)];
