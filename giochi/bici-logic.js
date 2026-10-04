@@ -2,7 +2,7 @@
 'use strict';
 const W = 360, H = 500, RL = 44, RR = 316, TARGET = 3600, PY = 430, MAXV = 260;
 // Incolla qui l'URL /exec del tuo Google Apps Script per la classifica (vedi istruzioni)
-const BICI_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRap5Szo01QEmwXEave2ZLNWZHPtWhkSsehzKOaYAijTa_pnAw8sB1_Jf8KcWMR9KU/exec";
+const BICI_SCRIPT_URL = "";
 const $ = id => document.getElementById(id);
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = a => a[Math.floor(Math.random() * a.length)];
@@ -13,16 +13,16 @@ const T = {
   it: { title: "Bike Escape", subtitle: "Schiva gli ostacoli e arriva al matrimonio in tempo!", char: "1. Scegli il personaggio", city: "2. Scegli l'ambientazione",
     sposo: "Sposo", sposoSub: "Giacca blu notte", sposa: "Sposa", sposaSub: "Abito e velo", milano: "Milano", milanoSub: "Tra Duomo e nebbia", barcellona: "Barcellona", barcellonaSub: "Sole e Sagrada Família",
     play: "Gioca", back: "← Torna all'Area Giochi", controls: "Frecce sinistra e destra (oppure A / D) per muoverti.", touch: "Tieni premuti i tasti o trascina sulla strada.",
-    dest: "Al matrimonio", go: "Via!", finish: "Arrivo", again: "Rigioca", change: "Cambia scelta", level: "Livello", score: "Punteggio", nameLabel: "Il tuo nome", namePh: "Es. Mario Rossi", nameReq: "Inserisci il tuo nome per giocare", boardTitle: "Classifica", thPos: "Pos.", thName: "Giocatore", thCity: "Città", thScore: "Punti", boardLoading: "Caricamento classifica…", boardEmpty: "Ancora nessun punteggio.", boardError: "Classifica non disponibile.", boardOff: "Classifica non ancora collegata.",
+    dest: "Al matrimonio", go: "Via!", finish: "Arrivo", again: "Rigioca", change: "Cambia scelta", level: "Livello", score: "Punteggio", nameLabel: "Il tuo nome", namePh: "Es. Mario Rossi", nameReq: "Inserisci il tuo nome per giocare", boardTitle: "Classifica", thPos: "Pos.", thName: "Giocatore", thCity: "Città", thScore: "Punti", boardLoading: "Caricamento classifica…", boardEmpty: "Ancora nessun punteggio.", boardError: "Classifica non disponibile.", boardOff: "Classifica non ancora collegata.", rings: "Anelli", close: "Per un pelo", dodged: "Schivati", scoreHint: "Raccogli gli anelli (le serie consecutive valgono di più) e sfiora gli ostacoli per guadagnare punti.",
     winTitle_m: "Ce l'hai fatto!", winTitle_f: "Ce l'hai fatta!", winMsg_m: "Sei arrivato in tempo: gli invitati ti aspettano.", winMsg_f: "Sei arrivata in tempo: gli invitati ti aspettano.",
     loseTitle: "Game over", loseMsg_m: "Ti sei scontrato con {o}.", loseMsg_f: "Ti sei scontrata con {o}.",
-    ob: { ped: "un pedone", dog: "un cane", bin: "un cestino", hog: "un riccio", tram: "un tram", palm: "una palma", scooter: "un monopattino" } },
+    ob: { ped: "un pedone", dog: "un cane", bin: "un cestino", hog: "un riccio", tram: "un tram", palm: "una palma", scooter: "un monopattino", roach: "una cucaracha" } },
   en: { title: "Bike Escape", subtitle: "Dodge the obstacles and reach the wedding on time!", char: "1. Choose your character", city: "2. Choose the location",
     sposo: "Groom", sposoSub: "Midnight blue suit", sposa: "Bride", sposaSub: "Dress and veil", milano: "Milan", milanoSub: "Duomo and fog", barcellona: "Barcelona", barcellonaSub: "Sun and Sagrada Família",
     play: "Play", back: "← Back to Games Area", controls: "Left and right arrow keys (or A / D) to move.", touch: "Hold the buttons or drag on the road.",
-    dest: "To the wedding", go: "Go!", finish: "Finish", again: "Play again", change: "Change selection", level: "Level", score: "Score", nameLabel: "Your name", namePh: "E.g. John Smith", nameReq: "Enter your name to play", boardTitle: "Leaderboard", thPos: "Pos.", thName: "Player", thCity: "City", thScore: "Points", boardLoading: "Loading leaderboard…", boardEmpty: "No scores yet.", boardError: "Leaderboard unavailable.", boardOff: "Leaderboard not connected yet.",
+    dest: "To the wedding", go: "Go!", finish: "Finish", again: "Play again", change: "Change selection", level: "Level", score: "Score", nameLabel: "Your name", namePh: "E.g. John Smith", nameReq: "Enter your name to play", boardTitle: "Leaderboard", thPos: "Pos.", thName: "Player", thCity: "City", thScore: "Points", boardLoading: "Loading leaderboard…", boardEmpty: "No scores yet.", boardError: "Leaderboard unavailable.", boardOff: "Leaderboard not connected yet.", rings: "Rings", close: "Close calls", dodged: "Dodged", scoreHint: "Collect rings (streaks are worth more) and graze obstacles to earn points.",
     winTitle: "You made it!", winMsg: "You arrived on time: the guests are waiting.", loseTitle: "Game over", loseMsg: "You crashed into {o}.",
-    ob: { ped: "a pedestrian", dog: "a dog", bin: "a bin", hog: "a hedgehog", tram: "a tram", palm: "a palm tree", scooter: "a scooter" } }
+    ob: { ped: "a pedestrian", dog: "a dog", bin: "a bin", hog: "a hedgehog", tram: "a tram", palm: "a palm tree", scooter: "a scooter", roach: "a cockroach" } }
 };
 let lang = localStorage.getItem('selectedLanguage') || 'it'; if (!T[lang]) lang = 'it';
 let ch = 'sposo', city = 'milano';
@@ -34,7 +34,7 @@ const CITY = {
   milano: { road: '#4b5059', edge: '#d8cfc6', line: '#f1ede6', accent: '#b3202a', roofs: ['#b8a9a0', '#cdbfb4', '#9ea3a8', '#c9aeb0'],
     coats: ['#e0b04a', '#c0392b', '#f1f1f1', '#4a8bd0', '#e58aa5'], conf: ['#b3202a', '#ffffff', '#d9a441', '#1f2933'], pool: ['tram', 'tram', 'ped', 'ped', 'dog', 'bin', 'hog'], bin: '#2f8f5b', tram: '#e07b2b' },
   barcellona: { road: '#6a5a55', edge: '#efd9a8', line: '#ffe08a', accent: '#d65a31', roofs: ['#d9683a', '#e8a24a', '#c6502f', '#f0c27a'],
-    coats: ['#e07a3f', '#f2c14e', '#2e9aa0', '#d9577b', '#f4f1e8'], conf: ['#d65a31', '#f4b94a', '#1c8c8c', '#ffffff'], pool: ['dog', 'dog', 'scooter', 'scooter', 'palm', 'ped', 'bin'], bin: '#2f7fb5' }
+    coats: ['#e07a3f', '#f2c14e', '#2e9aa0', '#d9577b', '#f4f1e8'], conf: ['#d65a31', '#f4b94a', '#1c8c8c', '#ffffff'], pool: ['dog', 'dog', 'roach', 'roach', 'scooter', 'palm', 'ped'] }
 };
 
 /* ---------- Canvas ---------- */
@@ -78,11 +78,18 @@ const OB = {
   scooter: { w: 20, h: 46, rel: [-80, -40], draw(o) {
     ell(2, 3, 9, 24, SH); rr(-4, -10, 8, 32, 3, '#1c8c8c'); rr(-1.5, 20, 3, 6, 1.5, '#222');
     line(0, -9, 0, -17, '#333', 2); rr(-11, -20, 22, 3, 1.5, '#333');
-    ell(0, -4, 8, 5, o.col); ell(0, -5, 5, 5, o.hair); } }
+    ell(0, -4, 8, 5, o.col); ell(0, -5, 5, 5, o.hair); } },
+  roach: { w: 28, h: 38, rel: [70, 140], draw(o, t) {
+    ctx.scale(1.25, 1.25);
+    for (let i = 0; i < 3; i++) { const y = -2 + i * 6, a = Math.sin(t * 28 + o.ph + i * 2);
+      line(-4, y, -11, y + 3 + a * 3, '#3b2616', 1.6); line(4, y, 11, y + 3 - a * 3, '#3b2616', 1.6); }
+    line(-1.5, 14, -6 + Math.sin(t * 9 + o.ph) * 3, 25, '#3b2616', 1.2); line(1.5, 14, 6 + Math.sin(t * 9 + o.ph + 2) * 3, 25, '#3b2616', 1.2);
+    ell(1, 3, 6, 10.5, SH); ell(0, 2, 6, 10.5, '#6b4423'); line(0, -7, 0, 11, 'rgba(0,0,0,.35)', 1);
+    ell(-2, 0, 1.6, 6, 'rgba(255,255,255,.3)'); ell(0, 13, 4, 3.4, '#3b2616'); } }
 };
 
 /* ---------- Stato ---------- */
-const g = { mode: 'setup', t: 0, sf: 0, dist: 0, elapsed: 0, level: 1, score: 0, lostTo: null, roadOff: 0, cd: 0, cdN: -1, endT: 0, shown: false, raf: 0, last: 0, drag: null,
+const g = { mode: 'setup', t: 0, sf: 0, dist: 0, elapsed: 0, level: 1, score: 0, extra: 0, rings: 0, close: 0, dodged: 0, streak: 0, items: [], pops: [], lostTo: null, roadOff: 0, cd: 0, cdN: -1, endT: 0, shown: false, raf: 0, last: 0, drag: null,
   p: { x: W / 2, vx: 0, tilt: 0 }, obs: [], sc: { l: [], r: [] }, conf: [], keys: { l: 0, r: 0 }, lastHud: -1 };
 
 function mkItem() {
@@ -95,7 +102,7 @@ function fillScene(arr) {
 }
 
 function resetRun() {
-  g.mode = 'count'; g.cd = 3.4; g.cdN = -1; g.dist = 0; g.elapsed = 0; g.level = 1; g.score = 0; g.sf = 0.3; g.endT = 0; g.shown = false;
+  g.mode = 'count'; g.cd = 3.4; g.cdN = -1; g.dist = 0; g.elapsed = 0; g.level = 1; g.score = 0; g.extra = 0; g.rings = 0; g.close = 0; g.dodged = 0; g.streak = 0; g.items = []; g.pops = []; g.sf = 0.3; g.endT = 0; g.shown = false;
   g.obs = []; g.conf = []; g.sc.l = []; g.sc.r = []; g.p.x = W / 2; g.p.vx = 0; g.p.tilt = 0; g.lastHud = -1;
   fillScene(g.sc.l); fillScene(g.sc.r);
   $('end').classList.remove('show'); wrap.classList.remove('hit');
@@ -131,6 +138,7 @@ function showEnd(won) {
   $('end-title').textContent = won ? tx('winTitle') : tx('loseTitle');
   $('end-msg').textContent = won ? tx('winMsg') : tx('loseMsg').replace('{o}', L.ob[g.lostTo]);
   $('end-score').textContent = tx('score') + ': ' + g.score;
+  $('end-stats').textContent = [tx('rings') + ': ' + g.rings, tx('close') + ': ' + g.close, tx('dodged') + ': ' + g.dodged].join('  \u00b7  ');
   const el = $('end-icon'); el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
   $('end').classList.add('show'); g.shown = true;
 }
@@ -174,16 +182,29 @@ function update(dt) {
     if (level > g.level) { g.level = level; toast(); }
     const last = g.obs[g.obs.length - 1];
     if (TARGET - g.dist > 220 && (!last || last.y > 70) && Math.random() < dt * (1.3 + 1.7 * lvl)) spawn();
+    const lr = g.items[g.items.length - 1];
+    if (TARGET - g.dist > 220 && (!lr || lr.y > 130) && Math.random() < dt * 0.8) spawnRing();
   }
   if (g.mode === 'play' || g.mode === 'win') g.dist += 100 * spd * g.sf * dt;
 
-  g.obs.forEach(o => { o.y += (200 * spd + o.rel) * g.sf * dt; });
+  g.obs.forEach(o => { o.y += (200 * spd + o.rel) * g.sf * dt; if (o.type === 'roach') o.x = clamp(o.x + Math.sin(g.t * 7 + o.ph) * 70 * dt * g.sf, RL + 16, RR - 16); });
+  g.items.forEach(r => { r.y += 200 * spd * g.sf * dt; });
   g.obs = g.obs.filter(o => o.y < H + 80);
+  if (g.mode !== 'play') g.items = g.items.filter(r => r.y < H + 30);
 
   if (g.mode === 'play') {
     for (const o of g.obs) {
       const d = OB[o.type], hw = d.w / 2 * 0.82, hh = d.h / 2 * 0.82;
       if (Math.abs(p.x - o.x) < 10 + hw && Math.abs(PY - o.y) < 22 + hh) { lose(o); break; }
+      if (Math.abs(PY - o.y) < 22 + hh) o.gap = Math.min(o.gap === undefined ? 99 : o.gap, Math.abs(p.x - o.x) - (10 + hw));
+      else if (!o.done && o.y > PY) { o.done = true; g.dodged++; g.extra += 10; if (o.gap !== undefined && o.gap < 16) { g.close++; g.extra += 25; pop(p.x, '+25', '#ffffff'); } }
+    }
+    if (g.mode === 'play') {
+      g.items = g.items.filter(r => {
+        if (Math.abs(p.x - r.x) < 20 && Math.abs(PY - r.y) < 30) { collect(r); return false; }
+        if (r.y > PY + 40 && !r.missed) { r.missed = true; g.streak = 0; }
+        return r.y < H + 30;
+      });
     }
     if (g.mode === 'play' && g.dist >= TARGET) win();
   }
@@ -193,20 +214,37 @@ function update(dt) {
   }
   g.conf.forEach(c => { c.vy += 420 * dt; c.x += c.vx * dt; c.y += c.vy * dt; c.r += c.vr * dt; });
   g.conf = g.conf.filter(c => c.y < H + 20);
+  g.pops.forEach(q => { q.t += dt; q.y -= 45 * dt; }); g.pops = g.pops.filter(q => q.t < 1);
 
-  const rem = Math.max(0, TARGET - Math.floor(g.dist)), key = rem + '|' + g.level;
+  const live = Math.floor(Math.min(g.dist, TARGET)) + g.extra, mult = 1 + Math.min(3, Math.floor(g.streak / 3));
+  const rem = Math.max(0, TARGET - Math.floor(g.dist)), key = rem + '|' + g.level + '|' + live + '|' + mult;
   if (key !== g.lastHud) {
     g.lastHud = key;
     $('hud-dist').textContent = tx('dest') + ': ' + rem + ' m';
     $('hud-lvl').textContent = tx('level') + ' ' + g.level + '/5';
+    $('hud-score').textContent = live; $('hud-combo').textContent = mult > 1 ? 'x' + mult : '';
     const pc = (1 - rem / TARGET) * 100; $('fill').style.width = pc + '%'; $('dot').style.left = pc + '%';
   }
+}
+
+function pop(x, text, col) { g.pops.push({ x, y: PY - 34, t: 0, text, col }); }
+function spawnRing() {
+  for (let k = 0; k < 6; k++) {
+    const x = rnd(RL + 22, RR - 22);
+    if (!g.obs.some(o => o.y < 130 && Math.abs(o.x - x) < OB[o.type].w / 2 + 26)) { g.items.push({ x, y: -20, ph: Math.random() * 6 }); return; }
+  }
+}
+function collect(r) {
+  g.streak++; g.rings++;
+  const mult = 1 + Math.min(3, Math.floor(g.streak / 3)), pts = 50 * mult;
+  g.extra += pts; pop(r.x, '+' + pts, '#ffd45a');
+  for (let i = 0; i < 8; i++) g.conf.push({ x: r.x, y: r.y, vx: rnd(-90, 90), vy: rnd(-150, -30), r: 0, vr: rnd(-6, 6), w: 4, h: 4, c: pick(['#ffd45a', '#fff3b0', '#ffffff']) });
 }
 
 /* ---------- Classifica ---------- */
 let playerName = localStorage.getItem('bikePlayer') || '';
 function finishRun(won) {
-  g.score = Math.round(Math.min(g.dist, TARGET)) + (won ? Math.max(0, Math.round((60 - g.elapsed) * 20)) : 0);
+  g.score = Math.round(Math.min(g.dist, TARGET)) + g.extra + (won ? 1000 : 0);
   saveScore(g.score, won);
 }
 function boardMsg(key) {
@@ -262,6 +300,16 @@ function drawPlayer() {
   ctx.restore();
 }
 
+function drawRing(r) {
+  const k = 0.45 + 0.55 * Math.abs(Math.cos(g.t * 3 + r.ph));
+  ctx.save(); ctx.translate(r.x, r.y);
+  ell(0, 0, 18, 18, 'rgba(255,214,90,.22)');
+  ctx.scale(k, 1); ctx.beginPath(); ctx.arc(0, 0, 9, 0, Math.PI * 2); ctx.strokeStyle = '#f2b632'; ctx.lineWidth = 4.5; ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, 0, 9, Math.PI * 1.15, Math.PI * 1.85); ctx.strokeStyle = '#fff1b0'; ctx.lineWidth = 1.6; ctx.stroke();
+  ctx.restore();
+  ctx.save(); ctx.translate(r.x, r.y - 11); ctx.rotate(Math.PI / 4); rr(-3.2, -3.2, 6.4, 6.4, 1.2, '#bfe9ff'); ctx.restore();
+}
+
 function drawScene(side, it) {
   const C = CITY[city], x0 = side === 'l' ? 3 : W - 41;
   if (it.k === 'roof') {
@@ -288,10 +336,14 @@ function draw() {
     ctx.fillStyle = '#fff'; ctx.font = '700 13px "Instrument Sans",sans-serif'; ctx.textAlign = 'center';
     ctx.fillText(tx('finish').toUpperCase(), W / 2, fy - 13); ctx.textAlign = 'start';
   }
+  g.items.forEach(drawRing);
   g.obs.forEach(o => { const d = OB[o.type]; ctx.save(); ctx.translate(o.x, o.y); if (o.type !== 'tram') ell(0, 0, d.w * 0.75, d.h * 0.62, 'rgba(255,255,255,.16)'); d.draw(o, g.t); ctx.restore(); });
   drawPlayer();
   g.conf.forEach(c => { ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(c.r); ctx.fillStyle = c.c; ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h); ctx.restore(); });
 
+  ctx.textAlign = 'center'; ctx.font = '700 15px "Instrument Sans",sans-serif';
+  g.pops.forEach(q => { ctx.globalAlpha = 1 - q.t; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.5)'; ctx.strokeText(q.text, q.x, q.y); ctx.fillStyle = q.col; ctx.fillText(q.text, q.x, q.y); });
+  ctx.globalAlpha = 1; ctx.textAlign = 'start';
   const gr = ctx.createLinearGradient(0, 0, 0, 190);
   if (city === 'milano') { gr.addColorStop(0, 'rgba(235,240,245,.7)'); gr.addColorStop(1, 'rgba(235,240,245,0)'); }
   else { gr.addColorStop(0, 'rgba(255,214,120,.38)'); gr.addColorStop(1, 'rgba(255,214,120,0)'); }

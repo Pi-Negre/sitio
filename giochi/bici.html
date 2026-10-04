@@ -53,6 +53,9 @@ transition:transform .3s cubic-bezier(.3,1.4,.5,1),border-color .25s,box-shadow 
 .namebox input.bad{animation:shake .4s;border-bottom-color:var(--accent)}
 #name-err{color:var(--accent);font-size:.85rem;min-height:1.3em;margin-top:4px;font-weight:600}
 .hud #hud-lvl{color:var(--hero)}
+.scorebox{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);color:#fff;font-weight:700;font-size:.9rem;padding:4px 12px;border-radius:999px;display:flex;gap:6px;align-items:baseline;pointer-events:none}
+#hud-combo{color:#ffd45a;font-size:.8rem}
+#end .stats{font-size:.85rem;opacity:.85;animation:up .5s .3s both}
 .toast{position:absolute;top:14px;left:50%;translate:-50% 0;background:var(--accent);color:#fff;font-weight:700;padding:6px 18px;border-radius:999px;opacity:0;pointer-events:none}
 .toast.show{animation:toast 1.6s ease both}
 @keyframes toast{0%{opacity:0;translate:-50% -14px}15%,75%{opacity:1;translate:-50% 0}100%{opacity:0;translate:-50% -8px}}
@@ -154,15 +157,15 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:360/500}
     <div class="track" aria-hidden="true"><div class="fill" id="fill"></div><div class="dot" id="dot"></div></div>
     <div class="canvas-wrap" id="wrap">
       <canvas id="gameCanvas" width="360" height="500"></canvas>
-      <div class="flash"></div><div class="toast" id="toast"></div>
+      <div class="flash"></div><div class="toast" id="toast"></div><div class="scorebox"><span id="hud-score">0</span><small id="hud-combo"></small></div>
       <div class="overlay" id="count"><div class="big" id="count-n"></div></div>
       <div class="overlay" id="end">
         <svg id="end-icon" viewBox="0 0 24 24" aria-hidden="true"></svg>
-        <h2 id="end-title"></h2><p id="end-msg"></p><p class="score" id="end-score"></p>
+        <h2 id="end-title"></h2><p id="end-msg"></p><p class="score" id="end-score"></p><p class="stats" id="end-stats"></p>
         <div class="row"><button class="btn" id="btn-again" data-i="again"></button><button class="btn ghost" id="btn-change" data-i="change"></button></div>
       </div>
     </div>
-    <p class="hint kbd" data-i="controls"></p><p class="hint touch" data-i="touch"></p>
+    <p class="hint kbd" data-i="controls"></p><p class="hint touch" data-i="touch"></p><p class="hint" data-i="scoreHint"></p>
     <div class="pad"><button id="pad-l" aria-label="Left"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button id="pad-r" aria-label="Right"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
   </section>
 
