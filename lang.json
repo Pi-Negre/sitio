@@ -1,7 +1,7 @@
 {
   "it": {
     "title": "Elisa e Giovanni",
-    "location": "📍 Milano, Italia",
+    "location": "Milano, Italia",
     "rsvp_btn": "Conferma Presenza (RSVP)",
     "nav_info": "Info Utili",
     "nav_games": "Area Giochi",
@@ -11,19 +11,19 @@
     "reception_title": "Ricevimento",
     "reception_time": "Ore 13:30 - ?",
     "rsvp_title": "Ci sarai?",
-    "rsvp_subtitle": "Ti preghiamo di confermare la tua presenza entro il 30 Aprile.",
+    "rsvp_subtitle": "Ti preghiamo di confermare la tua presenza entro il 28 febbraio.",
     "form_name": "Nome e Cognome",
     "form_email": "La tua Email",
     "form_select_default": "Parteciperai?",
     "form_select_yes": "Sì, verrò con gioia!",
     "form_select_no": "Purtroppo non potrò esserci",
-    "form_notes": "Allergie, intolleranze o note particolari...",
+    "form_notes": "Allergie, intolleranze o note particolari ...",
     "form_submit": "Invia Conferma",
     "footer_text": "Benvenuti!"
   },
   "en": {
-    "title": "Groom & Bride",
-    "location": "📍 Milan, Italy",
+    "title": "Elisa and Giovanni",
+    "location": "Milan, Italy",
     "rsvp_btn": "Confirm Attendance (RSVP)",
     "nav_info": "Useful Info",
     "nav_games": "Games Area",
@@ -39,7 +39,7 @@
     "form_select_default": "Will you attend?",
     "form_select_yes": "Yes, I'll be there gladly!",
     "form_select_no": "Unfortunately, I can't make it",
-    "form_notes": "Dietary requirements, allergies or special notes...",
+    "form_notes": "Dietary requirements, allergies or special notes ...",
     "form_submit": "Submit RSVP",
     "footer_text": "Welcome"
   }
