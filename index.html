@@ -13,11 +13,56 @@
 </head>
 <body>
 
-    <!-- Spiga di grano riutilizzata dalla scena -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-        <symbol id="ear" viewBox="0 0 24 120"><path d="M12 118V30" stroke="#a98a2f" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-        <g fill="#d9a441"><ellipse cx="7.5" cy="52" rx="3.6" ry="7" transform="rotate(-28 7.5 52)"/><ellipse cx="16.5" cy="52" rx="3.6" ry="7" transform="rotate(28 16.5 52)"/><ellipse cx="7.5" cy="40" rx="3.6" ry="7" transform="rotate(-28 7.5 40)"/><ellipse cx="16.5" cy="40" rx="3.6" ry="7" transform="rotate(28 16.5 40)"/><ellipse cx="7.5" cy="28" rx="3.6" ry="7" transform="rotate(-28 7.5 28)"/><ellipse cx="16.5" cy="28" rx="3.6" ry="7" transform="rotate(28 16.5 28)"/><ellipse cx="12" cy="14" rx="3.6" ry="8"/></g></symbol>
-    </defs></svg>
+    <!-- Fiore di falso gelsomino riutilizzabile nella scena -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+        <symbol id="ear" viewBox="0 0 100 100">
+        <!-- Petals: narrow and pointed -->
+        <g fill="#fffdf6" stroke="#e7d4ad" stroke-width="1.2" stroke-linejoin="round">
+            <path d="M50 49 C43 38 42 23 50 8 C58 23 57 38 50 49Z"/>
+            <path d="M50 49 C60 38 73 30 88 31 C80 44 66 50 50 49Z"/>
+            <path d="M50 49 C64 54 73 67 72 83 C59 76 51 64 50 49Z"/>
+            <path d="M50 49 C41 63 30 75 15 77 C20 62 34 51 50 49Z"/>
+            <path d="M50 49 C35 49 21 43 12 31 C28 28 42 36 50 49Z"/>
+        </g>
+
+        <!-- Subtle petal veins -->
+        <g fill="none" stroke="#f0e3c8" stroke-width="0.8" stroke-linecap="round">
+            <path d="M50 47 Q49 28 50 13"/>
+            <path d="M51 49 Q69 39 83 33"/>
+            <path d="M51 50 Q63 68 69 78"/>
+            <path d="M49 50 Q31 65 19 73"/>
+            <path d="M49 48 Q30 39 17 33"/>
+        </g>
+
+        <!-- Golden stamens -->
+        <g stroke="#c6a13a" stroke-width="1.4" stroke-linecap="round">
+            <path d="M50 50 L50 39"/>
+            <path d="M50 50 L43 42"/>
+            <path d="M50 50 L57 42"/>
+            <path d="M50 50 L40 49"/>
+            <path d="M50 50 L60 49"/>
+        </g>
+        <g fill="#d9ad3f">
+            <circle cx="50" cy="38" r="2"/>
+            <circle cx="42" cy="41" r="2"/>
+            <circle cx="58" cy="41" r="2"/>
+            <circle cx="39" cy="49" r="2"/>
+            <circle cx="61" cy="49" r="2"/>
+        </g>
+
+        <!-- Small green leaves -->
+        <g fill="#87945b" stroke="#697b43" stroke-width="1">
+            <path d="M48 58 C35 53 25 56 18 66 C31 67 41 64 48 58Z"/>
+            <path d="M52 58 C65 53 75 56 82 66 C69 67 59 64 52 58Z"/>
+        </g>
+        <g fill="none" stroke="#697b43" stroke-width="0.8">
+            <path d="M48 58 L22 64"/>
+            <path d="M52 58 L78 64"/>
+        </g>
+        </symbol>
+    </defs>
+    </svg>
 
     <!-- 1. Selettore Lingua in alto a destra -->
     <div class="lang-switcher">
