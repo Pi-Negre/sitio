@@ -47,8 +47,31 @@ padding:13px 16px;border-radius:12px;cursor:pointer;line-height:1.4;
 transition:transform .2s,border-color .2s,background .2s,box-shadow .2s,opacity .3s;
 animation:in .5s calc(var(--i)*70ms + .15s) cubic-bezier(.2,.8,.2,1) both}
 .chip{flex:none;width:30px;height:30px;border-radius:50%;background:var(--bg);color:var(--blue);font-weight:700;font-size:.9rem;display:grid;place-items:center;transition:background .2s,color .2s,transform .25s}
-.btn-opt:hover{transform:translateX(5px);border-color:var(--blue);background:#f5f8fd;box-shadow:-4px 0 0 var(--blue)}
-.btn-opt:hover .chip{background:var(--blue);color:#fff;transform:scale(1.1)}
+
+/* Hover effects only for mouse devices */
+@media (hover: hover) and (pointer: fine) {
+    .btn-opt:hover {
+        transform: translateX(5px);
+        border-color: var(--blue);
+        background: #f5f8fd;
+        box-shadow: -4px 0 0 var(--blue);
+    }
+
+    .btn-opt:hover .chip {
+        background: var(--blue);
+        color: #fff;
+        transform: scale(1.1);
+    }
+}
+
+/* Mobile touch behaviour */
+.btn-opt {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 .btn-opt:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .btn-opt.chosen{background:var(--blue);color:#fff;border-color:var(--blue);transform:scale(1.02);box-shadow:none}
 .btn-opt.chosen .chip{background:var(--yellow);color:var(--blue)}
