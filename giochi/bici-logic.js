@@ -8,28 +8,12 @@ const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-/* ---------- Translations ---------- */
-const T = {
-  it: { title: "Bike Escape", subtitle: "Schiva gli ostacoli e arriva al matrimonio in tempo!", char: "1. Scegli il personaggio", city: "2. Scegli l'ambientazione",
-    sposo: "Sposo", sposoSub: "Giacca blu notte", sposa: "Sposa", sposaSub: "Abito e velo", milano: "Milano", milanoSub: "Tra Duomo e nebbia", barcellona: "Barcellona", barcellonaSub: "Sole e Sagrada Família",
-    play: "Gioca", back: "← Torna all'Area Giochi", controls: "Frecce sinistra e destra (oppure A / D) per muoverti.", touch: "Tieni premuti i tasti o trascina sulla strada.",
-    dest: "Al matrimonio", go: "Via!", finish: "Arrivo", again: "Rigioca", change: "Cambia scelta", level: "Livello", score: "Punteggio", nameLabel: "Il tuo nome", namePh: "Es. Mario Rossi", nameReq: "Inserisci il tuo nome per giocare", boardTitle: "Classifica", thPos: "Pos.", thName: "Giocatore", thCity: "Città", thScore: "Punti", boardLoading: "Caricamento classifica…", boardEmpty: "Ancora nessun punteggio.", boardError: "Classifica non disponibile.", boardOff: "Classifica non ancora collegata.", rings: "Anelli", close: "Per un pelo", dodged: "Schivati", scoreHint: "Raccogli gli anelli (le serie consecutive valgono di più) e sfiora gli ostacoli per guadagnare punti.",
-    winTitle_m: "Ce l'hai fatto!", winTitle_f: "Ce l'hai fatta!", winMsg_m: "Sei arrivato in tempo: gli invitati ti aspettano.", winMsg_f: "Sei arrivata in tempo: gli invitati ti aspettano.",
-    loseTitle: "Game over", loseMsg_m: "Ti sei scontrato con {o}.", loseMsg_f: "Ti sei scontrata con {o}.",
-    ob: { ped: "un pedone", dog: "un cane", bin: "un cestino", hog: "un riccio", tram: "un tram", palm: "una palma", scooter: "un monopattino", roach: "una cucaracha" } },
-  en: { title: "Bike Escape", subtitle: "Dodge the obstacles and reach the wedding on time!", char: "1. Choose your character", city: "2. Choose the location",
-    sposo: "Groom", sposoSub: "Midnight blue suit", sposa: "Bride", sposaSub: "Dress and veil", milano: "Milan", milanoSub: "Duomo and fog", barcellona: "Barcelona", barcellonaSub: "Sun and Sagrada Família",
-    play: "Play", back: "← Back to Games Area", controls: "Left and right arrow keys (or A / D) to move.", touch: "Hold the buttons or drag on the road.",
-    dest: "To the wedding", go: "Go!", finish: "Finish", again: "Play again", change: "Change selection", level: "Level", score: "Score", nameLabel: "Your name", namePh: "E.g. John Smith", nameReq: "Enter your name to play", boardTitle: "Leaderboard", thPos: "Pos.", thName: "Player", thCity: "City", thScore: "Points", boardLoading: "Loading leaderboard…", boardEmpty: "No scores yet.", boardError: "Leaderboard unavailable.", boardOff: "Leaderboard not connected yet.", rings: "Rings", close: "Close calls", dodged: "Dodged", scoreHint: "Collect rings (streaks are worth more) and graze obstacles to earn points.",
-    winTitle: "You made it!", winMsg: "You arrived on time: the guests are waiting.", loseTitle: "Game over", loseMsg: "You crashed into {o}.",
-    ob: { ped: "a pedestrian", dog: "a dog", bin: "a bin", hog: "a hedgehog", tram: "a tram", palm: "a palm tree", scooter: "a scooter", roach: "a cockroach" } }
-};
-let lang = localStorage.getItem('wedding-language') || localStorage.getItem('selectedLanguage') || 'it'; if (!T[lang]) lang = 'it';
-localStorage.setItem('wedding-language', lang);
-localStorage.removeItem('selectedLanguage');
+/* ---------- Shared translations ---------- */
+let lang = 'it';
+const T = () => window.weddingTranslations[lang].bike;
 let ch = 'sposo', city = 'milano';
 const g$ = () => (ch === 'sposa' ? 'f' : 'm');
-const tx = k => { const L = T[lang]; const v = L[k + '_' + g$()] !== undefined ? L[k + '_' + g$()] : L[k]; return v; };
+const tx = k => { const L = T(); const v = L[k + '_' + g$()] !== undefined ? L[k + '_' + g$()] : L[k]; return v; };
 
 /* ---------- City themes ---------- */
 const CITY = {
@@ -135,7 +119,7 @@ function win() {
 }
 
 function showEnd(won) {
-  const L = T[lang];
+  const L = T();
   $('end-icon').innerHTML = won ? '<circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.5 3.5L17 9"/>' : '<circle cx="12" cy="12" r="10"/><path d="M9 9l6 6M15 9l-6 6"/>';
   $('end-title').textContent = won ? tx('winTitle') : tx('loseTitle');
   $('end-msg').textContent = won ? tx('winMsg') : tx('loseMsg').replace('{o}', L.ob[g.lostTo]);
@@ -268,7 +252,7 @@ function loadBoard() {
     data.forEach((row, i) => {
       const tr = document.createElement('tr');
       if (row.nome === playerName && Number(row.punteggio) === g.score) tr.className = 'me';
-      [i + 1, row.nome, T[lang][row.citta] || row.citta || '', row.punteggio].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+      [i + 1, row.nome, T()[row.citta] || row.citta || '', row.punteggio].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
       b.appendChild(tr);
     });
   }).catch(() => boardMsg('boardError'));
@@ -383,6 +367,7 @@ function toSetup() {
 function texts() {
   document.querySelectorAll('[data-i]').forEach(e => { e.textContent = tx(e.dataset.i); });
   document.documentElement.lang = lang; document.title = tx('title') + ' - Wedding Edition'; $('lang-select').value = lang; $('player-name').placeholder = tx('namePh');
+  $('pad-l').setAttribute('aria-label', tx('padLeft')); $('pad-r').setAttribute('aria-label', tx('padRight'));
   if (g.mode !== 'setup') { $('hud-city').textContent = tx(city); g.lastHud = -1; }
   if (g.shown && (g.mode === 'win' || g.mode === 'lose')) showEnd(g.mode === 'win');
 }
@@ -399,13 +384,7 @@ document.querySelectorAll('.choice[data-city]').forEach(b => b.addEventListener(
 $('btn-play').addEventListener('click', startGame);
 $('btn-again').addEventListener('click', () => { resetRun(); });
 $('btn-change').addEventListener('click', toSetup);
-$('lang-select').addEventListener('change', e => {
-  if (!T[e.target.value]) return;
-  lang = e.target.value;
-  localStorage.setItem('wedding-language', lang);
-  localStorage.removeItem('selectedLanguage');
-  texts();
-});
+document.addEventListener('languageChanged', event => { lang = event.detail.language; texts(); });
 
 const kmap = { ArrowLeft: 'l', a: 'l', A: 'l', ArrowRight: 'r', d: 'r', D: 'r' };
 addEventListener('keydown', e => { if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; const k = kmap[e.key]; if (k) { g.keys[k] = 1; if (e.key.startsWith('Arrow')) e.preventDefault(); } });
@@ -422,6 +401,9 @@ cv.addEventListener('pointermove', e => { if (g.drag !== null) g.drag = toX(e); 
 ['pointerup', 'pointercancel'].forEach(ev => cv.addEventListener(ev, () => { g.drag = null; }));
 
 $('player-name').value = playerName;
-texts();
-loadBoard();
+window.weddingLanguageReady.then(({ language }) => {
+  lang = language;
+  texts();
+  loadBoard();
+});
 })();

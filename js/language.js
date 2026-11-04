@@ -34,23 +34,15 @@ async function initLanguage() {
     localStorage.setItem(LANGUAGE_KEY, initialLanguage);
     localStorage.removeItem(LEGACY_LANGUAGE_KEY);
 
-    const selector = document.getElementById("lang-select");
-
-    if (selector) {
+    document.querySelectorAll("#lang-select").forEach((selector) => {
       selector.value = initialLanguage;
+      selector.addEventListener("change", () => setWeddingLanguage(selector.value));
+    });
 
-      selector.addEventListener("change", () => {
-        const selectedLanguage = selector.value;
-
-        if (!isSupported(selectedLanguage)) return;
-
-        localStorage.setItem(LANGUAGE_KEY, selectedLanguage);
-        localStorage.removeItem(LEGACY_LANGUAGE_KEY);
-        applyLanguage(selectedLanguage);
-      });
-    }
+    return { language: initialLanguage, translations };
   } catch (error) {
     console.error("Language initialization failed:", error);
+    return { language: DEFAULT_LANGUAGE, translations: {} };
   }
 }
 
@@ -130,4 +122,20 @@ function applyLanguage(language) {
   );
 }
 
-document.addEventListener("DOMContentLoaded", initLanguage);
+function setWeddingLanguage(language) {
+  if (!isSupported(language)) return;
+
+  localStorage.setItem(LANGUAGE_KEY, language);
+  localStorage.removeItem(LEGACY_LANGUAGE_KEY);
+  applyLanguage(language);
+}
+
+window.setWeddingLanguage = setWeddingLanguage;
+window.weddingLanguageReady = new Promise((resolve) => {
+  const start = () => initLanguage().then(resolve);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
+});

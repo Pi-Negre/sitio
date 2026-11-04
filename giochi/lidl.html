@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="../js/language.js" data-language-file="../lang.json"></script>
 <title>Che Prodotto Lidl Sei?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -180,16 +181,10 @@ font-weight:700;font-size:1.35rem;line-height:1.1;transform:rotate(12deg);box-sh
 
 <script>
 const svg = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
-const uiText = {
-  it: { title: "Che prodotto Lidl sei?", intro: "Rispondi sinceramente alle domande per scoprire la tua vera identità!", language: "Lingua", scan: "Passo il tuo profilo alla cassa…", product: "Il tuo prodotto Lidl è…", compatibility: "Compatibilità con gli altri prodotti", restart: "Rifai il test", home: "Torna al Sito", back: "← Torna all'Area Giochi", progress: "Domanda {current} di {total}", scanSteps: ["Passo il tuo profilo alla cassa…", "Bip… bip…", "Calcolo il prezzo…"], price: "solo per te" },
-  en: { title: "Which Lidl product are you?", intro: "Answer honestly to discover your true identity!", language: "Language", scan: "Taking your profile to the checkout…", product: "Your Lidl product is…", compatibility: "Compatibility with other products", restart: "Take the quiz again", home: "Back to the site", back: "← Back to the Games Area", progress: "Question {current} of {total}", scanSteps: ["Taking your profile to the checkout…", "Beep… beep…", "Calculating the price…"], price: "just for you" }
-};
-let currentLanguage = localStorage.getItem("wedding-language") || localStorage.getItem("selectedLanguage") || "it";
-if (!uiText[currentLanguage]) currentLanguage = "it";
-localStorage.setItem("wedding-language", currentLanguage);
-localStorage.removeItem("selectedLanguage");
+let currentLanguage = "it";
+const T = () => window.weddingTranslations[currentLanguage].lidl;
 function applyUiLanguage() {
-  const t = uiText[currentLanguage];
+  const t = T();
   document.documentElement.lang = currentLanguage;
   document.title = t.title;
   $("lang-select").value = currentLanguage;
@@ -218,83 +213,18 @@ const ICONS = {
   verdura: svg('<path d="M12 22V12M12 12C12 7 8 4 4 4c0 4 3 8 8 8ZM12 14c0-4 3-7 8-7 0 4-3 7-8 7Z"/>')
 };
 
-// Each answer contributes to a product profile; the icon illustrates its question.
+// The question icons are language-neutral; all question and answer copy lives in lang.json.
 const domande = [
-  { q: "Oggi piove e allora...", icon: "rain", opts: [
-    { text: "Scendo per strada e comincio a correre sotto la pioggia.", profile: "ceci" },
-    { text: "Sto in casa sotto le coperte.", profile: "latte_condensato" },
-    { text: "Chiamo i miei genitori per sapere se anche da loro piove.", profile: "riso" },
-    { text: "Faccio delle foto per Instagram.", profile: "verdurine" } ] },
-  { q: "Un tuo collega ti invita fuori a pranzo ma non vuoi andarci, come rispondi?", icon: "lunch", opts: [
-    { text: "'No, non ho voglia.'", profile: "ceci" },
-    { text: "'Bellissima idea, vengo subito', ma poi non mi presento all'appuntamento!", profile: "verdurine" },
-    { text: "'Grazie mille per l'offerta, ma ho una cosa da fare.'", profile: "latte_condensato" },
-    { text: "'Bellissima idea, vengo subito', ti unisci al pranzo e soffri in silenzio.", profile: "riso" } ] },
-  { q: "Vuoi organizzare la tua festa di compleanno, cosa fai?", icon: "party", opts: [
-    { text: "Non ho tanta voglia, ma vedere i miei amici mi farà bene e quindi organizzo una cena a casa.", profile: "riso" },
-    { text: "Comincio a chiamare tutti i miei numeri in rubrica per dire che ho affittato la terrazza del Duomo per il compleanno.", profile: "verdurine" },
-    { text: "Le feste di compleanno fanno schifo, compiere gli anni mi deprime, non organizzo nulla.", profile: "ceci" },
-    { text: "Invito tutti fuori per una birra che offrirò io.", profile: "latte_condensato" } ] },
-  { q: "Devi arredare casa, a chi ti rivolgi?", icon: "sofa", opts: [
-    { text: "Al miglior studio di design di Milano, non mi importa del prezzo. L'estetica è l'unica cosa di cui mi importa.", profile: "verdurine" },
-    { text: "A nessuno, posso benissimo fare da solo.", profile: "ceci" },
-    { text: "Al mio youtuber preferito. Guarderò tutti i suoi video in due giorni e poi mi costruirò tutti i mobili da solo.", profile: "latte_condensato" },
-    { text: "Ho un amico designer, gli scrivo un messaggio perché chiamarlo mi sembra troppo.", profile: "riso" } ] },
-  { q: "Devi fare la spesa per il mese, qual è il tuo budget?", icon: "cart", opts: [
-    { text: "5€", profile: "ceci" }, { text: "50€", profile: "riso" },
-    { text: "100€", profile: "latte_condensato" }, { text: "200€", profile: "verdurine" } ] },
-  { q: "Oggi è il primo giorno di scuola di tuo figlio, cosa gli dici?", icon: "school", opts: [
-    { text: "'Goditi questo giorno perché sarà unico.'", profile: "riso" },
-    { text: "'Goditela finché sei alle elementari, perché dopo è molto peggio.'", profile: "latte_condensato" },
-    { text: "Nulla, imparerà sbagliando.", profile: "ceci" },
-    { text: "'Cerca di dare il meglio e prendere il massimo in tutte le materie, ma sii gentile con gli altri.'", profile: "verdurine" } ] },
-  { q: "La memoria del tuo telefono è piena e devi eliminare delle foto e video, cosa fai?", icon: "phone", opts: [
-    { text: "Le foto sono troppo importanti per me, compro dello spazio su Google Cloud.", profile: "verdurine" },
-    { text: "Formatto il telefono.", profile: "ceci" },
-    { text: "Faccio un backup ed elimino le foto.", profile: "latte_condensato" },
-    { text: "Non so fare un backup quindi spendo 5 ore a selezionare le mie foto preferite ed elimino le altre.", profile: "riso" } ] }
+  { icon: "rain" }, { icon: "lunch" }, { icon: "party" }, { icon: "sofa" },
+  { icon: "cart" }, { icon: "school" }, { icon: "phone" }
 ];
-
-// Keep each English question and option at the same index as its Italian counterpart above.
-const domandeEn = [
-  { q: "It's raining today, so…", opts: ["I head outside and start running in the rain.", "I stay home under the covers.", "I call my parents to ask if it's raining there too.", "I take some photos for Instagram."] },
-  { q: "A colleague invites you to lunch, but you don't want to go. What do you say?", opts: ["‘No, I don't feel like it.’", "‘Great idea, I'll be right there’—then I don't show up!", "‘Thanks so much, but I have something to do.’", "‘Great idea, I'll be right there’—then I join and suffer in silence."] },
-  { q: "You want to plan your birthday party. What do you do?", opts: ["I'm not really in the mood, but seeing my friends will cheer me up, so I host dinner at home.", "I call everyone in my contacts to say I've rented the Duomo rooftop for my birthday.", "Birthday parties are awful and getting older gets me down, so I plan nothing.", "I invite everyone out for a beer and offer to pay."] },
-  { q: "You need to furnish your home. Who do you turn to?", opts: ["The best design studio in Milan. I don't care about the price; aesthetics are all that matter.", "No one. I can do it all myself.", "My favourite YouTuber. I'll watch all their videos in two days, then build all the furniture myself.", "I text a designer friend because calling feels like too much."] },
-  { q: "You're doing the monthly grocery shop. What's your budget?", opts: ["€5", "€50", "€100", "€200"] },
-  { q: "It's your child's first day of school. What do you tell them?", opts: ["‘Enjoy this day because it will be one of a kind.’", "‘Make the most of primary school, because it gets much worse after that.’", "Nothing. They'll learn by making mistakes.", "‘Do your best and aim high in every subject, but be kind to others.’"] },
-  { q: "Your phone is full and you need to delete photos and videos. What do you do?", opts: ["My photos are too important, so I buy more Google storage.", "I factory-reset my phone.", "I back them up, then delete them.", "I don't know how to back them up, so I spend five hours picking favourites and delete the rest."] }
-];
-
-const profili = {
-  ceci: { icon: "ceci", name: "Ceci secchi", nick: "Il Saggio Burbero", price: "0,89", note: "SCADENZA: MAI · TEMPO DI COTTURA: LUNGO",
-    desc: "La tua educazione è stata dura ma sei quello che ogni studente con un budget ristretto vuole. Hai un grande futuro come educatore anche se non lo vuoi ammettere. Sei deciso, duro e ruvido come la vita." },
-  riso: { icon: "riso", name: "Riso", nick: "Dal cuore d'oro", price: "1,29", note: "OTTIMO CON TUTTO · ADATTABILE A OGNI OCCASIONE",
-    desc: "Ti sai adattare, ti fai andare bene tutto come accompagnamento, verdure, pollo, frutto, tutti stanno bene con te. Sei versatile, puoi essere un pregiato risotto o una calorosa insalata di riso. Eppure a volte vorresti stare un po' da solo." },
-  latte_condensato: { icon: "latte", name: "Latte condensato", nick: "L'anticonformista", price: "2,49", note: "EDIZIONE RARA · NON PER TUTTI I PALATI",
-    desc: "Sei una rarità prelibata. Dal gusto deciso che non fa per tutti. La tua generosità è travolgente, ti faresti in quattro per gli altri, ma non scendi a compromessi. A volte la gente ti considera un outsider o una persona bizzarra, ma a te non importa tanto." },
-  verdurine: { icon: "verdura", name: "Verdurine", nick: "La regina", price: "1,99", note: "QUALITÀ PREMIUM · SOLO LE MIGLIORI",
-    desc: "Sei una persona dolce, calorosa e super affettuosa. Vuoi sempre il meglio per te e i tuoi amici, ma sei abbastanza picky e non tutti riescono a starti accanto. Ogni occasione è buona per migliorare la tua condizione. Sei decisa e agguerrita e non ti arrendi mai." }
-};
-
-// Profile keys must match profili so the score calculation stays language-independent.
-const profiliEn = {
-  ceci: { name: "Dried chickpeas", nick: "The Grumpy Sage", price: "0.89", note: "BEST BEFORE: NEVER · COOKING TIME: LONG",
-    desc: "You had a tough upbringing, but you're exactly what every student on a tight budget needs. You have a bright future as a teacher, even if you won't admit it. You're determined, tough, and as rough around the edges as life itself." },
-  riso: { name: "Rice", nick: "A heart of gold", price: "1.29", note: "GOES WITH EVERYTHING · FITS EVERY OCCASION",
-    desc: "You adapt easily and get along with every side dish: vegetables, chicken, fruit—everyone gets along with you. You're versatile, equally at home as an elegant risotto or a comforting rice salad. Still, sometimes you just want a little time alone." },
-  latte_condensato: { name: "Condensed milk", nick: "The nonconformist", price: "2.49", note: "RARE EDITION · NOT FOR EVERYONE",
-    desc: "You're a delicious rarity, with a bold flavour that's not for everyone. Your generosity knows no bounds and you'd do anything for others, but you don't compromise. People may see you as an outsider or a little odd, but you don't mind much." },
-  verdurine: { name: "Mixed vegetables", nick: "The queen", price: "1.99", note: "PREMIUM QUALITY · ONLY THE BEST",
-    desc: "You're sweet, warm, and incredibly affectionate. You always want the best for yourself and your friends, though you can be picky and not everyone can keep up. Every chance is an opportunity to improve your lot. You're determined, fierce, and never give up." }
-};
 
 const $ = id => document.getElementById(id);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const COLORS = ["#0050aa", "#fff000", "#e60a14"];
 let currentQ = 0, lock = false, punteggi = {};
 
-function resetScores() { punteggi = { ceci: 0, riso: 0, latte_condensato: 0, verdurine: 0 }; }
+function resetScores() { punteggi = Object.fromEntries(Object.keys(T().profiles).map(profile => [profile, 0])); }
 
 function burst(x, y, n = 14) {
   if (reduce) return;
@@ -312,20 +242,22 @@ function setSteps(done, now) {
 }
 
 function loadQuestion() {
-  if (currentQ >= domande.length) { startScan(); return; }
+  if (currentQ >= T().questions.length) { startScan(); return; }
   const d = domande[currentQ], card = $("card");
-  const english = currentLanguage === "en" ? domandeEn[currentQ] : null;
-  $("progress").textContent = uiText[currentLanguage].progress.replace("{current}", currentQ + 1).replace("{total}", domande.length);
-  $("badge").innerHTML = ICONS[d.icon]; $("question-text").textContent = english ? english.q : d.q;
+  const question = T().questions[currentQ];
+  const answerProfiles = T().answerProfiles[currentQ];
+  $("progress").textContent = T().progress.replace("{current}", currentQ + 1).replace("{total}", T().questions.length);
+  $("badge").innerHTML = ICONS[d.icon]; $("question-text").textContent = question.q;
   setSteps(currentQ, currentQ);
   card.classList.remove("enter", "leave"); void card.offsetWidth; card.classList.add("enter");
 
   const box = $("options-container"); box.innerHTML = ""; box.classList.remove("locked");
-  d.opts.forEach((opt, i) => {
+  question.answers.forEach((answer, i) => {
     const b = document.createElement("button");
     b.className = "btn-opt"; b.style.setProperty("--i", i);
     b.innerHTML = `<span class="chip">${"ABCD"[i]}</span><span class="txt"></span>`;
-    b.querySelector(".txt").textContent = english ? english.opts[i] : opt.text;
+    b.querySelector(".txt").textContent = answer;
+    const opt = { profile: answerProfiles[i] };
     b.onclick = ev => choose(b, opt, ev);
     box.appendChild(b);
   });
@@ -354,26 +286,27 @@ function startScan() {
   $("quiz-game").hidden = true; $("scan-box").hidden = false;
   makeBars($("scan-bars"), 34);
   let i = 0; const t = setInterval(() => {
-    const texts = uiText[currentLanguage].scanSteps;
+    const texts = T().scanSteps;
     $("scan-text").textContent = texts[++i % texts.length];
   }, 650);
   setTimeout(() => { clearInterval(t); showResult(); }, 2000);
 }
 
 function showResult() {
+  const profiles = T().profiles;
   const win = Object.keys(punteggi).reduce((a, b) => punteggi[a] > punteggi[b] ? a : b);
-  const p = currentLanguage === "en" ? profiliEn[win] : profili[win];
+  const p = profiles[win];
   $("scan-box").hidden = true; $("result-box").hidden = false;
   $("product-art").innerHTML = ICONS[p.icon]; $("cheese-name").textContent = p.name; $("cheese-nick").textContent = p.nick;
   $("cheese-note").textContent = p.note; $("cheese-description").textContent = p.desc;
-  $("price").innerHTML = `${p.price}€<small>${uiText[currentLanguage].price}</small>`;
+  $("price").innerHTML = `${p.price}€<small>${T().price}</small>`;
   makeBars($("tag-bars"), 40);
 
   const rows = $("match-rows"); rows.innerHTML = "";
-  Object.keys(profili).sort((a, b) => punteggi[b] - punteggi[a]).forEach(k => {
-    const pct = Math.round(punteggi[k] / domande.length * 100);
+  Object.keys(profiles).sort((a, b) => punteggi[b] - punteggi[a]).forEach(k => {
+    const pct = Math.round(punteggi[k] / T().questions.length * 100);
     const row = document.createElement("div"); row.className = "row" + (k === win ? " win" : "");
-    const name = currentLanguage === "en" ? profiliEn[k].name : profili[k].name;
+    const name = profiles[k].name;
     row.innerHTML = `<span>${name}</span><div class="meter"><b data-w="${pct}"></b></div><span>${pct}%</span>`;
     rows.appendChild(row);
   });
@@ -389,11 +322,8 @@ $("restart").onclick = () => {
   $("tag").classList.remove("show"); loadQuestion();
 };
 
-$("lang-select").addEventListener("change", event => {
-  if (!uiText[event.target.value]) return;
-  currentLanguage = event.target.value;
-  localStorage.setItem("wedding-language", currentLanguage);
-  localStorage.removeItem("selectedLanguage");
+document.addEventListener("languageChanged", event => {
+  currentLanguage = event.detail.language;
   applyUiLanguage();
 });
 
@@ -403,8 +333,12 @@ document.addEventListener("keydown", e => {
   const b = $("options-container").children[+e.key - 1]; if (b) b.click();
 });
 
-$("steps").innerHTML = domande.map(() => "<i></i>").join("");
-resetScores(); applyUiLanguage();
+window.weddingLanguageReady.then(({ language }) => {
+  currentLanguage = language;
+  $("steps").innerHTML = T().questions.map(() => "<i></i>").join("");
+  resetScores();
+  applyUiLanguage();
+});
 </script>
 </body>
 </html>

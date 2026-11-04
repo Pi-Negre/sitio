@@ -1,33 +1,23 @@
 // Replace this value with the deployed Google Apps Script URL; keep the quotation marks.
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZL04nemGa7zkFajxKMpCO2LuzLCNIRHSInqbhMg1I8uwVy9hgy00wB3ocT1q7a63E/exec";
 
-const langData = {
-    it: {
-        title: "🗺️ Wedding GeoGuesser", documentTitle: "Wedding GeoGuesser", photoAlt: "Foto del viaggio", subtitle: "Indovina dove abbiamo scattato questa foto!", progress: "Tappa {current} di {total}", btnCheck: "Invia Risposta 📍", btnNext: "Prossima Tappa ➡️", btnFinish: "Risultato Finale 🎉", back: "⬅️ Torna all'Area Giochi", distText: "La tua scelta dista <strong>{dist} km</strong> dal punto reale.", finalScore: "Gioco Terminato! Errore totale: <strong>{total} km</strong>. Meno km fai, più ci conosci! 😉", nameAlert: "Inserisci il tuo nome!", nameInstruction: "Inserisci il tuo nome e cognome per iniziare:", namePlaceholder: "Esempio: Mario Rossi", btnStart: "Inizia il Gioco 🚀", mapClick: "Clicca sulla mappa!", position: "Pos.", thName: "Invitato", thScore: "Errore Totale", boardTitle: "🏆 Top 10 Classifica", loading: "Caricamento classifica...", empty: "Nessun punteggio.", error: "Errore nel caricamento."
-    },
-    en: {
-        title: "🗺️ Wedding GeoGuesser", documentTitle: "Wedding GeoGuesser", photoAlt: "Travel photo", subtitle: "Guess where this photo was taken!", progress: "Stage {current} of {total}", btnCheck: "Submit Guess 📍", btnNext: "Next Stage ➡️", btnFinish: "See Final Results 🎉", back: "⬅️ Back to Games Area", distText: "Your guess is <strong>{dist} km</strong> away from the location.", finalScore: "Game Over! Total accumulated error: <strong>{total} km</strong>. Lower is better! 😉", nameAlert: "Please enter your name!", nameInstruction: "Enter your first and last name to start:", namePlaceholder: "E.g. John Smith", btnStart: "Start Game 🚀", mapClick: "Click on the map!", position: "Pos.", thName: "Guest", thScore: "Total Error", boardTitle: "🏆 Top 10 Leaderboard", loading: "Loading leaderboard...", empty: "No scores.", error: "Error loading scores."
-    }
-};
+const T = () => window.weddingTranslations[currentLang].geo;
 
 const tappe = [
-    { foto: "../assets/images/tappa1.jpeg", lat: 45.491706516674256, lng: 9.1530605076123, it: "Milano! La nostra città natale, dove si può mangiare il miglior gelato e la migliore pizza.", en: "Milan! Our hometown, where you can eat the best ice cream and the best pizza." },
-    { foto: "../assets/images/tappa2.jpeg", lat: 41.42492065563975, lng: 2.185793910563726, it: "Barcellona! Dove abbiamo vissuto negli ultimi anni e dove abbiamo trovato una seconda casa.", en: "Barcelona! Where we have lived for the past few years and where we found a second home." },
-    { foto: "../assets/images/tappa3.jpeg", lat: 37.445704140675474, lng: 24.94366071688098, it: "Syros! Un paradiso delle Cicladi, unica isola greca in cui si trovi una Lidl.", en: "Syros! A paradise in the Cyclades, and the only Greek island where you can actually find a Lidl." },
-    { foto: "../assets/images/tappa4.jpeg", lat: 40.5824, lng: -0.2185, it: "Cinctorres! Dove abbiamo visto la nostra prima eclissi totale. Ci sono anche i dinosauri.", en: "Cinctorres! Where we saw our very first total solar eclipse. There are also dinosaurs here." },
-    { foto: "../assets/images/tappa5.jpeg", lat: 46.57378272007491, lng: 8.988843794065533, it: "Olivone! Tra le maestose montagne svizzere, dove si può trovare la pace e la gioia.", en: "Olivone! Among the majestic Swiss mountains, where you can find peace and joy." },
-    { foto: "../assets/images/tappa6.jpeg", lat: 47.4979, lng: 19.0402, it: "Budapest! Ci siamo passati per solo otto ore... È carina.", en: "Budapest! We only stopped by for eight hours... It's nice." },
-    { foto: "../assets/images/tappa7.jpeg", lat: 46.42629399216806, lng: 8.307930134573258, it: "Il Blinnenhorn! Dove abbiamo deciso di sposarci.", en: "The Blinnenhorn! Where we decided to get married." }
+    { foto: "../assets/images/tappa1.jpeg", lat: 45.491706516674256, lng: 9.1530605076123 },
+    { foto: "../assets/images/tappa2.jpeg", lat: 41.42492065563975, lng: 2.185793910563726 },
+    { foto: "../assets/images/tappa3.jpeg", lat: 37.445704140675474, lng: 24.94366071688098 },
+    { foto: "../assets/images/tappa4.jpeg", lat: 40.5824, lng: -0.2185 },
+    { foto: "../assets/images/tappa5.jpeg", lat: 46.57378272007491, lng: 8.988843794065533 },
+    { foto: "../assets/images/tappa6.jpeg", lat: 47.4979, lng: 19.0402 },
+    { foto: "../assets/images/tappa7.jpeg", lat: 46.42629399216806, lng: 8.307930134573258 }
 ];
 
-let currentStage = 0, currentLang = localStorage.getItem('wedding-language') || localStorage.getItem('selectedLanguage') || 'it';
-if (!langData[currentLang]) currentLang = 'it';
-localStorage.setItem('wedding-language', currentLang);
-localStorage.removeItem('selectedLanguage');
+let currentStage = 0, currentLang = 'it';
 let map, userMarker, realMarker, polyline, selectedLat = null, selectedLng = null, hasGuessed = false, totalDistance = 0, gameOverState = false, playerName = "";
 
 function updateTexts() {
-    const t = langData[currentLang];
+    const t = T();
     document.getElementById("game-title").innerText = t.title;
     document.title = t.documentTitle;
     document.getElementById("game-subtitle").innerText = t.subtitle;
@@ -45,21 +35,14 @@ function updateTexts() {
     if (!gameOverState) {
         document.getElementById("progress-text").innerText = t.progress.replace("{current}", currentStage + 1).replace("{total}", tappe.length);
         document.getElementById("action-btn").innerText = !hasGuessed ? t.btnCheck : (currentStage === tappe.length - 1 ? t.btnFinish : t.btnNext);
+    } else {
+        document.getElementById("distance-result").innerHTML = t.finalScore.replace("{total}", totalDistance);
     }
-}
-
-function switchLanguage(lang) {
-    if (!langData[lang]) return;
-    currentLang = lang;
-    localStorage.setItem('wedding-language', lang);
-    localStorage.removeItem('selectedLanguage');
-    updateTexts();
-    if(hasGuessed && !gameOverState) document.getElementById("anecdote-text").innerText = tappe[currentStage][currentLang];
 }
 
 function startActualGame() {
     const input = document.getElementById("player-name-input").value.trim();
-    if (input === "") { alert(langData[currentLang].nameAlert); return; }
+    if (input === "") { alert(T().nameAlert); return; }
     playerName = input;
     document.getElementById("name-zone").style.display = "none";
     document.getElementById("game-zone").style.display = "block";
@@ -80,7 +63,7 @@ function initMap() {
 }
 
 function handleButtonClick() {
-    const t = langData[currentLang];
+    const t = T();
     if (!hasGuessed) {
         if (selectedLat === null) { alert(t.mapClick); return; }
         hasGuessed = true; const reale = tappe[currentStage];
@@ -92,7 +75,7 @@ function handleButtonClick() {
         const group = new L.featureGroup([userMarker, realMarker]); map.fitBounds(group.getBounds().pad(0.2));
         
         document.getElementById("distance-result").innerHTML = t.distText.replace("{dist}", Math.round(d));
-        document.getElementById("anecdote-text").innerText = reale[currentLang];
+        document.getElementById("anecdote-text").innerText = T().anecdotes[currentStage];
         document.getElementById("result-box").style.display = "block";
         document.getElementById("action-btn").innerText = (currentStage === tappe.length - 1) ? t.btnFinish : t.btnNext;
     } else {
@@ -126,7 +109,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 function salvaPunteggioSuGoogleSheet(nomeInvitato, kmTotali) {
-    if (!GOOGLE_SCRIPT_URL) { document.getElementById("leaderboard-body").innerHTML = `<tr><td colspan="3">Database URL missing.</td></tr>`; return; }
+    if (!GOOGLE_SCRIPT_URL) { document.getElementById("leaderboard-body").textContent = T().missingUrl; return; }
     fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", cache: "no-cache", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ nome: nomeInvitato, punteggio: kmTotali }) })
     .then(() => { setTimeout(caricaClassificaDaGoogleSheet, 1000); })
     .catch(() => { caricaClassificaDaGoogleSheet(); });
@@ -138,14 +121,17 @@ function escapeHtml(s) {
 
 function caricaClassificaDaGoogleSheet() {
     const tbody = document.getElementById("leaderboard-body");
-    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${langData[currentLang].loading}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${T().loading}</td></tr>`;
     fetch(GOOGLE_SCRIPT_URL).then(r => r.json()).then(data => {
         tbody.innerHTML = "";
-        if (!Array.isArray(data) || data.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${langData[currentLang].empty}</td></tr>`; return; }
+        if (!Array.isArray(data) || data.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${T().empty}</td></tr>`; return; }
         data.forEach((row, idx) => { tbody.innerHTML += `<tr><td><strong>${idx + 1}</strong></td><td>${escapeHtml(row.nome)}</td><td>${escapeHtml(row.punteggio)} km</td></tr>`; });
-    }).catch(() => { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${langData[currentLang].error}</td></tr>`; });
+    }).catch(() => { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${T().error}</td></tr>`; });
 }
 
-document.getElementById("lang-select").addEventListener("change", event => switchLanguage(event.target.value));
-document.getElementById("lang-select").value = currentLang;
-updateTexts();
+document.addEventListener("languageChanged", event => {
+    currentLang = event.detail.language;
+    updateTexts();
+    if (hasGuessed && !gameOverState) document.getElementById("anecdote-text").innerText = T().anecdotes[currentStage];
+});
+window.weddingLanguageReady.then(({ language }) => { currentLang = language; updateTexts(); });
