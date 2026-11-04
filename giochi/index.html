@@ -68,12 +68,11 @@ animation:fade-up .9s calc(.5s + var(--i)*.14s) cubic-bezier(.2,.8,.2,1) both}
 .g-lidl:hover .icon svg{animation:roll .8s ease-in-out infinite alternate}
 @keyframes roll{to{transform:translateX(3px) rotate(4deg)}}
 
-.back{display:inline-block;margin:56px 0 48px;padding:12px 28px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:600;box-shadow:inset 0 0 0 2px var(--ink);
-transition:background .25s,color .25s,transform .25s;animation:fade-up .9s 1s cubic-bezier(.2,.8,.2,1) both}
-.back:hover{background:var(--ink);color:#fff;transform:translateY(-2px)}
+.back-link{margin:56px 0 48px;animation:fade-up .9s 1s cubic-bezier(.2,.8,.2,1) both}
 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
+<link rel="stylesheet" href="../navigation.css">
 <script src="../js/language.js" data-language-file="../lang.json" defer></script>
 </head>
 
@@ -174,7 +173,7 @@ transition:background .25s,color .25s,transform .25s;animation:fade-up .9s 1s cu
     </a>
   </main>
 
-  <a href="../index.html" class="back" data-i18n="back">
+  <a href="../index.html" class="back-link" data-i18n="back">
     ← Torna al sito principale
   </a>
 

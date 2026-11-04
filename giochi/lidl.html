@@ -122,9 +122,8 @@ font-weight:700;font-size:1.35rem;line-height:1.1;transform:rotate(12deg);box-sh
 .btn:hover{background:var(--blue);color:#fff;transform:translateY(-2px)}
 .btn.ghost{background:transparent;box-shadow:inset 0 0 0 2px var(--blue)}
 .btn.ghost:hover{background:var(--blue)}
-.btn:focus-visible,.back-link:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
-.back-link{display:inline-block;margin-top:24px;color:var(--muted);text-decoration:none;font-size:.95rem}
-.back-link:hover{color:var(--blue);text-decoration:underline}
+.btn:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.back-link{margin-top:24px}
 
 /* Confetti in the three brand colours */
 .fx{position:fixed;z-index:50;pointer-events:none;width:9px;height:14px;border-radius:2px;animation:pop 1s ease-out forwards}
@@ -132,6 +131,7 @@ font-weight:700;font-size:1.35rem;line-height:1.1;transform:rotate(12deg);box-sh
 @media(max-width:520px){.quiz-container{margin-left:12px;margin-right:12px;padding:20px 14px 26px}.row{grid-template-columns:105px 1fr 38px}.band{padding-bottom:84px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
 </style>
+<link rel="stylesheet" href="../navigation.css">
 </head>
 <body>
 <header class="band">

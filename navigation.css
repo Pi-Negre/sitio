@@ -1,0 +1,21 @@
+.back-link {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 999px;
+  color: var(--back-link-color, var(--ink, #14233a));
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 2px var(--back-link-color, var(--ink, #14233a));
+  transition: background 0.25s, color 0.25s, transform 0.25s;
+}
+
+.back-link:hover {
+  background: var(--back-link-color, var(--ink, #14233a));
+  color: var(--back-link-hover-color, #fff);
+  transform: translateY(-2px);
+}
+
+.back-link:focus-visible {
+  outline: 3px solid var(--back-link-color, var(--ink, #14233a));
+  outline-offset: 3px;
+}

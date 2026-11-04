@@ -111,10 +111,10 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:360/500}
 .pad svg{width:32px;height:32px;stroke-width:3}
 @media(pointer:coarse){.pad{display:flex}.kbd{display:none}}
 @media(pointer:fine){.touch{display:none}}
-.back{display:inline-block;margin-top:18px;color:var(--ink);opacity:.75;text-decoration:none;font-size:.95rem;font-weight:600}
-.back:hover{opacity:1;text-decoration:underline}
+.back-link{margin-top:18px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
+<link rel="stylesheet" href="../navigation.css">
 </head>
 <body data-city="milano" data-char="sposo">
 <div class="bg m"></div><div class="bg b"></div>
@@ -174,7 +174,7 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:360/500}
   </section>
 </main>
 
-<a href="index.html" class="back" id="link-back" data-i="back"></a>
+<a href="index.html" class="back-link" id="link-back" data-i="back"></a>
 <script>document.querySelectorAll(".pic img").forEach(function(i){if(i.complete&&i.naturalWidth)i.parentNode.classList.add("has-photo")})</script>
 <script src="bici-logic.js"></script>
 </body>

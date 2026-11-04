@@ -5,6 +5,8 @@
     --paper: #fbfaf7;
     --mist: #e6eef6;
     --muted: #5d6b7e;
+    --back-link-color: #dbe6f3;
+    --back-link-hover-color: #14233a;
 }
 
 * { box-sizing: border-box; }
@@ -192,13 +194,8 @@ h1 {
 .real-point { font-size: 30px; text-align: center; line-height: 30px; }
 
 .back-link {
-    display: inline-block;
     margin-top: 24px;
-    color: #dbe6f3;
-    text-decoration: none;
-    font-size: 0.95rem;
 }
-.back-link:hover { color: #fff; text-decoration: underline; }
 
 @media (max-width: 520px) {
     .game-container { padding: 62px 14px 24px; border-width: 9px; }
