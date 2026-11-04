@@ -9,112 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700&family=Instrument+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../language-switcher.css">
-<style>
-:root{--display:'Fraunces',Georgia,serif;--body:'Instrument Sans','Segoe UI',system-ui,sans-serif}
-body[data-city=milano]{--ink:#1f2933;--accent:#b3202a;--accent-d:#8c1620;--soft:#f6e3e3;--panel:#fffdfb;--line:#ddd3cc;--muted:#64707c}
-body[data-city=barcellona]{--ink:#2b2622;--accent:#d65a31;--accent-d:#b04420;--soft:#fbe4d6;--panel:#fffcf5;--line:#ecd9b5;--muted:#7a6d5f}
-body[data-char=sposo]{--hero:#1d2a44}
-body[data-char=sposa]{--hero:#c4607c}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-[hidden]{display:none!important}
-body{font-family:var(--body);color:var(--ink);text-align:center;min-height:100vh;padding:0 0 20px;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-.bg{position:fixed;inset:0;z-index:-1;opacity:0;transition:opacity .9s ease}
-.bg.m{background:linear-gradient(180deg,#d6dde6 0%,#eee9e4 60%,#f5efe9 100%)}
-.bg.b{background:linear-gradient(180deg,#b6e2df 0%,#f8e6bd 65%,#f4cc94 100%)}
-body[data-city=milano] .bg.m,body[data-city=barcellona] .bg.b{opacity:1}
-svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-button{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+<link rel="stylesheet" href="bici-style.css">
 
-.shell{max-width:470px;margin:0 auto;padding:60px 14px 10px;position:relative}
-.shell > .lang-switcher{position:fixed;top:14px;right:14px;z-index:1000}
-h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,8vw,2.7rem);letter-spacing:-.02em;line-height:1.1;animation:up .8s cubic-bezier(.2,.8,.2,1) both}
-.sub{color:var(--muted);margin:8px auto 20px;max-width:34ch;animation:up .8s .12s cubic-bezier(.2,.8,.2,1) both}
-@keyframes up{from{opacity:0;translate:0 20px}}
-
-.panel{background:var(--panel);border-radius:18px;padding:22px 18px 24px;box-shadow:0 14px 34px rgba(30,30,30,.12);transition:background .6s,opacity .3s,transform .3s}
-.panel.enter{animation:up .6s cubic-bezier(.2,.8,.2,1) both}
-.panel.leave{opacity:0;transform:translateY(-12px)}
-.step{font-family:var(--display);font-weight:600;font-size:1.05rem;margin:4px 0 12px}
-.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.choice{background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 8px 12px;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;
-transition:transform .3s cubic-bezier(.3,1.4,.5,1),border-color .25s,box-shadow .25s,background .25s}
-.choice:hover{transform:translateY(-3px)}
-/* Real photos (../assets/images/*.jpg) shown over the fallback illustration. */
-.pic{position:relative;width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--soft)}
-.pic svg,.pic img{position:absolute;inset:0;width:100%;height:100%;stroke:none}
-.pic img{object-fit:cover;transition:transform .5s}
-.choice:hover .pic img{transform:scale(1.06)}
-.pic.has-photo svg{display:none}
-.char .pic{aspect-ratio:1/1}
-.char .pic img{object-fit:contain;object-position:center bottom}
-.namebox{margin-bottom:18px}
-.namebox input{font:inherit;font-family:var(--display);font-size:1.15rem;text-align:center;width:80%;max-width:300px;padding:10px 8px;border:none;border-bottom:2px solid var(--ink);background:transparent;color:var(--ink);outline:none}
-.namebox input:focus{border-bottom-color:var(--accent)}
-.namebox input.bad{animation:shake .4s;border-bottom-color:var(--accent)}
-#name-err{color:var(--accent);font-size:.85rem;min-height:1.3em;margin-top:4px;font-weight:600}
-.hud #hud-lvl{color:var(--hero)}
-.scorebox{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);color:#fff;font-weight:700;font-size:.9rem;padding:4px 12px;border-radius:999px;display:flex;gap:6px;align-items:baseline;pointer-events:none}
-#hud-combo{color:#ffd45a;font-size:.8rem}
-#end .stats{font-size:.85rem;opacity:.85;animation:up .5s .3s both}
-.toast{position:absolute;top:14px;left:50%;translate:-50% 0;background:var(--accent);color:#fff;font-weight:700;padding:6px 18px;border-radius:999px;opacity:0;pointer-events:none}
-.toast.show{animation:toast 1.6s ease both}
-@keyframes toast{0%{opacity:0;translate:-50% -14px}15%,75%{opacity:1;translate:-50% 0}100%{opacity:0;translate:-50% -8px}}
-#end .score{font-family:var(--display);font-size:1.5rem;font-weight:700;opacity:1;animation:up .5s .25s both}
-.board{margin-top:18px}
-.board table{width:100%;border-collapse:collapse;font-size:.95rem;margin-top:6px}
-.board th{background:var(--ink);color:#fff;padding:9px 10px;text-align:left}
-.board td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
-.board tbody tr:first-child td{font-weight:700;color:var(--accent)}
-.board tr.me td{background:var(--soft);font-weight:700}
-.choice strong{font-family:var(--display);font-size:1.05rem}
-.choice small{color:var(--muted);font-size:.8rem;line-height:1.3}
-.choice[aria-pressed=true]{border-color:var(--accent);background:var(--soft);box-shadow:0 8px 20px rgba(0,0,0,.12);transform:translateY(-3px)}
-.choice[aria-pressed=true]::after{content:"";position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L19 7'/%3E%3C/svg%3E") center/11px no-repeat;animation:pop .35s cubic-bezier(.3,1.8,.5,1)}
-@keyframes pop{from{scale:0}}
-
-.btn{display:inline-block;background:var(--accent);color:#fff;border:none;border-radius:999px;padding:14px 38px;font-weight:700;font-size:1.05rem;cursor:pointer;transition:background .25s,transform .25s,box-shadow .25s}
-.btn:hover{background:var(--accent-d);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.2)}
-.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
-.btn.ghost:hover{background:var(--ink);color:#fff}
-#btn-play{animation:breathe 2.4s ease-in-out infinite}
-@keyframes breathe{50%{box-shadow:0 0 0 8px rgba(0,0,0,.07)}}
-
-/* Stage */
-.hud{display:flex;justify-content:space-between;font-weight:600;font-size:.9rem;margin-bottom:8px}
-.track{height:8px;background:var(--line);border-radius:99px;position:relative;margin:0 8px 14px}
-.fill{height:100%;width:0;background:var(--hero);border-radius:99px}
-.dot{position:absolute;top:50%;left:0;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--hero);translate:-50% -50%}
-.canvas-wrap{position:relative;border-radius:14px;overflow:hidden;border:3px solid var(--ink);box-shadow:0 10px 26px rgba(0,0,0,.25);background:#444;user-select:none;touch-action:none}
-canvas{display:block;width:100%;height:auto;aspect-ratio:360/500}
-.canvas-wrap.hit{animation:shake .5s}
-@keyframes shake{20%{translate:-8px 3px}40%{translate:7px -3px}60%{translate:-5px 2px}80%{translate:3px 0}}
-.flash{position:absolute;inset:0;background:var(--accent);opacity:0;pointer-events:none}
-.hit .flash{animation:flash .6s ease-out}
-@keyframes flash{from{opacity:.55}to{opacity:0}}
-.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;color:#fff;background:rgba(20,20,25,.62);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .45s}
-.overlay.show{opacity:1;pointer-events:auto}
-#count{background:transparent;backdrop-filter:none}
-.big{font-family:var(--display);font-weight:700;font-size:5.5rem;line-height:1;text-shadow:0 4px 24px rgba(0,0,0,.5);animation:tick .8s cubic-bezier(.2,.9,.3,1.3) both}
-@keyframes tick{from{scale:2;opacity:0}60%{opacity:1}}
-#end h2{font-family:var(--display);font-size:2rem;line-height:1.1;animation:up .5s .1s both}
-#end p{max-width:26ch;opacity:.92;animation:up .5s .2s both}
-#end .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px;animation:up .5s .3s both}
-#end .btn{padding:12px 24px;font-size:.95rem}
-#end .btn.ghost{color:#fff;box-shadow:inset 0 0 0 2px #fff}
-#end .btn.ghost:hover{background:#fff;color:var(--ink)}
-#end-icon{width:54px;height:54px;stroke-width:2.4;animation:pop .5s cubic-bezier(.3,1.8,.5,1) both}
-
-.hint{font-size:.85rem;color:var(--muted);margin-top:12px}
-.pad{display:none;justify-content:center;gap:28px;margin-top:14px}
-.pad button{width:74px;height:74px;border-radius:50%;border:none;background:var(--accent);color:#fff;display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.25);transition:transform .12s,background .2s;touch-action:none}
-.pad button:active{transform:scale(.9);background:var(--accent-d)}
-.pad svg{width:32px;height:32px;stroke-width:3}
-@media(pointer:coarse){.pad{display:flex}.kbd{display:none}}
-@media(pointer:fine){.touch{display:none}}
-.back-link{margin-top:18px}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-</style>
 <link rel="stylesheet" href="../navigation.css">
 </head>
 <body data-city="milano" data-char="sposo">
@@ -176,7 +72,7 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:360/500}
 </main>
 
 <a href="index.html" class="back-link" id="link-back" data-i="back"></a>
-<script>document.querySelectorAll(".pic img").forEach(function(i){if(i.complete&&i.naturalWidth)i.parentNode.classList.add("has-photo")})</script>
+<script src="bici-init.js" defer></script>
 <script src="bici-logic.js"></script>
 </body>
 </html>

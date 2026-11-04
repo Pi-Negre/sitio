@@ -10,69 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../language-switcher.css">
+  <link rel="stylesheet" href="games-menu.css">
 
-<style>
-:root{--ink:#14233a;--sea:#1f4e8c;--stamp:#c8432f;--paper:#fbfaf7;--mist:#e6eef6;--muted:#5d6b7e;--line:#d9e1ea;--lidl:#0050aa;--sun:#fff000;
---display:'Fraunces',Georgia,serif;--body:'Instrument Sans','Segoe UI',system-ui,sans-serif}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.6;min-height:100vh;text-align:center;
-animation:page-in .6s ease both;transition:opacity .3s,transform .3s;-webkit-font-smoothing:antialiased}
-body.leaving{opacity:0;transform:translateY(-10px)}
-@keyframes page-in{from{opacity:0}}
-svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-a:focus-visible,select:focus-visible{outline:3px solid var(--stamp);outline-offset:3px}
-
-/* Header band with two slowly drifting light blobs */
-.band{position:relative;overflow:hidden;color:#fff;padding:64px 20px 110px;background:linear-gradient(160deg,#2b64ab 0%,var(--sea) 55%,#173d6e 100%)}
-.band::before,.band::after{content:"";position:absolute;border-radius:50%;filter:blur(50px);opacity:.35;pointer-events:none}
-.band::before{width:340px;height:340px;background:#5b9be0;top:-120px;left:-80px;animation:blob1 14s ease-in-out infinite alternate}
-.band::after{width:300px;height:300px;background:var(--stamp);bottom:-170px;right:-60px;opacity:.28;animation:blob2 17s ease-in-out infinite alternate}
-@keyframes blob1{to{transform:translate(160px,70px)}}
-@keyframes blob2{to{transform:translate(-200px,-50px)}}
-.band>*{position:relative;z-index:1}
-.band>*:not(.lang-switcher){animation:fade-up .9s cubic-bezier(.2,.8,.2,1) both}
-.band h1{animation-delay:.1s!important}.band .rings{animation-delay:.25s!important}.band .sub{animation-delay:.4s!important}
-@keyframes fade-up{from{opacity:0;translate:0 24px}}
-h1{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,7vw,3.6rem);letter-spacing:-.02em;line-height:1.1}
-.rings{display:block;width:60px;height:30px;margin:18px auto 14px;stroke-width:2.2}
-.sub{max-width:44ch;margin:0 auto;opacity:.92;font-size:1.08rem}
-
-/* Game cards */
-.game-menu{max-width:1000px;margin:-60px auto 0;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;position:relative;z-index:2}
-.game-card{--accent:var(--sea);--tint:var(--mist);--ic:var(--sea);position:relative;display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--ink);
-background:#fff;border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:10px;padding:34px 26px 26px;overflow:hidden;
-box-shadow:0 10px 26px rgba(20,35,58,.08);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;
-animation:fade-up .9s calc(.5s + var(--i)*.14s) cubic-bezier(.2,.8,.2,1) both}
-.game-card:hover,.game-card:focus-visible{transform:translateY(-8px);box-shadow:0 22px 40px rgba(20,35,58,.16)}
-.g-geo{--i:0}.g-bici{--i:1;--accent:var(--stamp);--tint:#f7e1dc;--ic:var(--stamp)}
-.g-lidl{--i:2;--accent:var(--lidl);--tint:var(--sun);--ic:var(--lidl)}
-.icon{width:76px;height:76px;border-radius:50%;background:var(--tint);color:var(--ic);display:grid;place-items:center;margin-bottom:20px;transition:background .3s,color .3s,transform .4s cubic-bezier(.3,1.5,.5,1)}
-.icon svg{width:38px;height:38px;overflow:visible}
-.game-card:hover .icon{background:var(--accent);color:#fff;transform:scale(1.1) rotate(-6deg)}
-.g-lidl:hover .icon{color:var(--sun)}
-.game-card h3{font-family:var(--display);font-weight:600;font-size:1.3rem;line-height:1.25;margin-bottom:10px}
-.game-card p{color:var(--muted);flex:1;max-width:30ch}
-.play{display:inline-flex;align-items:center;gap:6px;margin-top:22px;font-weight:600;color:var(--accent)}
-.play svg{width:18px;height:18px;transition:transform .3s}
-.game-card:hover .play svg{transform:translateX(6px)}
-.play::after{content:"";position:absolute;left:0;bottom:0;height:4px;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
-.game-card:hover .play::after{transform:scaleX(1)}
-
-/* Small animations for each game card */
-.wheel{transform-box:fill-box;transform-origin:center}
-.g-bici:hover .wheel{animation:spin .9s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.route{position:absolute;right:-6px;top:10px;width:120px;opacity:.5;color:var(--sea);stroke-width:1.6;stroke-dasharray:4 6}
-.g-geo:hover .route{animation:march 1s linear infinite}
-@keyframes march{to{stroke-dashoffset:-20}}
-.g-lidl:hover .icon svg{animation:roll .8s ease-in-out infinite alternate}
-@keyframes roll{to{transform:translateX(3px) rotate(4deg)}}
-
-.back-link{margin:56px 0 48px;animation:fade-up .9s 1s cubic-bezier(.2,.8,.2,1) both}
-
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
-</style>
 <link rel="stylesheet" href="../navigation.css">
+<script src="games-menu.js" defer></script>
 <script src="../js/language.js" data-language-file="../lang.json" defer></script>
 </head>
 
@@ -177,38 +118,5 @@ animation:fade-up .9s calc(.5s + var(--i)*.14s) cubic-bezier(.2,.8,.2,1) both}
     ← Torna al sito principale
   </a>
 
-  <script>
-    // Fade the page out before navigating to another page.
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    document.querySelectorAll("a[href]").forEach((link) => {
-      link.addEventListener("click", (event) => {
-        if (
-          reduceMotion ||
-          event.metaKey ||
-          event.ctrlKey ||
-          event.shiftKey ||
-          event.altKey ||
-          event.button !== 0 ||
-          link.target === "_blank"
-        ) {
-          return;
-        }
-
-        event.preventDefault();
-        document.body.classList.add("leaving");
-
-        setTimeout(() => {
-          window.location.href = link.href;
-        }, 300);
-      });
-    });
-
-    window.addEventListener("pageshow", () => {
-      document.body.classList.remove("leaving");
-    });
-  </script>
 </body>
 </html>
