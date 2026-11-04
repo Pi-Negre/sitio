@@ -22,6 +22,8 @@ const tappe = [
 
 let currentStage = 0, currentLang = localStorage.getItem('wedding-language') || localStorage.getItem('selectedLanguage') || 'it';
 if (!langData[currentLang]) currentLang = 'it';
+localStorage.setItem('wedding-language', currentLang);
+localStorage.removeItem('selectedLanguage');
 let map, userMarker, realMarker, polyline, selectedLat = null, selectedLng = null, hasGuessed = false, totalDistance = 0, gameOverState = false, playerName = "";
 
 function updateTexts() {
@@ -50,7 +52,7 @@ function switchLanguage(lang) {
     if (!langData[lang]) return;
     currentLang = lang;
     localStorage.setItem('wedding-language', lang);
-    localStorage.setItem('selectedLanguage', lang);
+    localStorage.removeItem('selectedLanguage');
     updateTexts();
     if(hasGuessed && !gameOverState) document.getElementById("anecdote-text").innerText = tappe[currentStage][currentLang];
 }
@@ -144,5 +146,6 @@ function caricaClassificaDaGoogleSheet() {
     }).catch(() => { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${langData[currentLang].error}</td></tr>`; });
 }
 
+document.getElementById("lang-select").addEventListener("change", event => switchLanguage(event.target.value));
 document.getElementById("lang-select").value = currentLang;
 updateTexts();

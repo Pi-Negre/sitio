@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../language-switcher.css">
 
 <style>
 :root{--ink:#14233a;--sea:#1f4e8c;--stamp:#c8432f;--paper:#fbfaf7;--mist:#e6eef6;--muted:#5d6b7e;--line:#d9e1ea;--lidl:#0050aa;--sun:#fff000;
@@ -35,8 +36,6 @@ a:focus-visible,select:focus-visible{outline:3px solid var(--stamp);outline-offs
 h1{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,7vw,3.6rem);letter-spacing:-.02em;line-height:1.1}
 .rings{display:block;width:60px;height:30px;margin:18px auto 14px;stroke-width:2.2}
 .sub{max-width:44ch;margin:0 auto;opacity:.92;font-size:1.08rem}
-.lang-switcher{position:absolute;top:14px;right:14px;z-index:5}
-.lang-switcher select{font:inherit;font-weight:600;font-size:.9rem;color:var(--ink);background:rgba(255,255,255,.95);border:none;border-radius:999px;padding:8px 14px;cursor:pointer;box-shadow:0 2px 10px rgba(20,35,58,.25)}
 
 /* Game cards */
 .game-menu{max-width:1000px;margin:-60px auto 0;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;position:relative;z-index:2}
@@ -81,7 +80,7 @@ transition:background .25s,color .25s,transform .25s;animation:fade-up .9s 1s cu
 <body>
   <header class="band">
     <div class="lang-switcher">
-      <select id="lang-select" data-i18n-aria-label="language_label" aria-label="Lingua">
+      <select id="lang-select" aria-label="Language / Lingua">
         <option value="it">Italiano</option>
         <option value="en">English</option>
       </select>

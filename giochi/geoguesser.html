@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Load the custom stylesheet for the game. -->
     <link rel="stylesheet" href="geoguesser-style.css" />
+    <link rel="stylesheet" href="../language-switcher.css" />
 </head>
 <body>
 
@@ -19,10 +20,10 @@
         <p id="game-subtitle" class="subtitle">Indovina dove abbiamo scattato questa foto della nostra storia!</p>
 
         <!-- Language selector -->
-        <div class="lang-switcher-container">
-            <select id="lang-select" onchange="switchLanguage(this.value)">
-                <option value="it">🇮🇹 Italiano</option>
-                <option value="en">🇬🇧 English</option>
+        <div class="lang-switcher">
+            <select id="lang-select" aria-label="Language / Lingua">
+                <option value="it">Italiano</option>
+                <option value="en">English</option>
             </select>
         </div>
 

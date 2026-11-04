@@ -30,9 +30,9 @@ async function initLanguage() {
 
     applyLanguage(initialLanguage);
 
-    // Keep both keys in sync while older standalone game pages are still supported.
+    // Move the saved preference to the shared key after reading the legacy key.
     localStorage.setItem(LANGUAGE_KEY, initialLanguage);
-    localStorage.setItem(LEGACY_LANGUAGE_KEY, initialLanguage);
+    localStorage.removeItem(LEGACY_LANGUAGE_KEY);
 
     const selector = document.getElementById("lang-select");
 
@@ -45,7 +45,7 @@ async function initLanguage() {
         if (!isSupported(selectedLanguage)) return;
 
         localStorage.setItem(LANGUAGE_KEY, selectedLanguage);
-        localStorage.setItem(LEGACY_LANGUAGE_KEY, selectedLanguage);
+        localStorage.removeItem(LEGACY_LANGUAGE_KEY);
         applyLanguage(selectedLanguage);
       });
     }

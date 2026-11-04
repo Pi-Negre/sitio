@@ -23,10 +23,11 @@ body {
 
 /* The postcard: airmail-striped border around a paper card */
 .game-container {
+    position: relative;
     max-width: 880px;
     margin: 10px auto;
     background: var(--paper);
-    padding: 28px 28px 32px;
+    padding: 72px 28px 32px;
     border: 12px solid transparent;
     border-image: repeating-linear-gradient(135deg,
         var(--stamp) 0 16px, #fff 16px 32px, var(--sea) 32px 48px, #fff 48px 64px) 12;
@@ -48,19 +49,6 @@ h1 {
     margin: 0 auto 18px;
     max-width: 46ch;
     line-height: 1.5;
-}
-
-.lang-switcher-container { text-align: right; margin-bottom: 6px; }
-
-.lang-switcher-container select {
-    padding: 6px 10px;
-    border: 1.5px solid var(--ink);
-    border-radius: 999px;
-    background: #fff;
-    color: var(--ink);
-    font-family: inherit;
-    font-size: 0.9rem;
-    cursor: pointer;
 }
 
 .name-screen { padding: 34px 10px 20px; }
@@ -143,7 +131,7 @@ h1 {
     font-family: inherit;
 }
 .btn:hover { background: var(--stamp); transform: translateY(-1px); }
-.btn:focus-visible, .lang-switcher-container select:focus-visible, .back-link:focus-visible {
+.btn:focus-visible, .lang-switcher select:focus-visible, .back-link:focus-visible {
     outline: 3px solid var(--stamp);
     outline-offset: 3px;
 }
@@ -213,6 +201,6 @@ h1 {
 .back-link:hover { color: #fff; text-decoration: underline; }
 
 @media (max-width: 520px) {
-    .game-container { padding: 18px 14px 24px; border-width: 9px; }
+    .game-container { padding: 62px 14px 24px; border-width: 9px; }
     #map, .wedding-photo { max-height: 280px; height: 280px; }
 }

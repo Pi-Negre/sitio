@@ -25,6 +25,8 @@ const T = {
     ob: { ped: "a pedestrian", dog: "a dog", bin: "a bin", hog: "a hedgehog", tram: "a tram", palm: "a palm tree", scooter: "a scooter", roach: "a cockroach" } }
 };
 let lang = localStorage.getItem('wedding-language') || localStorage.getItem('selectedLanguage') || 'it'; if (!T[lang]) lang = 'it';
+localStorage.setItem('wedding-language', lang);
+localStorage.removeItem('selectedLanguage');
 let ch = 'sposo', city = 'milano';
 const g$ = () => (ch === 'sposa' ? 'f' : 'm');
 const tx = k => { const L = T[lang]; const v = L[k + '_' + g$()] !== undefined ? L[k + '_' + g$()] : L[k]; return v; };
@@ -401,7 +403,7 @@ $('lang-select').addEventListener('change', e => {
   if (!T[e.target.value]) return;
   lang = e.target.value;
   localStorage.setItem('wedding-language', lang);
-  localStorage.setItem('selectedLanguage', lang);
+  localStorage.removeItem('selectedLanguage');
   texts();
 });
 
