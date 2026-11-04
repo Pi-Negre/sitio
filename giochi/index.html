@@ -59,7 +59,7 @@ animation:fade-up .9s calc(.5s + var(--i)*.14s) cubic-bezier(.2,.8,.2,1) both}
 .play::after{content:"";position:absolute;left:0;bottom:0;height:4px;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
 .game-card:hover .play::after{transform:scaleX(1)}
 
-/* Per-game micro animations */
+/* Small animations for each game card */
 .wheel{transform-box:fill-box;transform-origin:center}
 .g-bici:hover .wheel{animation:spin .9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}

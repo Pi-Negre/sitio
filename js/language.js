@@ -20,7 +20,7 @@ async function initLanguage() {
     translations = await response.json();
     window.weddingTranslations = translations;
 
-    // Migrate the language preference saved by the previous version.
+    // Read the current preference, falling back to the key used by older game pages.
     const oldLanguage = localStorage.getItem(LEGACY_LANGUAGE_KEY);
     const savedLanguage = localStorage.getItem(LANGUAGE_KEY) || oldLanguage;
 
@@ -30,7 +30,7 @@ async function initLanguage() {
 
     applyLanguage(initialLanguage);
 
-    // Save the preference using the new shared key.
+    // Keep both keys in sync while older standalone game pages are still supported.
     localStorage.setItem(LANGUAGE_KEY, initialLanguage);
     localStorage.setItem(LEGACY_LANGUAGE_KEY, initialLanguage);
 

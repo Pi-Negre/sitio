@@ -1,14 +1,14 @@
 (function () {
 'use strict';
 const W = 360, H = 500, RL = 44, RR = 316, TARGET = 3600, PY = 430, MAXV = 260;
-// Incolla qui l'URL /exec del tuo Google Apps Script per la classifica (vedi istruzioni)
+// Paste the deployed Google Apps Script /exec URL here to enable the leaderboard.
 const BICI_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRap5Szo01QEmwXEave2ZLNWZHPtWhkSsehzKOaYAijTa_pnAw8sB1_Jf8KcWMR9KU/exec";
 const $ = id => document.getElementById(id);
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-/* ---------- Testi ---------- */
+/* ---------- Translations ---------- */
 const T = {
   it: { title: "Bike Escape", subtitle: "Schiva gli ostacoli e arriva al matrimonio in tempo!", char: "1. Scegli il personaggio", city: "2. Scegli l'ambientazione",
     sposo: "Sposo", sposoSub: "Giacca blu notte", sposa: "Sposa", sposaSub: "Abito e velo", milano: "Milano", milanoSub: "Tra Duomo e nebbia", barcellona: "Barcellona", barcellonaSub: "Sole e Sagrada Família",
@@ -29,7 +29,7 @@ let ch = 'sposo', city = 'milano';
 const g$ = () => (ch === 'sposa' ? 'f' : 'm');
 const tx = k => { const L = T[lang]; const v = L[k + '_' + g$()] !== undefined ? L[k + '_' + g$()] : L[k]; return v; };
 
-/* ---------- Temi città ---------- */
+/* ---------- City themes ---------- */
 const CITY = {
   milano: { road: '#4b5059', edge: '#d8cfc6', line: '#f1ede6', accent: '#b3202a', roofs: ['#b8a9a0', '#cdbfb4', '#9ea3a8', '#c9aeb0'],
     coats: ['#e0b04a', '#c0392b', '#f1f1f1', '#4a8bd0', '#e58aa5'], conf: ['#b3202a', '#ffffff', '#d9a441', '#1f2933'], pool: ['tram', 'tram', 'ped', 'ped', 'dog', 'bin', 'hog'], bin: '#2f8f5b', tram: '#e07b2b' },
@@ -54,7 +54,7 @@ function palm(t, ph, s) {
   ell(0, 0, 5, 5, '#7a5230'); ctx.restore();
 }
 
-/* ---------- Ostacoli (visti dall'alto) ---------- */
+/* ---------- Obstacles, drawn from above ---------- */
 const OB = {
   ped: { w: 30, h: 30, rel: [-40, 50], draw(o, t) {
     ell(2, 3, 13, 8, SH); const s = Math.sin(t * 9 + o.ph) * 3;
@@ -88,7 +88,7 @@ const OB = {
     ell(-2, 0, 1.6, 6, 'rgba(255,255,255,.3)'); ell(0, 13, 4, 3.4, '#3b2616'); } }
 };
 
-/* ---------- Stato ---------- */
+/* ---------- Game state ---------- */
 const g = { mode: 'setup', t: 0, sf: 0, dist: 0, elapsed: 0, level: 1, score: 0, extra: 0, rings: 0, close: 0, dodged: 0, streak: 0, items: [], pops: [], lostTo: null, roadOff: 0, cd: 0, cdN: -1, endT: 0, shown: false, raf: 0, last: 0, drag: null,
   p: { x: W / 2, vx: 0, tilt: 0 }, obs: [], sc: { l: [], r: [] }, conf: [], keys: { l: 0, r: 0 }, lastHud: -1 };
 
@@ -143,7 +143,7 @@ function showEnd(won) {
   $('end').classList.add('show'); g.shown = true;
 }
 
-/* ---------- Aggiornamento ---------- */
+/* ---------- Game update ---------- */
 function toast() {
   const el = $('toast'); el.textContent = tx('level') + ' ' + g.level;
   el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
@@ -154,7 +154,7 @@ function update(dt) {
   const tgt = { ready: 0.3, count: 0.3, play: 1, win: 0.3, lose: 0, setup: 0 }[g.mode] || 0;
   g.sf += (tgt - g.sf) * Math.min(1, dt * 3);
   if (!isFinite(g.sf)) g.sf = 0;
-  // La difficolta' cresce con la strada fatta: velocita' da 1x a 1.8x, piu' ostacoli al secondo
+  // Difficulty increases with distance: speed rises from 1× to 1.8×, with more obstacles spawning each second.
   const lvl = clamp(g.dist / TARGET, 0, 1), spd = 1 + 0.8 * lvl;
 
   const p = g.p, can = g.mode === 'play' || g.mode === 'count';
@@ -241,7 +241,7 @@ function collect(r) {
   for (let i = 0; i < 8; i++) g.conf.push({ x: r.x, y: r.y, vx: rnd(-90, 90), vy: rnd(-150, -30), r: 0, vr: rnd(-6, 6), w: 4, h: 4, c: pick(['#ffd45a', '#fff3b0', '#ffffff']) });
 }
 
-/* ---------- Classifica ---------- */
+/* ---------- Leaderboard ---------- */
 let playerName = localStorage.getItem('bikePlayer') || '';
 function finishRun(won) {
   g.score = Math.round(Math.min(g.dist, TARGET)) + g.extra + (won ? 1000 : 0);
@@ -272,7 +272,7 @@ function loadBoard() {
   }).catch(() => boardMsg('boardError'));
 }
 
-/* ---------- Disegno ---------- */
+/* ---------- Rendering ---------- */
 function drawPlayer() {
   const p = g.p, t = g.t, C = CITY[city], sposa = ch === 'sposa';
   const pedal = Math.sin(t * (5 + g.sf * 9));
@@ -356,7 +356,7 @@ function loop(ts) {
   update(dt); draw();
 }
 
-/* ---------- Schermate ---------- */
+/* ---------- Screens ---------- */
 function swap(from, to, done) {
   from.classList.add('leave');
   setTimeout(() => {
@@ -385,7 +385,7 @@ function texts() {
   if (g.shown && (g.mode === 'win' || g.mode === 'lose')) showEnd(g.mode === 'win');
 }
 
-/* ---------- Eventi ---------- */
+/* ---------- Event handlers ---------- */
 document.querySelectorAll('.choice[data-char]').forEach(b => b.addEventListener('click', () => {
   ch = b.dataset.char; document.body.dataset.char = ch;
   document.querySelectorAll('.choice[data-char]').forEach(x => x.setAttribute('aria-pressed', x === b)); texts();

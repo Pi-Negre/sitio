@@ -218,7 +218,7 @@ const ICONS = {
   verdura: svg('<path d="M12 22V12M12 12C12 7 8 4 4 4c0 4 3 8 8 8ZM12 14c0-4 3-7 8-7 0 4-3 7-8 7Z"/>')
 };
 
-// Ogni risposta assegna un "profilo"; icon = dettaglio visivo legato alla domanda.
+// Each answer contributes to a product profile; the icon illustrates its question.
 const domande = [
   { q: "Oggi piove e allora...", icon: "rain", opts: [
     { text: "Scendo per strada e comincio a correre sotto la pioggia.", profile: "ceci" },
@@ -255,6 +255,7 @@ const domande = [
     { text: "Non so fare un backup quindi spendo 5 ore a selezionare le mie foto preferite ed elimino le altre.", profile: "riso" } ] }
 ];
 
+// Keep each English question and option at the same index as its Italian counterpart above.
 const domandeEn = [
   { q: "It's raining today, so…", opts: ["I head outside and start running in the rain.", "I stay home under the covers.", "I call my parents to ask if it's raining there too.", "I take some photos for Instagram."] },
   { q: "A colleague invites you to lunch, but you don't want to go. What do you say?", opts: ["‘No, I don't feel like it.’", "‘Great idea, I'll be right there’—then I don't show up!", "‘Thanks so much, but I have something to do.’", "‘Great idea, I'll be right there’—then I join and suffer in silence."] },
@@ -276,6 +277,7 @@ const profili = {
     desc: "Sei una persona dolce, calorosa e super affettuosa. Vuoi sempre il meglio per te e i tuoi amici, ma sei abbastanza picky e non tutti riescono a starti accanto. Ogni occasione è buona per migliorare la tua condizione. Sei decisa e agguerrita e non ti arrendi mai." }
 };
 
+// Profile keys must match profili so the score calculation stays language-independent.
 const profiliEn = {
   ceci: { name: "Dried chickpeas", nick: "The Grumpy Sage", price: "0.89", note: "BEST BEFORE: NEVER · COOKING TIME: LONG",
     desc: "You had a tough upbringing, but you're exactly what every student on a tight budget needs. You have a bright future as a teacher, even if you won't admit it. You're determined, tough, and as rough around the edges as life itself." },
@@ -395,7 +397,7 @@ $("lang-select").addEventListener("change", event => {
   applyUiLanguage();
 });
 
-// Scorciatoie da tastiera: 1-4 per rispondere
+// Press 1–4 to choose the corresponding answer.
 document.addEventListener("keydown", e => {
   if ($("quiz-game").hidden || lock) return;
   const b = $("options-container").children[+e.key - 1]; if (b) b.click();

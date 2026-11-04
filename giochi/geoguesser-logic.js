@@ -1,4 +1,4 @@
-// ⚠️ IMPORTANTE: Sostituisci questo testo con il tuo URL reale di Google Apps Script (lascia le virgolette)
+// Replace this value with the deployed Google Apps Script URL; keep the quotation marks.
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZL04nemGa7zkFajxKMpCO2LuzLCNIRHSInqbhMg1I8uwVy9hgy00wB3ocT1q7a63E/exec";
 
 const langData = {
@@ -117,7 +117,7 @@ function resetStageForNext() {
 }
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Raggio terrestre in km
+    const R = 6371; // Earth's mean radius in kilometres.
     const dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));

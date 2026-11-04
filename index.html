@@ -15,13 +15,13 @@
 </head>
 <body>
 
-    <!-- Spiga di grano riutilizzata dalla scena -->
+    <!-- Reusable wheat symbol for the animated hero scene. -->
     <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
         <symbol id="ear" viewBox="0 0 24 120"><path d="M12 118V30" stroke="#a98a2f" stroke-width="2.2" stroke-linecap="round" fill="none"/>
         <g fill="#d9a441"><ellipse cx="7.5" cy="52" rx="3.6" ry="7" transform="rotate(-28 7.5 52)"/><ellipse cx="16.5" cy="52" rx="3.6" ry="7" transform="rotate(28 16.5 52)"/><ellipse cx="7.5" cy="40" rx="3.6" ry="7" transform="rotate(-28 7.5 40)"/><ellipse cx="16.5" cy="40" rx="3.6" ry="7" transform="rotate(28 16.5 40)"/><ellipse cx="7.5" cy="28" rx="3.6" ry="7" transform="rotate(-28 7.5 28)"/><ellipse cx="16.5" cy="28" rx="3.6" ry="7" transform="rotate(28 16.5 28)"/><ellipse cx="12" cy="14" rx="3.6" ry="8"/></g></symbol>
     </defs></svg>
 
-    <!-- 1. Selettore Lingua in alto a destra -->
+    <!-- Language selector, positioned in the upper-right corner. -->
     <div class="lang-switcher">
         <select id="lang-select" data-i18n-aria-label="language_label" aria-label="Lingua">
             <option value="it">Italiano</option>
@@ -29,7 +29,7 @@
         </select>
     </div>
 
-    <!-- 2. Copertina (Hero) -->
+    <!-- Hero section -->
     <header class="hero">
         <div class="scene" aria-hidden="true">
             <div class="sun"></div><span class="cloud c1"></span><span class="cloud c2"></span>
@@ -48,13 +48,13 @@
         </div>
     </header>
 
-    <!-- 3. Barra di navigazione -->
+    <!-- Main navigation -->
     <nav class="navbar">
         <a href="#info" data-i18n="nav_info">Info Utili</a>
         <a href="giochi/index.html" class="nav-games" data-i18n="nav_games">Area Giochi</a>
     </nav>
 
-    <!-- Sezione Informazioni -->
+    <!-- Wedding information -->
     <section id="info" class="container">
         <h2 data-i18n="details_title">Dettagli</h2>
         <div class="grid">
@@ -71,13 +71,13 @@
         </div>
     </section>
 
-    <!-- Sezione RSVP (Form di conferma) -->
+    <!-- RSVP form -->
     <section id="rsvp" class="container bg-light">
         <h2 data-i18n="rsvp_title">Ci sarai?</h2>
         <p data-i18n="rsvp_subtitle">Ti preghiamo di confermare la tua presenza entro il 28 febbraio.</p>
         
         <form class="rsvp-form" id="rsvp-form">
-            <!-- Nota: per gli input usiamo data-i18n-placeholder per tradurre il testo interno -->
+            <!-- Use data-i18n-placeholder to translate input placeholder text. -->
             <input type="text" name="nome" autocomplete="name" maxlength="100" data-i18n-placeholder="form_name" placeholder="Nome e Cognome" required>
             <input type="email" name="email" autocomplete="email" maxlength="120" data-i18n-placeholder="form_email" placeholder="La tua Email" required>
             <select name="presenza" required>
@@ -118,9 +118,9 @@
         <p data-i18n="footer_text">Benvenuti!</p>
     </footer>
 
-    <!-- Animazioni, RSVP -> Google Sheet -->
+    <!-- Animations and RSVP submission to Google Sheets -->
     <script>
-        // 1) Incolla qui l'URL /exec del tuo Google Apps Script per le conferme (RSVP)
+        // Paste the deployed Google Apps Script /exec URL here to enable RSVP submissions.
         const RSVP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0jAJ3EqsdIt_wEyQf3s-CM9SGQ7Xm51rfMruCpFllTc3dzXqG8Xw0hgTp4KWnVcdwhQ/exec";
 
         (function () {
@@ -152,7 +152,7 @@
             });
         })();
 
-        // Spighe di grano che ondeggiano nella copertina
+        // Generate the wheat stalks that sway in the hero scene.
         (function () {
             const box = document.querySelector(".wheat"); if (!box) return;
             const n = Math.round(innerWidth / 34); let html = "";
@@ -163,7 +163,7 @@
             box.innerHTML = html;
         })();
 
-        // Scroll reveal + navbar shadow
+        // Reveal content as it enters view and add a shadow to the navbar on scroll.
         (function () {
             const nav = document.querySelector(".navbar");
             const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 10);
