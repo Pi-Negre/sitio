@@ -20,87 +20,6 @@
         <symbol id="ear" viewBox="0 0 24 120"><path d="M12 118V30" stroke="#a98a2f" stroke-width="2.2" stroke-linecap="round" fill="none"/>
         <g fill="#d9a441"><ellipse cx="7.5" cy="52" rx="3.6" ry="7" transform="rotate(-28 7.5 52)"/><ellipse cx="16.5" cy="52" rx="3.6" ry="7" transform="rotate(28 16.5 52)"/><ellipse cx="7.5" cy="40" rx="3.6" ry="7" transform="rotate(-28 7.5 40)"/><ellipse cx="16.5" cy="40" rx="3.6" ry="7" transform="rotate(28 16.5 40)"/><ellipse cx="7.5" cy="28" rx="3.6" ry="7" transform="rotate(-28 7.5 28)"/><ellipse cx="16.5" cy="28" rx="3.6" ry="7" transform="rotate(28 16.5 28)"/><ellipse cx="12" cy="14" rx="3.6" ry="8"/></g></symbol>
     </defs></svg>
-    
-    <!-- Fiore di falso gelsomino riutilizzabile nella scena -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <defs>
-        <symbol id="gelsomino" viewBox="0 0 100 100">
-
-        <!-- Five long, delicate jasmine petals -->
-        <g fill="#fffefa" stroke="#e8dfca" stroke-width="1.1"
-            stroke-linejoin="round" stroke-linecap="round">
-
-            <!-- Top petal -->
-            <path d="
-            M49 53
-            C44 43 42 29 44 17
-            C45 9 49 4 51 5
-            C55 10 57 23 55 34
-            C54 43 53 49 51 53
-            C50 55 49 55 49 53 Z"/>
-
-            <!-- Upper-right petal -->
-            <path d="
-            M51 51
-            C60 42 69 29 79 25
-            C85 22 91 24 92 27
-            C90 34 80 43 70 48
-            C62 53 56 55 51 54
-            C49 53 49 52 51 51 Z"/>
-
-            <!-- Lower-right petal -->
-            <path d="
-            M52 52
-            C63 56 77 65 82 76
-            C85 82 83 89 80 91
-            C73 88 64 78 59 69
-            C54 61 51 56 50 53
-            C50 51 51 51 52 52 Z"/>
-
-            <!-- Lower-left petal -->
-            <path d="
-            M49 53
-            C43 64 34 77 23 82
-            C17 85 11 82 9 79
-            C13 71 23 62 33 57
-            C40 53 46 51 49 51
-            C51 51 51 52 49 53 Z"/>
-
-            <!-- Upper-left petal -->
-            <path d="
-            M49 51
-            C38 50 23 46 15 37
-            C10 32 10 26 13 23
-            C21 25 32 32 40 40
-            C46 45 50 49 51 51
-            C52 53 51 53 49 51 Z"/>
-
-        </g>
-
-        <!-- Delicate petal folds -->
-        <g fill="none" stroke="#f0e9da" stroke-width="0.8"
-            stroke-linecap="round">
-            <path d="M50 51 Q49 29 50 9"/>
-            <path d="M51 52 Q69 35 87 27"/>
-            <path d="M51 52 Q69 72 81 86"/>
-            <path d="M49 52 Q29 69 13 80"/>
-            <path d="M49 51 Q29 38 13 27"/>
-        </g>
-
-        <!-- Soft green-yellow centre -->
-        <circle cx="50" cy="51" r="4.2" fill="#dce3a0"/>
-        <circle cx="50" cy="51" r="2.5" fill="#c7d27c"/>
-
-        <g fill="#b9c66e">
-            <circle cx="48" cy="49" r="0.8"/>
-            <circle cx="53" cy="50" r="0.7"/>
-            <circle cx="50" cy="54" r="0.7"/>
-            <circle cx="46" cy="52" r="0.6"/>
-        </g>
-
-        </symbol>
-    </defs>
-    </svg>
 
     <!-- 1. Selettore Lingua in alto a destra -->
     <div class="lang-switcher">
@@ -199,48 +118,105 @@
         <p data-i18n="footer_text">Benvenuti!</p>
     </footer>
 
-    <!-- Script del Multilingua -->
+    <!-- Multilingual support -->
     <script>
+        const SUPPORTED_LANGUAGES = ["it", "en"];
+        const DEFAULT_LANGUAGE = "it";
+
         let translations = {};
 
-        async function loadTranslations() {
+        function getSavedLanguage() {
             try {
-                const response = await fetch('lang.json');
-                translations = await response.json();
-                const savedLang = localStorage.getItem('selectedLanguage') || 'it';
-                document.getElementById('language-select').value = savedLang;
-                applyTranslations(savedLang);
-            } catch (error) {
-                console.error("Errore nel caricamento del file lang.json:", error);
+                const savedLanguage = localStorage.getItem("selectedLanguage");
+
+                return SUPPORTED_LANGUAGES.includes(savedLanguage)
+                    ? savedLanguage
+                    : DEFAULT_LANGUAGE;
+            } catch {
+                return DEFAULT_LANGUAGE;
             }
         }
 
-        function applyTranslations(lang) {
-            // Traduce i testi normali
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    element.innerText = translations[lang][key];
+        async function loadTranslations() {
+            try {
+                const response = await fetch("lang.json");
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+
+                translations = await response.json();
+
+                const language = getSavedLanguage();
+
+                applyTranslations(language);
+            } catch (error) {
+                console.error("Failed to load translations:", error);
+                applyTranslations(DEFAULT_LANGUAGE);
+            }
+        }
+
+        function applyTranslations(language) {
+            if (!SUPPORTED_LANGUAGES.includes(language)) {
+                language = DEFAULT_LANGUAGE;
+            }
+
+            const languageData = translations[language] || {};
+            const fallbackData = translations[DEFAULT_LANGUAGE] || {};
+
+            // Translate regular text content
+            document.querySelectorAll("[data-i18n]").forEach(element => {
+                const key = element.dataset.i18n;
+
+                const translatedText =
+                    languageData[key] ?? fallbackData[key];
+
+                if (translatedText !== undefined) {
+                    element.textContent = translatedText;
                 }
             });
 
-            // Traduce i placeholder dentro i campi di testo del form
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-                const key = element.getAttribute('data-i18n-placeholder');
-                if (translations[lang] && translations[lang][key]) {
-                    element.setAttribute('placeholder', translations[lang][key]);
+            // Translate input placeholders
+            document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+                const key = element.dataset.i18nPlaceholder;
+
+                const translatedText =
+                    languageData[key] ?? fallbackData[key];
+
+                if (translatedText !== undefined) {
+                    element.placeholder = translatedText;
                 }
             });
 
-            document.documentElement.lang = lang;
+            document.documentElement.lang = language;
+
+            const languageSelect = document.getElementById("language-select");
+
+            if (languageSelect) {
+                languageSelect.value = language;
+            }
+
+            // Update the page title
+            document.title = language === "en"
+                ? "Elisa and Giovanni"
+                : "Elisa e Giovanni";
         }
 
-        function changeLanguage(lang) {
-            localStorage.setItem('selectedLanguage', lang);
-            applyTranslations(lang);
+        function changeLanguage(language) {
+            if (!SUPPORTED_LANGUAGES.includes(language)) {
+                return;
+            }
+
+            try {
+                localStorage.setItem("selectedLanguage", language);
+            } catch (error) {
+                console.warn("Unable to save language preference:", error);
+            }
+
+            applyTranslations(language);
         }
 
-        window.addEventListener('DOMContentLoaded', loadTranslations);
+        document.addEventListener("DOMContentLoaded", loadTranslations);
     </script>
 
     <!-- Animazioni, RSVP -> Google Sheet -->
