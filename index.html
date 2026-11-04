@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elisa e Giovanni</title>
+    <title data-i18n-title="page_title">Elisa e Giovanni</title>
     <meta name="description" content="Il nostro matrimonio: informazioni, conferma presenza e giochi per gli invitati.">
     <meta name="theme-color" content="#2f4a2c">
-    <link rel="icon" type="image/png" href="giochi/assets/images/gelsomino_small.png">
+    <link rel="icon" type="image/png" href="assets/images/gelsomino_small.png">
     <!-- <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23406f3b' stroke='%232d4f2b' stroke-width='1.2'%3E%3Cpath d='M50 50 C36 38 36 16 50 2 C64 16 64 38 50 50Z' transform='rotate(36 50 50)'/%3E%3Cpath d='M50 50 C36 38 36 16 50 2 C64 16 64 38 50 50Z' transform='rotate(180 50 50)'/%3E%3Cpath d='M50 50 C36 38 36 16 50 2 C64 16 64 38 50 50Z' transform='rotate(324 50 50)'/%3E%3C/g%3E%3Cg stroke='%2388ad76' stroke-width='1' stroke-linecap='round'%3E%3Cpath d='M50 46 L50 9' transform='rotate(36 50 50)'/%3E%3Cpath d='M50 46 L50 9' transform='rotate(180 50 50)'/%3E%3Cpath d='M50 46 L50 9' transform='rotate(324 50 50)'/%3E%3C/g%3E%3Cg fill='%23fffdf6' stroke='%23d8c9a9' stroke-width='1.2' stroke-linejoin='round'%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z'/%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z' transform='rotate(72 50 50)'/%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z' transform='rotate(144 50 50)'/%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z' transform='rotate(216 50 50)'/%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z' transform='rotate(288 50 50)'/%3E%3C/g%3E%3Ccircle cx='50' cy='50' r='5' fill='%23dce3a0'/%3E%3Ccircle cx='50' cy='50' r='2.5' fill='%23b9c66e'/%3E%3C/svg%3E">-->
     <!-- <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 96V38' stroke='%234a6a2f' stroke-width='6' stroke-linecap='round'/%3E%3Cg fill='%23d9a441'%3E%3Cellipse cx='36' cy='70' rx='10' ry='17' transform='rotate(-28 36 70)'/%3E%3Cellipse cx='64' cy='70' rx='10' ry='17' transform='rotate(28 64 70)'/%3E%3Cellipse cx='36' cy='46' rx='10' ry='17' transform='rotate(-28 36 46)'/%3E%3Cellipse cx='64' cy='46' rx='10' ry='17' transform='rotate(28 64 46)'/%3E%3Cellipse cx='50' cy='22' rx='10' ry='18'/%3E%3C/g%3E%3C/svg%3E">-->
-    <script>document.documentElement.classList.add("js")</script>
+    <script src="js/language.js" data-language-file="lang.json" defer></script>
     <!-- ?v=4 forces browsers to download the new stylesheet; bump it after future CSS edits -->
     <link rel="stylesheet" href="style.css?v=4">
 </head>
@@ -23,7 +23,7 @@
 
     <!-- 1. Selettore Lingua in alto a destra -->
     <div class="lang-switcher">
-        <select id="language-select" aria-label="Language" onchange="changeLanguage(this.value)">
+        <select id="lang-select" aria-label="Language">
             <option value="it">Italiano</option>
             <option value="en">English</option>
         </select>
@@ -117,107 +117,6 @@
         </div>
         <p data-i18n="footer_text">Benvenuti!</p>
     </footer>
-
-    <!-- Multilingual support -->
-    <script>
-        const SUPPORTED_LANGUAGES = ["it", "en"];
-        const DEFAULT_LANGUAGE = "it";
-
-        let translations = {};
-
-        function getSavedLanguage() {
-            try {
-                const savedLanguage = localStorage.getItem("selectedLanguage");
-
-                return SUPPORTED_LANGUAGES.includes(savedLanguage)
-                    ? savedLanguage
-                    : DEFAULT_LANGUAGE;
-            } catch {
-                return DEFAULT_LANGUAGE;
-            }
-        }
-
-        async function loadTranslations() {
-            try {
-                const response = await fetch("lang.json");
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
-                }
-
-                translations = await response.json();
-
-                const language = getSavedLanguage();
-
-                applyTranslations(language);
-            } catch (error) {
-                console.error("Failed to load translations:", error);
-                applyTranslations(DEFAULT_LANGUAGE);
-            }
-        }
-
-        function applyTranslations(language) {
-            if (!SUPPORTED_LANGUAGES.includes(language)) {
-                language = DEFAULT_LANGUAGE;
-            }
-
-            const languageData = translations[language] || {};
-            const fallbackData = translations[DEFAULT_LANGUAGE] || {};
-
-            // Translate regular text content
-            document.querySelectorAll("[data-i18n]").forEach(element => {
-                const key = element.dataset.i18n;
-
-                const translatedText =
-                    languageData[key] ?? fallbackData[key];
-
-                if (translatedText !== undefined) {
-                    element.textContent = translatedText;
-                }
-            });
-
-            // Translate input placeholders
-            document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
-                const key = element.dataset.i18nPlaceholder;
-
-                const translatedText =
-                    languageData[key] ?? fallbackData[key];
-
-                if (translatedText !== undefined) {
-                    element.placeholder = translatedText;
-                }
-            });
-
-            document.documentElement.lang = language;
-
-            const languageSelect = document.getElementById("language-select");
-
-            if (languageSelect) {
-                languageSelect.value = language;
-            }
-
-            // Update the page title
-            document.title = language === "en"
-                ? "Elisa and Giovanni"
-                : "Elisa e Giovanni";
-        }
-
-        function changeLanguage(language) {
-            if (!SUPPORTED_LANGUAGES.includes(language)) {
-                return;
-            }
-
-            try {
-                localStorage.setItem("selectedLanguage", language);
-            } catch (error) {
-                console.warn("Unable to save language preference:", error);
-            }
-
-            applyTranslations(language);
-        }
-
-        document.addEventListener("DOMContentLoaded", loadTranslations);
-    </script>
 
     <!-- Animazioni, RSVP -> Google Sheet -->
     <script>

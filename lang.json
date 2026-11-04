@@ -1,5 +1,7 @@
+
 {
   "it": {
+    "page_title": "Elisa e Giovanni",
     "title": "Elisa e Giovanni",
     "location": "Milano, Italia",
     "rsvp_btn": "Conferma Presenza (RSVP)",
@@ -17,19 +19,37 @@
     "form_select_default": "Parteciperai?",
     "form_select_yes": "Sì, verrò con gioia!",
     "form_select_no": "Purtroppo non potrò esserci",
-    "form_notes": "Allergie, intolleranze o note particolari ...",
+    "form_notes": "Allergie, intolleranze o note particolari...",
     "form_submit": "Invia Conferma",
-    "footer_text": "Benvenuti!"
+    "footer_text": "Benvenuti!",
+    "form_sending": "Invio in corso…",
+    "form_success": "Grazie! La tua risposta è stata inviata.",
+    "form_error": "Qualcosa è andato storto. Riprova tra poco.",
+    "form_config": "Il modulo non è ancora collegato al foglio Google.",
+
+    "games_page_title": "Area Giochi del Matrimonio",
+    "games_title": "Area Giochi Digitali",
+    "games_subtitle": "Divertiti con i nostri mini-giochi dedicati agli sposi!",
+    "g1_title": "Quanto sei bravo in geografia?",
+    "g1_text": "Indovina i posti.",
+    "g2_title": "Bici Escape",
+    "g2_text": "Schiva i pedoni per arrivare al matrimonio in tempo.",
+    "g3_title": "Che Prodotto Lidl Sei?",
+    "g3_text": "Scoprilo con questo test di personalità definitivo e divertente!",
+    "play": "Gioca",
+    "back": "← Torna al sito principale"
   },
+
   "en": {
+    "page_title": "Elisa and Giovanni",
     "title": "Elisa and Giovanni",
     "location": "Milan, Italy",
     "rsvp_btn": "Confirm Attendance (RSVP)",
-    "nav_info": "Useful Info",
+    "nav_info": "Useful Information",
     "nav_games": "Games Area",
     "details_title": "Details",
     "ceremony_title": "Ceremony",
-    "ceremony_time": "11:00 AM - ? Church",
+    "ceremony_time": "11:00 AM - Church ?",
     "reception_title": "Reception",
     "reception_time": "1:30 PM - ?",
     "rsvp_title": "Will you be there?",
@@ -39,8 +59,24 @@
     "form_select_default": "Will you attend?",
     "form_select_yes": "Yes, I'll be there gladly!",
     "form_select_no": "Unfortunately, I can't make it",
-    "form_notes": "Dietary requirements, allergies or special notes ...",
+    "form_notes": "Allergies, dietary requirements or special notes...",
     "form_submit": "Submit RSVP",
-    "footer_text": "Welcome"
+    "footer_text": "Welcome!",
+    "form_sending": "Sending…",
+    "form_success": "Thank you! Your reply has been sent.",
+    "form_error": "Something went wrong. Please try again shortly.",
+    "form_config": "The form is not connected to the Google Sheet yet.",
+
+    "games_page_title": "Wedding Games Area",
+    "games_title": "Digital Games Area",
+    "games_subtitle": "Have fun with our mini-games dedicated to the newlyweds!",
+    "g1_title": "How good is your geography?",
+    "g1_text": "Guess the places.",
+    "g2_title": "Bike Escape",
+    "g2_text": "Dodge the pedestrians to get to the wedding on time.",
+    "g3_title": "Which Lidl Product Are You?",
+    "g3_text": "Find out with this ultimate, fun personality test!",
+    "play": "Play",
+    "back": "← Back to the main site"
   }
 }
