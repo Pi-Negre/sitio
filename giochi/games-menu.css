@@ -9,7 +9,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-l
 a:focus-visible,select:focus-visible{outline:3px solid var(--stamp);outline-offset:3px}
 
 /* Header band with two slowly drifting light blobs */
-.band{position:relative;overflow:hidden;color:#fff;padding:64px 20px 110px;background:linear-gradient(160deg,#2b64ab 0%,var(--sea) 55%,#173d6e 100%)}
+/*.band{position:relative;overflow:hidden;color:#fff;padding:64px 20px 110px;background:linear-gradient(160deg,#2b64ab 0%,var(--sea) 55%,#173d6e 100%)}
 .band::before,.band::after{content:"";position:absolute;border-radius:50%;filter:blur(50px);opacity:.35;pointer-events:none}
 .band::before{width:340px;height:340px;background:#5b9be0;top:-120px;left:-80px;animation:blob1 14s ease-in-out infinite alternate}
 .band::after{width:300px;height:300px;background:var(--stamp);bottom:-170px;right:-60px;opacity:.28;animation:blob2 17s ease-in-out infinite alternate}
@@ -21,7 +21,152 @@ a:focus-visible,select:focus-visible{outline:3px solid var(--stamp);outline-offs
 @keyframes fade-up{from{opacity:0;translate:0 24px}}
 h1{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,7vw,3.6rem);letter-spacing:-.02em;line-height:1.1}
 .rings{display:block;width:60px;height:30px;margin:18px auto 14px;stroke-width:2.2}
-.sub{max-width:44ch;margin:0 auto;opacity:.92;font-size:1.08rem}
+.sub{max-width:44ch;margin:0 auto;opacity:.92;font-size:1.08rem}*/
+
+/* Retro pixel sky header */
+.band {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff;
+  padding: 64px 20px 110px;
+  background: linear-gradient(
+    180deg,
+    #75b9e8 0%,
+    #91c9ec 55%,
+    #c0e0f3 100%
+  );
+}
+
+/* Cloud layer */
+.band::before,
+.band::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+
+  /* Pixelated edges */
+  image-rendering: pixelated;
+
+  background-repeat: repeat-x;
+}
+
+/* First cloud layer */
+.band::before {
+  width: 200%;
+  height: 110px;
+  top: 15%;
+  left: 0;
+
+  background-image:
+    linear-gradient(#fff 0 0),
+    linear-gradient(#fff 0 0),
+    linear-gradient(#fff 0 0),
+    linear-gradient(#fff 0 0),
+    linear-gradient(#fff 0 0);
+
+  background-size:
+    48px 16px,
+    80px 16px,
+    112px 16px,
+    80px 16px,
+    48px 16px;
+
+  background-position:
+    80px 32px,
+    96px 16px,
+    112px 0,
+    128px 16px,
+    144px 32px;
+
+  background-repeat: no-repeat;
+
+  filter: drop-shadow(16px 16px 0 rgba(255,255,255,.8));
+
+  opacity: .8;
+  animation: clouds-drift 55s linear infinite;
+}
+
+/* Second, more distant cloud layer */
+.band::after {
+  width: 200%;
+  height: 90px;
+  bottom: 15%;
+  left: 0;
+
+  background:
+    linear-gradient(#fff 0 0) 300px 32px / 48px 16px no-repeat,
+    linear-gradient(#fff 0 0) 316px 16px / 80px 16px no-repeat,
+    linear-gradient(#fff 0 0) 332px 0 / 48px 16px no-repeat,
+    linear-gradient(#fff 0 0) 348px 16px / 48px 16px no-repeat,
+    linear-gradient(#fff 0 0) 364px 32px / 48px 16px no-repeat;
+
+  opacity: .45;
+  animation: clouds-drift 85s linear infinite reverse;
+}
+
+/* Slow cloud movement */
+@keyframes clouds-drift {
+  from {
+    transform: translateX(-20%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Keep content above clouds */
+.band > * {
+  position: relative;
+  z-index: 1;
+}
+
+.band > *:not(.lang-switcher) {
+  animation: fade-up .9s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.band h1 {
+  animation-delay: .1s !important;
+}
+
+.band .rings {
+  animation-delay: .25s !important;
+}
+
+.band .sub {
+  animation-delay: .4s !important;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+}
+
+h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+
+.rings {
+  display: block;
+  width: 60px;
+  height: 30px;
+  margin: 18px auto 14px;
+  stroke-width: 2.2;
+}
+
+.sub {
+  max-width: 44ch;
+  margin: 0 auto;
+  opacity: .92;
+  font-size: 1.08rem;
+}
 
 /* Game cards */
 .game-menu{max-width:1000px;margin:-60px auto 0;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;position:relative;z-index:2}
