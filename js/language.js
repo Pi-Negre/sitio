@@ -18,11 +18,11 @@ async function initLanguage() {
     }
 
     translations = await response.json();
+    window.weddingTranslations = translations;
 
     // Migrate the language preference saved by the previous version.
     const oldLanguage = localStorage.getItem(LEGACY_LANGUAGE_KEY);
-    const savedLanguage =
-      localStorage.getItem(LANGUAGE_KEY) || oldLanguage;
+    const savedLanguage = localStorage.getItem(LANGUAGE_KEY) || oldLanguage;
 
     const initialLanguage = isSupported(savedLanguage)
       ? savedLanguage
@@ -32,7 +32,7 @@ async function initLanguage() {
 
     // Save the preference using the new shared key.
     localStorage.setItem(LANGUAGE_KEY, initialLanguage);
-    localStorage.removeItem(LEGACY_LANGUAGE_KEY);
+    localStorage.setItem(LEGACY_LANGUAGE_KEY, initialLanguage);
 
     const selector = document.getElementById("lang-select");
 
@@ -45,6 +45,7 @@ async function initLanguage() {
         if (!isSupported(selectedLanguage)) return;
 
         localStorage.setItem(LANGUAGE_KEY, selectedLanguage);
+        localStorage.setItem(LEGACY_LANGUAGE_KEY, selectedLanguage);
         applyLanguage(selectedLanguage);
       });
     }
@@ -91,6 +92,15 @@ function applyLanguage(language) {
 
     if (dictionary[key] !== undefined) {
       element.setAttribute("aria-label", dictionary[key]);
+    }
+  });
+
+  // Translate metadata used by browser previews and search results.
+  document.querySelectorAll("[data-i18n-content]").forEach((element) => {
+    const key = element.dataset.i18nContent;
+
+    if (dictionary[key] !== undefined) {
+      element.setAttribute("content", dictionary[key]);
     }
   });
 

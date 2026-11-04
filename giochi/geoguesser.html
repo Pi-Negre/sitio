@@ -29,7 +29,7 @@
         <!-- FASE 1: INSERIMENTO NOME -->
         <div id="name-zone" class="name-screen">
             <p id="name-instruction">Inserisci il tuo nome e cognome per iniziare a giocare:</p>
-            <input type="text" id="player-name-input" class="input-name" placeholder="Esempio: Mario Rossi"><br>
+            <input type="text" id="player-name-input" class="input-name" placeholder="Esempio: Mario Rossi" autocomplete="name" maxlength="100"><br>
             <button class="btn" onclick="startActualGame()" id="btn-start-label">Inizia il Gioco 🚀</button>
         </div>
 
@@ -58,7 +58,7 @@
                     <table class="leaderboard-table">
                         <thead>
                             <tr>
-                                <th>Pos.</th>
+                <th id="th-position">Pos.</th>
                                 <th id="th-name">Invitato</th>
                                 <th id="th-score">Errore Totale</th>
                             </tr>

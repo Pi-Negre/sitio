@@ -3,10 +3,10 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZL04nemGa7z
 
 const langData = {
     it: {
-        title: "🗺️ Wedding GeoGuesser", subtitle: "Indovina dove abbiamo scattato questa foto!", progress: "Tappa {current} di {total}", btnCheck: "Invia Risposta 📍", btnNext: "Prossima Tappa ➡️", btnFinish: "Risultato Finale 🎉", back: "⬅️ Torna all'Area Giochi", distText: "La tua scelta dista <strong>{dist} km</strong> dal punto reale.", finalScore: "Gioco Terminato! Errore totale: <strong>{total} km</strong>. Meno km fai, più ci conosci! 😉", nameAlert: "Inserisci il tuo nome!", nameInstruction: "Inserisci il tuo nome e cognome per iniziare:", btnStart: "Inizia il Gioco 🚀", thName: "Invitato", thScore: "Errore Totale", boardTitle: "🏆 Top 10 Classifica", loading: "Caricamento classifica..."
+        title: "🗺️ Wedding GeoGuesser", documentTitle: "Wedding GeoGuesser", photoAlt: "Foto del viaggio", subtitle: "Indovina dove abbiamo scattato questa foto!", progress: "Tappa {current} di {total}", btnCheck: "Invia Risposta 📍", btnNext: "Prossima Tappa ➡️", btnFinish: "Risultato Finale 🎉", back: "⬅️ Torna all'Area Giochi", distText: "La tua scelta dista <strong>{dist} km</strong> dal punto reale.", finalScore: "Gioco Terminato! Errore totale: <strong>{total} km</strong>. Meno km fai, più ci conosci! 😉", nameAlert: "Inserisci il tuo nome!", nameInstruction: "Inserisci il tuo nome e cognome per iniziare:", namePlaceholder: "Esempio: Mario Rossi", btnStart: "Inizia il Gioco 🚀", mapClick: "Clicca sulla mappa!", position: "Pos.", thName: "Invitato", thScore: "Errore Totale", boardTitle: "🏆 Top 10 Classifica", loading: "Caricamento classifica...", empty: "Nessun punteggio.", error: "Errore nel caricamento."
     },
     en: {
-        title: "🗺️ Wedding GeoGuesser", subtitle: "Guess where this photo was taken!", progress: "Stage {current} of {total}", btnCheck: "Submit Guess 📍", btnNext: "Next Stage ➡️", btnFinish: "See Final Results 🎉", back: "⬅️ Back to Games Area", distText: "Your guess is <strong>{dist} km</strong> away from the location.", finalScore: "Game Over! Total accumulated error: <strong>{total} km</strong>. Lower is better! 😉", nameAlert: "Please enter your name!", nameInstruction: "Enter your first and last name to start:", btnStart: "Start Game 🚀", thName: "Guest", thScore: "Total Error", boardTitle: "🏆 Top 10 Leaderboard", loading: "Loading leaderboard..."
+        title: "🗺️ Wedding GeoGuesser", documentTitle: "Wedding GeoGuesser", photoAlt: "Travel photo", subtitle: "Guess where this photo was taken!", progress: "Stage {current} of {total}", btnCheck: "Submit Guess 📍", btnNext: "Next Stage ➡️", btnFinish: "See Final Results 🎉", back: "⬅️ Back to Games Area", distText: "Your guess is <strong>{dist} km</strong> away from the location.", finalScore: "Game Over! Total accumulated error: <strong>{total} km</strong>. Lower is better! 😉", nameAlert: "Please enter your name!", nameInstruction: "Enter your first and last name to start:", namePlaceholder: "E.g. John Smith", btnStart: "Start Game 🚀", mapClick: "Click on the map!", position: "Pos.", thName: "Guest", thScore: "Total Error", boardTitle: "🏆 Top 10 Leaderboard", loading: "Loading leaderboard...", empty: "No scores.", error: "Error loading scores."
     }
 };
 
@@ -20,19 +20,26 @@ const tappe = [
     { foto: "../assets/images/tappa7.jpeg", lat: 46.42629399216806, lng: 8.307930134573258, it: "Il Blinnenhorn! Dove abbiamo deciso di sposarci.", en: "The Blinnenhorn! Where we decided to get married." }
 ];
 
-let currentStage = 0, currentLang = localStorage.getItem('selectedLanguage') || 'it';
+let currentStage = 0, currentLang = localStorage.getItem('wedding-language') || localStorage.getItem('selectedLanguage') || 'it';
+if (!langData[currentLang]) currentLang = 'it';
 let map, userMarker, realMarker, polyline, selectedLat = null, selectedLng = null, hasGuessed = false, totalDistance = 0, gameOverState = false, playerName = "";
 
 function updateTexts() {
     const t = langData[currentLang];
     document.getElementById("game-title").innerText = t.title;
+    document.title = t.documentTitle;
     document.getElementById("game-subtitle").innerText = t.subtitle;
     document.getElementById("link-back").innerText = t.back;
     document.getElementById("name-instruction").innerText = t.nameInstruction;
     document.getElementById("btn-start-label").innerText = t.btnStart;
     document.getElementById("th-name").innerText = t.thName;
     document.getElementById("th-score").innerText = t.thScore;
+    document.getElementById("th-position").innerText = t.position;
     document.getElementById("leaderboard-title").innerText = t.boardTitle;
+    document.getElementById("player-name-input").placeholder = t.namePlaceholder;
+    document.getElementById("current-photo").alt = t.photoAlt;
+    document.getElementById("loading-text").innerText = t.loading;
+    document.documentElement.lang = currentLang;
     if (!gameOverState) {
         document.getElementById("progress-text").innerText = t.progress.replace("{current}", currentStage + 1).replace("{total}", tappe.length);
         document.getElementById("action-btn").innerText = !hasGuessed ? t.btnCheck : (currentStage === tappe.length - 1 ? t.btnFinish : t.btnNext);
@@ -40,7 +47,11 @@ function updateTexts() {
 }
 
 function switchLanguage(lang) {
-    currentLang = lang; localStorage.setItem('selectedLanguage', lang); updateTexts();
+    if (!langData[lang]) return;
+    currentLang = lang;
+    localStorage.setItem('wedding-language', lang);
+    localStorage.setItem('selectedLanguage', lang);
+    updateTexts();
     if(hasGuessed && !gameOverState) document.getElementById("anecdote-text").innerText = tappe[currentStage][currentLang];
 }
 
@@ -69,7 +80,7 @@ function initMap() {
 function handleButtonClick() {
     const t = langData[currentLang];
     if (!hasGuessed) {
-        if (selectedLat === null) { alert(currentLang === 'it' ? "Clicca sulla mappa!" : "Click on the map!"); return; }
+        if (selectedLat === null) { alert(t.mapClick); return; }
         hasGuessed = true; const reale = tappe[currentStage];
         const d = calculateDistance(selectedLat, selectedLng, reale.lat, reale.lng);
         totalDistance += Math.round(d);
@@ -128,9 +139,9 @@ function caricaClassificaDaGoogleSheet() {
     tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${langData[currentLang].loading}</td></tr>`;
     fetch(GOOGLE_SCRIPT_URL).then(r => r.json()).then(data => {
         tbody.innerHTML = "";
-        if (!Array.isArray(data) || data.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No scores.</td></tr>`; return; }
+        if (!Array.isArray(data) || data.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${langData[currentLang].empty}</td></tr>`; return; }
         data.forEach((row, idx) => { tbody.innerHTML += `<tr><td><strong>${idx + 1}</strong></td><td>${escapeHtml(row.nome)}</td><td>${escapeHtml(row.punteggio)} km</td></tr>`; });
-    }).catch(() => { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Error loading.</td></tr>`; });
+    }).catch(() => { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${langData[currentLang].error}</td></tr>`; });
 }
 
 document.getElementById("lang-select").value = currentLang;

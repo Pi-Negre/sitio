@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-title="page_title">Elisa e Giovanni</title>
-    <meta name="description" content="Il nostro matrimonio: informazioni, conferma presenza e giochi per gli invitati.">
+    <meta name="description" data-i18n-content="meta_description" content="Il nostro matrimonio: informazioni, conferma presenza e giochi per gli invitati.">
     <meta name="theme-color" content="#2f4a2c">
     <link rel="icon" type="image/png" href="assets/images/gelsomino_small.png">
     <!-- <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23406f3b' stroke='%232d4f2b' stroke-width='1.2'%3E%3Cpath d='M50 50 C36 38 36 16 50 2 C64 16 64 38 50 50Z' transform='rotate(36 50 50)'/%3E%3Cpath d='M50 50 C36 38 36 16 50 2 C64 16 64 38 50 50Z' transform='rotate(180 50 50)'/%3E%3Cpath d='M50 50 C36 38 36 16 50 2 C64 16 64 38 50 50Z' transform='rotate(324 50 50)'/%3E%3C/g%3E%3Cg stroke='%2388ad76' stroke-width='1' stroke-linecap='round'%3E%3Cpath d='M50 46 L50 9' transform='rotate(36 50 50)'/%3E%3Cpath d='M50 46 L50 9' transform='rotate(180 50 50)'/%3E%3Cpath d='M50 46 L50 9' transform='rotate(324 50 50)'/%3E%3C/g%3E%3Cg fill='%23fffdf6' stroke='%23d8c9a9' stroke-width='1.2' stroke-linejoin='round'%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z'/%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z' transform='rotate(72 50 50)'/%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z' transform='rotate(144 50 50)'/%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z' transform='rotate(216 50 50)'/%3E%3Cpath d='M50 50 C44 40 40 24 46 12 C50 5 59 8 60 15 C61 27 56 42 50 50Z' transform='rotate(288 50 50)'/%3E%3C/g%3E%3Ccircle cx='50' cy='50' r='5' fill='%23dce3a0'/%3E%3Ccircle cx='50' cy='50' r='2.5' fill='%23b9c66e'/%3E%3C/svg%3E">-->
@@ -23,7 +23,7 @@
 
     <!-- 1. Selettore Lingua in alto a destra -->
     <div class="lang-switcher">
-        <select id="lang-select" aria-label="Language">
+        <select id="lang-select" data-i18n-aria-label="language_label" aria-label="Lingua">
             <option value="it">Italiano</option>
             <option value="en">English</option>
         </select>
@@ -123,16 +123,16 @@
         // 1) Incolla qui l'URL /exec del tuo Google Apps Script per le conferme (RSVP)
         const RSVP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0jAJ3EqsdIt_wEyQf3s-CM9SGQ7Xm51rfMruCpFllTc3dzXqG8Xw0hgTp4KWnVcdwhQ/exec";
 
-        const rsvpText = {
-            it: { sending: "Invio in corso…", ok: "Grazie! La tua risposta è stata inviata.", error: "Qualcosa è andato storto. Riprova tra poco.", config: "Il modulo non è ancora collegato al foglio Google." },
-            en: { sending: "Sending…", ok: "Thank you! Your reply has been sent.", error: "Something went wrong. Please try again shortly.", config: "The form is not connected to the Google Sheet yet." }
-        };
-
         (function () {
             const form = document.getElementById("rsvp-form");
             const status = document.getElementById("form-status");
-            const lang = () => localStorage.getItem("selectedLanguage") || "it";
-            const say = (key, cls) => { status.className = "form-status " + (cls || ""); status.textContent = rsvpText[lang()][key]; };
+            let language = localStorage.getItem("wedding-language") || localStorage.getItem("selectedLanguage") || "it";
+            const messages = { sending: "form_sending", ok: "form_success", error: "form_error", config: "form_config" };
+            const say = (key, cls) => {
+                status.className = "form-status " + (cls || "");
+                status.textContent = window.weddingTranslations?.[language]?.[messages[key]] || "";
+            };
+            document.addEventListener("languageChanged", event => { language = event.detail.language; });
 
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();

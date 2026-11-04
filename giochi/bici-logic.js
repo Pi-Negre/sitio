@@ -24,7 +24,7 @@ const T = {
     winTitle: "You made it!", winMsg: "You arrived on time: the guests are waiting.", loseTitle: "Game over", loseMsg: "You crashed into {o}.",
     ob: { ped: "a pedestrian", dog: "a dog", bin: "a bin", hog: "a hedgehog", tram: "a tram", palm: "a palm tree", scooter: "a scooter", roach: "a cockroach" } }
 };
-let lang = localStorage.getItem('selectedLanguage') || 'it'; if (!T[lang]) lang = 'it';
+let lang = localStorage.getItem('wedding-language') || localStorage.getItem('selectedLanguage') || 'it'; if (!T[lang]) lang = 'it';
 let ch = 'sposo', city = 'milano';
 const g$ = () => (ch === 'sposa' ? 'f' : 'm');
 const tx = k => { const L = T[lang]; const v = L[k + '_' + g$()] !== undefined ? L[k + '_' + g$()] : L[k]; return v; };
@@ -380,7 +380,7 @@ function toSetup() {
 
 function texts() {
   document.querySelectorAll('[data-i]').forEach(e => { e.textContent = tx(e.dataset.i); });
-  document.documentElement.lang = lang; $('lang-select').value = lang; $('player-name').placeholder = tx('namePh');
+  document.documentElement.lang = lang; document.title = tx('title') + ' - Wedding Edition'; $('lang-select').value = lang; $('player-name').placeholder = tx('namePh');
   if (g.mode !== 'setup') { $('hud-city').textContent = tx(city); g.lastHud = -1; }
   if (g.shown && (g.mode === 'win' || g.mode === 'lose')) showEnd(g.mode === 'win');
 }
@@ -397,7 +397,13 @@ document.querySelectorAll('.choice[data-city]').forEach(b => b.addEventListener(
 $('btn-play').addEventListener('click', startGame);
 $('btn-again').addEventListener('click', () => { resetRun(); });
 $('btn-change').addEventListener('click', toSetup);
-$('lang-select').addEventListener('change', e => { lang = e.target.value; localStorage.setItem('selectedLanguage', lang); texts(); });
+$('lang-select').addEventListener('change', e => {
+  if (!T[e.target.value]) return;
+  lang = e.target.value;
+  localStorage.setItem('wedding-language', lang);
+  localStorage.setItem('selectedLanguage', lang);
+  texts();
+});
 
 const kmap = { ArrowLeft: 'l', a: 'l', A: 'l', ArrowRight: 'r', d: 'r', D: 'r' };
 addEventListener('keydown', e => { if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; const k = kmap[e.key]; if (k) { g.keys[k] = 1; if (e.key.startsWith('Arrow')) e.preventDefault(); } });

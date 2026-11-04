@@ -2,6 +2,8 @@
 {
   "it": {
     "page_title": "Elisa e Giovanni",
+    "meta_description": "Il nostro matrimonio: informazioni, conferma presenza e giochi per gli invitati.",
+    "language_label": "Lingua",
     "title": "Elisa e Giovanni",
     "location": "Milano, Italia",
     "rsvp_btn": "Conferma Presenza (RSVP)",
@@ -42,6 +44,8 @@
 
   "en": {
     "page_title": "Elisa and Giovanni",
+    "meta_description": "Our wedding: event information, RSVP, and games for our guests.",
+    "language_label": "Language",
     "title": "Elisa and Giovanni",
     "location": "Milan, Italy",
     "rsvp_btn": "Confirm Attendance (RSVP)",

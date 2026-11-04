@@ -16,7 +16,9 @@ body{font-family:var(--font);color:var(--ink);background:var(--bg);text-align:ce
 svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* Header band */
-.band{background:var(--blue);color:#fff;padding:34px 20px 92px;border-bottom:8px solid var(--yellow)}
+.band{position:relative;background:var(--blue);color:#fff;padding:54px 20px 92px;border-bottom:8px solid var(--yellow)}
+.language-control{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:8px;font-size:.9rem}
+.language-control select{font:inherit;border:0;border-radius:999px;padding:7px 12px;color:var(--ink);background:#fff}
 .band h1{font-weight:700;font-size:clamp(1.8rem,6vw,2.7rem);letter-spacing:-.02em;line-height:1.1}
 .band p{margin:10px auto 0;max-width:46ch;opacity:.9;line-height:1.5}
 
@@ -133,6 +135,9 @@ font-weight:700;font-size:1.35rem;line-height:1.1;transform:rotate(12deg);box-sh
 </head>
 <body>
 <header class="band">
+  <label class="language-control" for="lang-select"><span id="language-label">Lingua</span>
+    <select id="lang-select"><option value="it">Italiano</option><option value="en">English</option></select>
+  </label>
   <h1>Che prodotto Lidl sei?</h1>
   <p>Rispondi sinceramente alle domande per scoprire la tua vera identità!</p>
 </header>
@@ -176,6 +181,29 @@ font-weight:700;font-size:1.35rem;line-height:1.1;transform:rotate(12deg);box-sh
 
 <script>
 const svg = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+const uiText = {
+  it: { title: "Che prodotto Lidl sei?", intro: "Rispondi sinceramente alle domande per scoprire la tua vera identità!", language: "Lingua", scan: "Passo il tuo profilo alla cassa…", product: "Il tuo prodotto Lidl è…", compatibility: "Compatibilità con gli altri prodotti", restart: "Rifai il test", home: "Torna al Sito", back: "← Torna all'Area Giochi", progress: "Domanda {current} di {total}", scanSteps: ["Passo il tuo profilo alla cassa…", "Bip… bip…", "Calcolo il prezzo…"], price: "solo per te" },
+  en: { title: "Which Lidl product are you?", intro: "Answer honestly to discover your true identity!", language: "Language", scan: "Taking your profile to the checkout…", product: "Your Lidl product is…", compatibility: "Compatibility with other products", restart: "Take the quiz again", home: "Back to the site", back: "← Back to the Games Area", progress: "Question {current} of {total}", scanSteps: ["Taking your profile to the checkout…", "Beep… beep…", "Calculating the price…"], price: "just for you" }
+};
+let currentLanguage = localStorage.getItem("wedding-language") || localStorage.getItem("selectedLanguage") || "it";
+if (!uiText[currentLanguage]) currentLanguage = "it";
+function applyUiLanguage() {
+  const t = uiText[currentLanguage];
+  document.documentElement.lang = currentLanguage;
+  document.title = t.title;
+  $("language-label").textContent = t.language;
+  $("lang-select").value = currentLanguage;
+  document.querySelector(".band h1").textContent = t.title;
+  document.querySelector(".band > p").textContent = t.intro;
+  $("scan-text").textContent = t.scan;
+  document.querySelector(".kicker").textContent = t.product;
+  document.querySelector(".match h3").textContent = t.compatibility;
+  $("restart").textContent = t.restart;
+  document.querySelector("#result-box .actions a").textContent = t.home;
+  document.querySelector(".back-link").textContent = t.back;
+  if (!$("quiz-game").hidden && !lock) loadQuestion();
+  if (!$("result-box").hidden) showResult();
+}
 const ICONS = {
   rain: svg('<path d="M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.5 8.2"/><path d="M16 14v6M8 14v6M12 16v6"/>'),
   lunch: svg('<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>'),
@@ -227,6 +255,16 @@ const domande = [
     { text: "Non so fare un backup quindi spendo 5 ore a selezionare le mie foto preferite ed elimino le altre.", profile: "riso" } ] }
 ];
 
+const domandeEn = [
+  { q: "It's raining today, so…", opts: ["I head outside and start running in the rain.", "I stay home under the covers.", "I call my parents to ask if it's raining there too.", "I take some photos for Instagram."] },
+  { q: "A colleague invites you to lunch, but you don't want to go. What do you say?", opts: ["‘No, I don't feel like it.’", "‘Great idea, I'll be right there’—then I don't show up!", "‘Thanks so much, but I have something to do.’", "‘Great idea, I'll be right there’—then I join and suffer in silence."] },
+  { q: "You want to plan your birthday party. What do you do?", opts: ["I'm not really in the mood, but seeing my friends will cheer me up, so I host dinner at home.", "I call everyone in my contacts to say I've rented the Duomo rooftop for my birthday.", "Birthday parties are awful and getting older gets me down, so I plan nothing.", "I invite everyone out for a beer and offer to pay."] },
+  { q: "You need to furnish your home. Who do you turn to?", opts: ["The best design studio in Milan. I don't care about the price; aesthetics are all that matter.", "No one. I can do it all myself.", "My favourite YouTuber. I'll watch all their videos in two days, then build all the furniture myself.", "I text a designer friend because calling feels like too much."] },
+  { q: "You're doing the monthly grocery shop. What's your budget?", opts: ["€5", "€50", "€100", "€200"] },
+  { q: "It's your child's first day of school. What do you tell them?", opts: ["‘Enjoy this day because it will be one of a kind.’", "‘Make the most of primary school, because it gets much worse after that.’", "Nothing. They'll learn by making mistakes.", "‘Do your best and aim high in every subject, but be kind to others.’"] },
+  { q: "Your phone is full and you need to delete photos and videos. What do you do?", opts: ["My photos are too important, so I buy more Google storage.", "I factory-reset my phone.", "I back them up, then delete them.", "I don't know how to back them up, so I spend five hours picking favourites and delete the rest."] }
+];
+
 const profili = {
   ceci: { icon: "ceci", name: "Ceci secchi", nick: "Il Saggio Burbero", price: "0,89", note: "SCADENZA: MAI · TEMPO DI COTTURA: LUNGO",
     desc: "La tua educazione è stata dura ma sei quello che ogni studente con un budget ristretto vuole. Hai un grande futuro come educatore anche se non lo vuoi ammettere. Sei deciso, duro e ruvido come la vita." },
@@ -236,6 +274,17 @@ const profili = {
     desc: "Sei una rarità prelibata. Dal gusto deciso che non fa per tutti. La tua generosità è travolgente, ti faresti in quattro per gli altri, ma non scendi a compromessi. A volte la gente ti considera un outsider o una persona bizzarra, ma a te non importa tanto." },
   verdurine: { icon: "verdura", name: "Verdurine", nick: "La regina", price: "1,99", note: "QUALITÀ PREMIUM · SOLO LE MIGLIORI",
     desc: "Sei una persona dolce, calorosa e super affettuosa. Vuoi sempre il meglio per te e i tuoi amici, ma sei abbastanza picky e non tutti riescono a starti accanto. Ogni occasione è buona per migliorare la tua condizione. Sei decisa e agguerrita e non ti arrendi mai." }
+};
+
+const profiliEn = {
+  ceci: { name: "Dried chickpeas", nick: "The Grumpy Sage", price: "0.89", note: "BEST BEFORE: NEVER · COOKING TIME: LONG",
+    desc: "You had a tough upbringing, but you're exactly what every student on a tight budget needs. You have a bright future as a teacher, even if you won't admit it. You're determined, tough, and as rough around the edges as life itself." },
+  riso: { name: "Rice", nick: "A heart of gold", price: "1.29", note: "GOES WITH EVERYTHING · FITS EVERY OCCASION",
+    desc: "You adapt easily and get along with every side dish: vegetables, chicken, fruit—everyone gets along with you. You're versatile, equally at home as an elegant risotto or a comforting rice salad. Still, sometimes you just want a little time alone." },
+  latte_condensato: { name: "Condensed milk", nick: "The nonconformist", price: "2.49", note: "RARE EDITION · NOT FOR EVERYONE",
+    desc: "You're a delicious rarity, with a bold flavour that's not for everyone. Your generosity knows no bounds and you'd do anything for others, but you don't compromise. People may see you as an outsider or a little odd, but you don't mind much." },
+  verdurine: { name: "Mixed vegetables", nick: "The queen", price: "1.99", note: "PREMIUM QUALITY · ONLY THE BEST",
+    desc: "You're sweet, warm, and incredibly affectionate. You always want the best for yourself and your friends, though you can be picky and not everyone can keep up. Every chance is an opportunity to improve your lot. You're determined, fierce, and never give up." }
 };
 
 const $ = id => document.getElementById(id);
@@ -263,8 +312,9 @@ function setSteps(done, now) {
 function loadQuestion() {
   if (currentQ >= domande.length) { startScan(); return; }
   const d = domande[currentQ], card = $("card");
-  $("progress").textContent = `Domanda ${currentQ + 1} di ${domande.length}`;
-  $("badge").innerHTML = ICONS[d.icon]; $("question-text").textContent = d.q;
+  const english = currentLanguage === "en" ? domandeEn[currentQ] : null;
+  $("progress").textContent = uiText[currentLanguage].progress.replace("{current}", currentQ + 1).replace("{total}", domande.length);
+  $("badge").innerHTML = ICONS[d.icon]; $("question-text").textContent = english ? english.q : d.q;
   setSteps(currentQ, currentQ);
   card.classList.remove("enter", "leave"); void card.offsetWidth; card.classList.add("enter");
 
@@ -273,7 +323,7 @@ function loadQuestion() {
     const b = document.createElement("button");
     b.className = "btn-opt"; b.style.setProperty("--i", i);
     b.innerHTML = `<span class="chip">${"ABCD"[i]}</span><span class="txt"></span>`;
-    b.querySelector(".txt").textContent = opt.text;
+    b.querySelector(".txt").textContent = english ? english.opts[i] : opt.text;
     b.onclick = ev => choose(b, opt, ev);
     box.appendChild(b);
   });
@@ -301,25 +351,28 @@ function makeBars(el, n) {
 function startScan() {
   $("quiz-game").hidden = true; $("scan-box").hidden = false;
   makeBars($("scan-bars"), 34);
-  const texts = ["Passo il tuo profilo alla cassa…", "Bip… bip…", "Calcolo il prezzo…"];
-  let i = 0; const t = setInterval(() => { $("scan-text").textContent = texts[++i % texts.length]; }, 650);
+  let i = 0; const t = setInterval(() => {
+    const texts = uiText[currentLanguage].scanSteps;
+    $("scan-text").textContent = texts[++i % texts.length];
+  }, 650);
   setTimeout(() => { clearInterval(t); showResult(); }, 2000);
 }
 
 function showResult() {
   const win = Object.keys(punteggi).reduce((a, b) => punteggi[a] > punteggi[b] ? a : b);
-  const p = profili[win];
+  const p = currentLanguage === "en" ? profiliEn[win] : profili[win];
   $("scan-box").hidden = true; $("result-box").hidden = false;
   $("product-art").innerHTML = ICONS[p.icon]; $("cheese-name").textContent = p.name; $("cheese-nick").textContent = p.nick;
   $("cheese-note").textContent = p.note; $("cheese-description").textContent = p.desc;
-  $("price").innerHTML = `${p.price}€<small>solo per te</small>`;
+  $("price").innerHTML = `${p.price}€<small>${uiText[currentLanguage].price}</small>`;
   makeBars($("tag-bars"), 40);
 
   const rows = $("match-rows"); rows.innerHTML = "";
   Object.keys(profili).sort((a, b) => punteggi[b] - punteggi[a]).forEach(k => {
     const pct = Math.round(punteggi[k] / domande.length * 100);
     const row = document.createElement("div"); row.className = "row" + (k === win ? " win" : "");
-    row.innerHTML = `<span>${profili[k].name}</span><div class="meter"><b data-w="${pct}"></b></div><span>${pct}%</span>`;
+    const name = currentLanguage === "en" ? profiliEn[k].name : profili[k].name;
+    row.innerHTML = `<span>${name}</span><div class="meter"><b data-w="${pct}"></b></div><span>${pct}%</span>`;
     rows.appendChild(row);
   });
 
@@ -334,6 +387,14 @@ $("restart").onclick = () => {
   $("tag").classList.remove("show"); loadQuestion();
 };
 
+$("lang-select").addEventListener("change", event => {
+  if (!uiText[event.target.value]) return;
+  currentLanguage = event.target.value;
+  localStorage.setItem("wedding-language", currentLanguage);
+  localStorage.setItem("selectedLanguage", currentLanguage);
+  applyUiLanguage();
+});
+
 // Scorciatoie da tastiera: 1-4 per rispondere
 document.addEventListener("keydown", e => {
   if ($("quiz-game").hidden || lock) return;
@@ -341,7 +402,7 @@ document.addEventListener("keydown", e => {
 });
 
 $("steps").innerHTML = domande.map(() => "<i></i>").join("");
-resetScores(); loadQuestion();
+resetScores(); applyUiLanguage();
 </script>
 </body>
 </html>
