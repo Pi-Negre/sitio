@@ -1,4 +1,5 @@
-.back-link {
+.back-link,
+.back-link:visited {
   display: inline-block;
   padding: 12px 28px;
   border-radius: 999px;
@@ -13,6 +14,7 @@
   background: var(--back-link-color, var(--ink, #14233a));
   color: var(--back-link-hover-color, #fff);
   transform: translateY(-2px);
+  text-decoration: none;
 }
 
 .back-link:focus-visible {
