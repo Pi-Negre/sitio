@@ -23,97 +23,19 @@ h1{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,7vw,3.6rem)
 .rings{display:block;width:60px;height:30px;margin:18px auto 14px;stroke-width:2.2}
 .sub{max-width:44ch;margin:0 auto;opacity:.92;font-size:1.08rem}*/
 
-/* Retro pixel sky header */
+/* Day and night sky header */
 .band {
   position: relative;
   overflow: hidden;
   isolation: isolate;
   color: #fff;
   padding: 64px 20px 110px;
-  background: linear-gradient(
-    180deg,
-    #75b9e8 0%,
-    #91c9ec 55%,
-    #c0e0f3 100%
-  );
+  background: linear-gradient(180deg, #398fd6 0%, #4ca8e8 34%, #63b8ef 68%, #7ccdf8 100%);
+  transition: background 1.8s ease;
 }
 
-/* Cloud layer */
-.band::before,
-.band::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-  z-index: 0;
-
-  /* Pixelated edges */
-  image-rendering: pixelated;
-
-  background-repeat: repeat-x;
-}
-
-/* First cloud layer */
-.band::before {
-  width: 200%;
-  height: 110px;
-  top: 15%;
-  left: 0;
-
-  background-image:
-    linear-gradient(#fff 0 0),
-    linear-gradient(#fff 0 0),
-    linear-gradient(#fff 0 0),
-    linear-gradient(#fff 0 0),
-    linear-gradient(#fff 0 0);
-
-  background-size:
-    48px 16px,
-    80px 16px,
-    112px 16px,
-    80px 16px,
-    48px 16px;
-
-  background-position:
-    80px 32px,
-    96px 16px,
-    112px 0,
-    128px 16px,
-    144px 32px;
-
-  background-repeat: no-repeat;
-
-  filter: drop-shadow(16px 16px 0 rgba(255,255,255,.8));
-
-  opacity: .8;
-  animation: clouds-drift 55s linear infinite;
-}
-
-/* Second, more distant cloud layer */
-.band::after {
-  width: 200%;
-  height: 90px;
-  bottom: 15%;
-  left: 0;
-
-  background:
-    linear-gradient(#fff 0 0) 300px 32px / 48px 16px no-repeat,
-    linear-gradient(#fff 0 0) 316px 16px / 80px 16px no-repeat,
-    linear-gradient(#fff 0 0) 332px 0 / 48px 16px no-repeat,
-    linear-gradient(#fff 0 0) 348px 16px / 48px 16px no-repeat,
-    linear-gradient(#fff 0 0) 364px 32px / 48px 16px no-repeat;
-
-  opacity: .45;
-  animation: clouds-drift 85s linear infinite reverse;
-}
-
-/* Slow cloud movement */
-@keyframes clouds-drift {
-  from {
-    transform: translateX(-20%);
-  }
-  to {
-    transform: translateX(0);
-  }
+.band.night {
+  background: linear-gradient(180deg, #141b33 0%, #192440 36%, #202f50 70%, #2a3860 100%);
 }
 
 /* Keep content above clouds */

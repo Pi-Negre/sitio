@@ -614,7 +614,11 @@
     if (!big && i % 3 === 0) st.style.background = "#ffe08a";
     starsEl.appendChild(st);
   }
-  const applySky = () => { night = isNight(); coop.classList.toggle("night", night); };
+  const applySky = () => {
+    night = isNight();
+    coop.classList.toggle("night", night);
+    document.querySelector(".band").classList.toggle("night", night);
+  };
   setInterval(applySky, 30000); applySky();
 
   // hens doze off one by one when it is dark and nothing is going on
