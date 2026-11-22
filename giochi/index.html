@@ -363,25 +363,33 @@
 
   /* ---------- sound (synthesised cluck, no files needed) ---------- */
   let audio, soundOn = true;
+  let cluckBuffer = null;
+
+  // 1. Load the real audio file once when your app starts
+  async function loadCluckSound(url) {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    cluckBuffer = await audio.decodeAudioData(arrayBuffer);
+  }
+
+  // Call this early (e.g., on page load)
+  loadCluckSound('../assets/images/chicken_sound.mp3');
+
+  // 2. Play it with natural pitch & speed variations
   function cluck(pitch = 1) {
-    if (!soundOn) return;
-    try {
-      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-      const now = audio.currentTime;
-      const n = 2 + Math.floor(Math.random() * 3);
-      for (let i = 0; i < n; i++) {
-        const o = audio.createOscillator(), g = audio.createGain(), f = audio.createBiquadFilter();
-        o.type = "sawtooth"; f.type = "bandpass"; f.frequency.value = 900 * pitch; f.Q.value = 3;
-        const s = now + i * 0.11;
-        o.frequency.setValueAtTime(420 * pitch, s);
-        o.frequency.exponentialRampToValueAtTime(190 * pitch, s + 0.09);
-        g.gain.setValueAtTime(0.0001, s);
-        g.gain.exponentialRampToValueAtTime(0.35, s + 0.015);
-        g.gain.exponentialRampToValueAtTime(0.0001, s + 0.1);
-        o.connect(f); f.connect(g); g.connect(audio.destination);
-        o.start(s); o.stop(s + 0.12);
-      }
-    } catch (e) {}
+    if (!soundOn || !cluckBuffer) return;
+    if (audio.state === 'suspended') audio.resume();
+
+    const source = audio.createBufferSource();
+    source.buffer = cluckBuffer;
+
+    // Add slight random variation (+/- 10%) so every cluck sounds unique
+    const randomDetune = 0.9 + Math.random() * 0.2;
+    source.playbackRate.value = pitch * randomDetune;
+
+    source.connect(audio.destination);
+    source.start(0);
   }
 
   /* ---------- chicken art (animated pixel-art sprites) ---------- */
