@@ -14,6 +14,181 @@
   <link rel="icon" type="image/png" href="assets/images/gelsomino_small.png">
 
 <link rel="stylesheet" href="../navigation.css">
+
+<!-- ===== CHICKEN FOOTER STYLES ===== -->
+<style>
+  .coop {
+    --grass-1: #7fb04a; --grass-2: #5a8f35; --dirt: #c9a36b;
+    position: relative; margin-top: 56px; overflow: hidden;
+    font-family: "Instrument Sans", system-ui, sans-serif; color: #fff;
+    background: linear-gradient(#bfe3f5 0%, #eaf6ee 62%);
+    user-select: none; -webkit-user-select: none;
+  }
+  .coop-head {
+    position: relative; z-index: 6; display: flex; flex-wrap: wrap; gap: 12px 20px;
+    align-items: center; justify-content: space-between; padding: 18px 24px 0;
+  }
+  .coop-title { margin: 0; font: 700 1.35rem/1.2 "Fraunces", Georgia, serif; color: #1f4e8c; }
+  .coop-hint { margin: 2px 0 0; font-size: .9rem; color: #3b5b80; max-width: 46ch; }
+  .coop-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .coop-btn {
+    font: 600 .95rem "Instrument Sans", sans-serif; cursor: pointer; border: 0;
+    padding: 11px 18px; border-radius: 999px; color: #fff; background: #1f4e8c;
+    box-shadow: 0 4px 0 #14335c; transition: transform .08s, box-shadow .08s;
+  }
+  .coop-btn.race { background: #e8806f; box-shadow: 0 4px 0 #b3513f; }
+  .coop-btn.ghost { background: #fff; color: #1f4e8c; box-shadow: 0 4px 0 #b9cde4; }
+  .coop-btn:hover { transform: translateY(-1px); }
+  .coop-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.25); }
+  .coop-btn:focus-visible, .chicken:focus-visible { outline: 3px solid #f2b632; outline-offset: 3px; }
+  .coop-btn[disabled] { opacity: .55; pointer-events: none; }
+
+  .field { position: relative; height: 230px; margin-top: 6px; }
+  .sun { position: absolute; right: 7%; top: -6px; width: 64px; height: 64px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff6c2, #ffd34d 65%); box-shadow: 0 0 40px 14px rgba(255,211,77,.45); }
+  .hills { position: absolute; inset: auto 0 62px 0; height: 80px; }
+  .grass { position: absolute; inset: auto 0 0 0; height: 96px;
+    background:
+      radial-gradient(ellipse at 20% 0, rgba(255,255,255,.12), transparent 50%),
+      repeating-linear-gradient(100deg, transparent 0 9px, rgba(0,0,0,.05) 9px 11px),
+      linear-gradient(var(--grass-1), var(--grass-2)); }
+  .fence { position: absolute; inset: auto 0 78px 0; height: 46px; opacity: .9;
+    background:
+      linear-gradient(#fff, #fff) 0 12px / 100% 5px no-repeat,
+      linear-gradient(#fff, #fff) 0 30px / 100% 5px no-repeat,
+      repeating-linear-gradient(90deg, #fff 0 9px, transparent 9px 44px);
+    filter: drop-shadow(0 2px 0 rgba(0,0,0,.12)); }
+  .finish { position: absolute; bottom: 4px; width: 14px; height: 108px; right: 70px; z-index: 1; border-radius: 2px;
+    background: repeating-conic-gradient(#222 0 25%, #fff 0 50%) 0 0 / 14px 14px; box-shadow: 0 0 0 2px rgba(0,0,0,.15); opacity: .0; transition: opacity .3s; }
+  .coop.racing .finish, .coop.finished .finish { opacity: 1; }
+
+  /* ---- chicken ---- */
+  .chicken { position: absolute; left: 0; width: 96px; height: 90px; cursor: pointer; z-index: 3; will-change: transform;
+    -webkit-tap-highlight-color: transparent; background: none; border: 0; padding: 0; }
+  .flip { width: 100%; height: 100%; transition: transform .12s; transform-origin: 50% 100%; }
+  .bob { width: 100%; height: 100%; transform-origin: 50% 100%; }
+  .chicken svg { width: 100%; height: 100%; overflow: visible; display: block; }
+  .tag { position: absolute; left: 50%; bottom: -17px; transform: translateX(-50%); font-size: .68rem; font-weight: 600;
+    background: rgba(255,255,255,.85); color: #24476f; padding: 1px 7px; border-radius: 99px; white-space: nowrap; pointer-events: none; }
+  .pick .tag { background: #f2b632; color: #3a2a00; }
+  .pick .tag::before { content: "★ "; }
+
+  .leg { transform-box: fill-box; transform-origin: 50% 0; }
+  .head { transform-box: fill-box; transform-origin: 50% 90%; }
+  .chicken.walk .leg.l1 { animation: stride .5s infinite alternate ease-in-out; }
+  .chicken.walk .leg.l2 { animation: stride .5s infinite alternate-reverse ease-in-out; }
+  .chicken.walk .bob { animation: waddle .5s infinite alternate ease-in-out; }
+  .chicken.walk .head { animation: nod .25s infinite alternate ease-in-out; }
+  .chicken.run .leg.l1 { animation: stride .15s infinite alternate linear; }
+  .chicken.run .leg.l2 { animation: stride .15s infinite alternate-reverse linear; }
+  .chicken.run .bob { animation: gallop .15s infinite alternate ease-in-out; }
+  .chicken.run .wing { animation: flap .15s infinite alternate ease-in-out; }
+  .chicken.peck .head { animation: peck .7s ease-in-out; }
+  .chicken.hop .bob { animation: hop .55s cubic-bezier(.3,.7,.4,1); }
+  .chicken.winner .bob { animation: victory .45s infinite alternate ease-in-out; }
+  .wing { transform-box: fill-box; transform-origin: 20% 20%; }
+
+  @keyframes stride { from { transform: rotate(-38deg); } to { transform: rotate(38deg); } }
+  @keyframes waddle { from { transform: rotate(-3deg) translateY(0); } to { transform: rotate(3deg) translateY(-2px); } }
+  @keyframes nod { from { transform: rotate(-4deg); } to { transform: rotate(5deg); } }
+  @keyframes gallop { from { transform: translateY(0) rotate(3deg) scaleX(1.04); } to { transform: translateY(-7px) rotate(-5deg) scaleX(.97); } }
+  @keyframes flap { from { transform: rotate(0); } to { transform: rotate(-28deg); } }
+  @keyframes peck { 0%,100% { transform: rotate(0); } 25%,55% { transform: rotate(38deg) translateY(4px); } 40% { transform: rotate(18deg); } 70% { transform: rotate(32deg) translateY(4px); } 85% { transform: rotate(6deg); } }
+  @keyframes hop { 0% { transform: scale(1,1); } 15% { transform: scale(1.14,.82); } 50% { transform: translateY(-52px) scale(.92,1.1) rotate(-6deg); } 85% { transform: scale(1.1,.88); } 100% { transform: scale(1,1); } }
+  @keyframes victory { from { transform: translateY(0) rotate(-6deg); } to { transform: translateY(-16px) rotate(6deg); } }
+
+  /* feathers + banner */
+  .feather { position: absolute; width: 9px; height: 18px; border-radius: 80% 0 80% 0; z-index: 5; pointer-events: none;
+    animation: fly .95s cubic-bezier(.2,.7,.3,1) forwards; }
+  @keyframes fly { 0% { transform: translate(0,0) rotate(0); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; } }
+  .banner { position: absolute; left: 50%; top: 16px; transform: translate(-50%, -20px) scale(.9); z-index: 8; opacity: 0;
+    padding: 10px 22px; border-radius: 16px; background: #fff; color: #1f4e8c; text-align: center; white-space: nowrap;
+    font: 700 1.3rem "Fraunces", Georgia, serif; box-shadow: 0 10px 30px rgba(20,51,92,.25); transition: all .25s cubic-bezier(.3,1.5,.5,1); pointer-events: none; }
+  .banner.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  .banner small { display: block; font: 600 .8rem "Instrument Sans", sans-serif; color: #e8806f; }
+  .banner.count { font-size: 2.6rem; padding: 4px 30px; }
+
+  @media (max-width: 600px) {
+    .coop-head { padding: 14px 14px 0; } .field { height: 210px; } .chicken { width: 80px; height: 75px; }
+    .sun { width: 44px; height: 44px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chicken.walk .bob, .chicken.walk .head, .chicken.winner .bob { animation: none; }
+  }
+
+  /* ---- corn ---- */
+  .corn { position: absolute; width: 34px; height: 22px; z-index: 2; pointer-events: none; animation: drop .55s both; }
+  .corn svg { width: 100%; height: 100%; overflow: visible; transform: scale(var(--s, 1)); transform-origin: 50% 100%; transition: transform .25s; filter: drop-shadow(0 2px 1px rgba(0,0,0,.25)); }
+  @keyframes drop {
+    0% { transform: translateY(calc(var(--fall, 0px) * -1)) rotate(-30deg); opacity: .3; animation-timing-function: cubic-bezier(.5,0,.9,.6); }
+    70% { transform: translateY(0) rotate(0); opacity: 1; animation-timing-function: ease-out; }
+    84% { transform: translateY(-9px); animation-timing-function: ease-in; }
+    100% { transform: translateY(0); }
+  }
+  .field { cursor: none; }
+
+  /* ---- hen cursor ---- */
+  html.hen-cursor, html.hen-cursor * { cursor: none !important; }
+  .hc { position: fixed; left: 0; top: 0; width: 60px; height: 60px; z-index: 2147483647; pointer-events: none; opacity: 0; transition: opacity .15s; will-change: transform; }
+  .hc-tilt { width: 100%; height: 100%; transform-origin: 6% 30%; }
+  .hc svg { width: 100%; height: 100%; display: block; overflow: visible; transform-origin: 85% 95%; transition: transform .15s;
+    filter: drop-shadow(0 3px 3px rgba(0,0,0,.3)); }
+  .hc.hot svg { transform: scale(1.14) rotate(-6deg); }
+  .hc svg.peck { animation: cpeck .34s cubic-bezier(.3,0,.3,1); }
+  @keyframes cpeck { 0% { transform: none; } 32%, 48% { transform: rotate(-32deg) translate(-3px,5px); } 100% { transform: none; } }
+  .speck { position: fixed; z-index: 2147483646; width: 5px; height: 5px; border-radius: 50%; pointer-events: none; animation: fly .6s ease-out forwards; }
+
+  /* ---- day / night ---- */
+  .coop { --hill1: #9cc66a; --hill2: #86b653; }
+  .coop.night { --grass-1: #3f6d4a; --grass-2: #27483a; --hill1: #34584a; --hill2: #27463c; }
+  .hill-a { fill: var(--hill1); transition: fill 1.5s; } .hill-b { fill: var(--hill2); transition: fill 1.5s; }
+  .sky-night { position: absolute; inset: 0; z-index: 0; opacity: 0; transition: opacity 1.8s; pointer-events: none; overflow: hidden;
+    background: linear-gradient(#060b20 0%, #18285a 60%, #2b4570 100%); }
+  .coop.night .sky-night { opacity: 1; }
+  #stars { position: absolute; inset: 0; }
+  .star { position: absolute; width: var(--z); height: var(--z); border-radius: 50%; background: #fff; animation: twinkle 3.2s var(--d) infinite ease-in-out; }
+  @keyframes twinkle { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+  .sun, .moon { transition: transform 1.6s, opacity 1.6s; }
+  .moon { position: absolute; left: 9%; top: 6px; width: 56px; height: 56px; border-radius: 50%; opacity: 0; transform: translateY(80px);
+    background: radial-gradient(circle at 36% 34%, #fffdf0, #ebe5c6 70%, #cfc79f); box-shadow: 0 0 36px 12px rgba(220,230,255,.35); }
+  .moon::before { content: ""; position: absolute; left: 30px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: rgba(150,140,110,.35);
+    box-shadow: -18px 22px 0 -2px rgba(150,140,110,.3), 6px 26px 0 -4px rgba(150,140,110,.28); }
+  .coop.night .moon { opacity: 1; transform: none; }
+  .coop.night .sun { opacity: 0; transform: translateY(90px); }
+  .coop.night .fence { opacity: .5; }
+  .coop.night .chicken svg { filter: brightness(.8) saturate(.9); }
+  .coop-title, .coop-hint { transition: color 1.5s; }
+  .coop.night .coop-title { color: #f1f5ff; } .coop.night .coop-hint { color: #b7c4e6; }
+
+  /* ---- sleeping ---- */
+  .lid { opacity: 0; }
+  .chicken.sleep .eye { opacity: 0; } .chicken.sleep .lid { opacity: 1; }
+  .chicken.sleep .head { transform: rotate(-40deg) translate(-2px, 6px); transition: transform .9s; }
+  .chicken.sleep .bob { animation: breathe 3s infinite ease-in-out; }
+  @keyframes breathe { from { transform: scaleY(.9) translateY(2px); } to { transform: scaleY(.94) translateY(2px); } }
+  .zzz { position: absolute; right: 2px; top: -16px; font: 700 .85rem "Fraunces", serif; color: #dbe7ff; opacity: 0; pointer-events: none; text-shadow: 0 1px 2px rgba(0,0,0,.4); }
+  .zzz b { font-size: 1.1em; margin-left: 2px; display: inline-block; }
+  .chicken.sleep .zzz { animation: zfloat 2.6s infinite ease-out; }
+  @keyframes zfloat { 0% { transform: translate(0,6px) scale(.7); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(12px,-22px) scale(1.15); opacity: 0; } }
+
+  /* ---- eggs ---- */
+  .chicken.lay .bob { animation: lay 1s ease-in-out; }
+  @keyframes lay { 0% { transform: none; } 20%, 70% { transform: scale(1.05,.84) translateX(0); } 35% { transform: scale(1.05,.84) translateX(-2px); } 50% { transform: scale(1.05,.84) translateX(2px); } 100% { transform: none; } }
+  .egg { position: absolute; width: 22px; height: 28px; z-index: 4; cursor: pointer; animation: eggpop .75s backwards; transform-origin: 50% 100%; filter: drop-shadow(0 3px 2px rgba(0,0,0,.25)); }
+  .egg svg { width: 100%; height: 100%; display: block; }
+  .egg:hover { animation: eggwobble .5s ease-in-out; }
+  .egg.got { animation: eggget .45s forwards; pointer-events: none; }
+  @keyframes eggpop { 0% { transform: translate(calc(var(--roll) * -1), -2px) scale(.3); opacity: 0; } 40% { transform: translate(calc(var(--roll) * -.5), -28px) scale(1) rotate(25deg); opacity: 1; }
+    75% { transform: translate(0,0) rotate(-10deg); } 88% { transform: translate(0,-6px); } 100% { transform: none; } }
+  @keyframes eggwobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-14deg); } 75% { transform: rotate(14deg); } }
+  @keyframes eggget { to { transform: translateY(-44px) scale(1.5); opacity: 0; } }
+  .egg-count { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: #1f4e8c; font: 600 .95rem "Instrument Sans", sans-serif;
+    padding: 9px 14px; border-radius: 999px; box-shadow: 0 4px 0 #b9cde4; }
+  .egg-count.bump { animation: bump .35s; }
+  @keyframes bump { 50% { transform: scale(1.25); } }
+</style>
+
 <script src="games-menu.js" defer></script>
 <script src="../js/language.js" data-language-file="../lang.json" defer></script>
 </head>
@@ -119,5 +294,433 @@
     ← Torna al sito principale
   </a>
 
+  <!-- ===== CHICKEN FOOTER ===== -->
+  <footer class="coop" id="coop">
+    <div class="sky-night" aria-hidden="true"><div id="stars"></div></div>
+    <div class="coop-head">
+      <div>
+        <h2 class="coop-title" data-i18n="coop_title">Il pollaio degli sposi</h2>
+        <p class="coop-hint" data-i18n="coop_hint">Tocca l'erba per lanciare il mais, raccogli le uova, scegli la tua campionessa e fai partire la gara!</p>
+      </div>
+      <div class="coop-actions">
+        <span class="egg-count" id="eggPill"><span aria-hidden="true">🥚</span> <b id="eggCount">0</b></span>
+        <button class="coop-btn" id="btnRun" type="button" data-i18n="coop_run">Falli correre</button>
+        <button class="coop-btn race" id="btnRace" type="button" data-i18n="coop_race">Via alla gara!</button>
+        <button class="coop-btn ghost" id="btnSound" type="button" aria-pressed="true" aria-label="Sound">🔊</button>
+      </div>
+    </div>
+
+    <div class="field" id="field">
+      <div class="sun" aria-hidden="true"></div>
+      <div class="moon" aria-hidden="true"></div>
+      <svg class="hills" viewBox="0 0 800 80" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 80V44C100 8 200 8 300 38S500 70 600 34 750 14 800 30V80Z" class="hill-a"/>
+        <path d="M0 80V58C120 30 220 40 340 58S560 40 800 52V80Z" class="hill-b"/>
+      </svg>
+      <div class="fence" aria-hidden="true"></div>
+      <div class="grass" aria-hidden="true"></div>
+      <div class="finish" id="finish" aria-hidden="true"></div>
+      <div class="banner" id="banner" role="status" aria-live="polite"></div>
+    </div>
+  </footer>
+
+  <div class="hc" id="henCursor" aria-hidden="true">
+    <div class="hc-tilt">
+      <svg viewBox="0 0 64 64">
+        <defs>
+          <linearGradient id="hcNeck" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3993f"/><stop offset=".5" stop-color="#b9561f"/><stop offset="1" stop-color="#6e2610"/></linearGradient>
+          <radialGradient id="hcHead" cx=".34" cy=".3" r=".85"><stop offset="0" stop-color="#e8873f"/><stop offset=".55" stop-color="#a8431a"/><stop offset="1" stop-color="#5e200a"/></radialGradient>
+          <linearGradient id="hcComb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff626b"/><stop offset=".55" stop-color="#cf1f31"/><stop offset="1" stop-color="#8e0f1c"/></linearGradient>
+          <linearGradient id="hcBeak" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe597"/><stop offset=".6" stop-color="#f2a83b"/><stop offset="1" stop-color="#c47612"/></linearGradient>
+          <radialGradient id="hcEye" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffd966"/><stop offset=".6" stop-color="#e8901a"/><stop offset="1" stop-color="#8b4a08"/></radialGradient>
+          <radialGradient id="hcFace" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#f4505f"/><stop offset="1" stop-color="#b3182a"/></radialGradient>
+          <clipPath id="hcClip"><path d="M22 64C20 52 22 42 28 33L48 38C55 48 59 57 62 64Z"/><ellipse cx="30" cy="25" rx="15" ry="14"/></clipPath>
+        </defs>
+        <path d="M22 64C20 52 22 42 28 33L48 38C55 48 59 57 62 64Z" fill="url(#hcNeck)"/>
+        <ellipse cx="30" cy="25" rx="15" ry="14" fill="url(#hcHead)"/>
+        <g id="hcTex" clip-path="url(#hcClip)"></g>
+        <ellipse cx="33" cy="16" rx="8" ry="3.6" fill="#fff" opacity=".2" transform="rotate(-14 33 16)"/>
+        <g fill="url(#hcComb)"><circle cx="23" cy="11" r="4.6"/><circle cx="29" cy="7" r="5.2"/><circle cx="36" cy="6.5" r="5.4"/><circle cx="42" cy="10.5" r="4.6"/><ellipse cx="32" cy="13" rx="11" ry="5"/></g>
+        <g fill="#fff" opacity=".35"><ellipse cx="28" cy="5.4" rx="2" ry="1.1"/><ellipse cx="35" cy="4.8" rx="2.2" ry="1.1"/></g>
+        <ellipse cx="25" cy="24" rx="8.2" ry="7" fill="url(#hcFace)"/>
+        <ellipse cx="36" cy="29" rx="4.2" ry="3.2" fill="#f3eee2" stroke="#d8cfb8" stroke-width=".6"/>
+        <path d="M19 27C15 31 16 39 21 40.5C26 39 26.5 32 24 27Z" fill="url(#hcFace)"/><path d="M19.5 30C18 33 18.5 36 20 38" stroke="#fff" stroke-opacity=".4" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <path d="M18 17C13 16.5 8 17.3 3 19.5C8 22 13 23.4 19 23Z" fill="url(#hcBeak)"/>
+        <path d="M19 23C14 23.5 10 24.5 6.5 26C11 28.5 16 28.5 20 27Z" fill="#d98a22"/>
+        <path d="M3.5 20.2C9 22.6 14 23.2 19 23" stroke="#8a4a08" stroke-width=".8" fill="none"/>
+        <path d="M6 19.6C9 18.8 13 18.4 17 18.4" stroke="#fff" stroke-opacity=".55" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <ellipse cx="14" cy="19.6" rx="1.2" ry=".65" fill="#6a3304"/>
+        <circle cx="25" cy="22" r="4.8" fill="#6e0e18"/><circle cx="25" cy="22" r="3.9" fill="url(#hcEye)"/>
+        <circle cx="25" cy="22" r="2" fill="#0a0807"/><circle cx="26.3" cy="20.7" r=".95" fill="#fff"/><circle cx="24" cy="23.3" r=".45" fill="#fff" opacity=".7"/>
+      </svg>
+    </div>
+  </div>
+
+<script>
+(() => {
+  /* ---------- tiny i18n for dynamic strings (follows <html lang>) ---------- */
+  const TXT = {
+    it: { go: "VIA!", wins: n => `${n} vince!`, called: "Ci avevi azzeccato!", tryAgain: "Sarà per la prossima!", pick: "La tua scelta", place: ["1°","2°","3°","4°","5°"] },
+    en: { go: "GO!",  wins: n => `${n} wins!`,  called: "You called it!",       tryAgain: "Better luck next time!", pick: "Your pick", place: ["1st","2nd","3rd","4th","5th"] }
+  };
+  const t = () => TXT[(document.documentElement.lang || "it").slice(0,2)] || TXT.it;
+
+  /* ---------- sound (synthesised cluck, no files needed) ---------- */
+  let audio, soundOn = true;
+  function cluck(pitch = 1) {
+    if (!soundOn) return;
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      const now = audio.currentTime;
+      const n = 2 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < n; i++) {
+        const o = audio.createOscillator(), g = audio.createGain(), f = audio.createBiquadFilter();
+        o.type = "sawtooth"; f.type = "bandpass"; f.frequency.value = 900 * pitch; f.Q.value = 3;
+        const s = now + i * 0.11;
+        o.frequency.setValueAtTime(420 * pitch, s);
+        o.frequency.exponentialRampToValueAtTime(190 * pitch, s + 0.09);
+        g.gain.setValueAtTime(0.0001, s);
+        g.gain.exponentialRampToValueAtTime(0.35, s + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.0001, s + 0.1);
+        o.connect(f); f.connect(g); g.connect(audio.destination);
+        o.start(s); o.stop(s + 0.12);
+      }
+    } catch (e) {}
+  }
+
+  /* ---------- chicken art (inline SVG, shaded) ---------- */
+  const BREEDS = [
+    { name: "Gelsomina", body: "#f6f1e4", wing: "#dcd0b4", tail: "#bfb08b", comb: "#d9303b", pitch: 1.1 },
+    { name: "Rosetta",   body: "#c8662b", wing: "#9b4818", tail: "#5e2a0c", comb: "#d9303b", pitch: 1.0 },
+    { name: "Nerina",    body: "#3a3d48", wing: "#262833", tail: "#1b8f7a", comb: "#d9303b", pitch: 0.85 },
+    { name: "Dorotea",   body: "#ecb94d", wing: "#c78a1c", tail: "#8a5a0a", comb: "#e0472f", pitch: 1.2 },
+    { name: "Pippo",     body: "#a9553a", wing: "#7a3a25", tail: "#3f1f12", comb: "#c92b36", pitch: 0.9 }
+  ];
+  const art = (p, i) => `
+  <svg viewBox="0 0 110 100" aria-hidden="true">
+    <defs>
+      <radialGradient id="sh${i}" cx=".35" cy=".28" r=".85">
+        <stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".32"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="54" cy="96" rx="34" ry="5" fill="rgba(0,0,0,.22)"/>
+    <g class="leg l2"><path d="M56 72V92M56 92l-9 3M56 92v5M56 92l8 3" stroke="#c9812a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+    <path d="M30 56C12 54 4 36 10 18 20 26 24 32 32 40 24 26 26 14 32 8 38 22 40 32 44 42Z" fill="${p.tail}"/>
+    <path d="M30 54C16 56 8 46 6 36 16 40 22 44 32 48Z" fill="${p.wing}" opacity=".8"/>
+    <ellipse cx="54" cy="56" rx="31" ry="24" fill="${p.body}"/>
+    <ellipse cx="54" cy="56" rx="31" ry="24" fill="url(#sh${i})"/>
+    <g class="wing">
+      <path d="M36 50C46 40 70 44 74 58 66 72 44 72 36 50Z" fill="${p.wing}"/>
+      <path d="M44 56C52 52 64 54 68 60M42 62C50 60 60 62 64 66" stroke="#000" stroke-opacity=".16" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+    <path d="M70 66C60 70 46 70 38 62" stroke="#fff" stroke-opacity=".25" stroke-width="2" fill="none"/>
+    <g class="leg l1"><path d="M46 72V92M46 92l-9 3M46 92v5M46 92l8 3" stroke="#e5a23a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+    <g class="head">
+      <path d="M68 52C66 40 68 30 76 24L90 32C88 42 84 50 82 58Z" fill="${p.body}"/>
+      <path d="M68 52C66 40 68 30 76 24L90 32C88 42 84 50 82 58Z" fill="url(#sh${i})"/>
+      <circle cx="82" cy="30" r="13" fill="${p.body}"/>
+      <circle cx="82" cy="30" r="13" fill="url(#sh${i})"/>
+      <path d="M72 20c-2-8 4-11 7-7 1-6 9-6 9 0 5-3 9 3 4 8z" fill="${p.comb}"/>
+      <path d="M94 28l13 5-13 6z" fill="#f2a83b"/><path d="M94 33l13 0-13 6z" fill="#d98a22"/>
+      <ellipse cx="90" cy="44" rx="3.6" ry="6.5" fill="${p.comb}"/>
+      <g class="eye"><circle cx="86" cy="27" r="3.2" fill="#fff"/><circle cx="86.6" cy="27.2" r="2.2" fill="#14110f"/><circle cx="87.3" cy="26.4" r=".8" fill="#fff"/></g><path class="lid" d="M82.6 27.6q3.6 3.2 7.2 0" stroke="#14110f" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </g>
+  </svg>`;
+
+  /* ---------- engine ---------- */
+  const coop = document.getElementById("coop"), field = document.getElementById("field");
+  const banner = document.getElementById("banner"), finishEl = document.getElementById("finish");
+  const LANES = [30, 6, 42, 18, 54]; // px from bottom, gives depth
+  let mode = "idle", pick = null, raceOrder = [], timers = [], corns = [];
+  const W = () => field.clientWidth, CW = () => document.querySelector(".chicken").offsetWidth;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const wait = (fn, ms) => { const id = setTimeout(fn, ms); timers.push(id); return id; };
+
+  const hens = BREEDS.map((p, i) => {
+    const el = document.createElement("button");
+    el.className = "chicken"; el.type = "button"; el.setAttribute("aria-label", p.name);
+    el.innerHTML = `<div class="flip"><div class="bob">${art(p, i)}</div></div><span class="tag">${p.name}</span><span class="zzz" aria-hidden="true">z<b>Z</b></span>`;
+    el.style.bottom = LANES[i] + "px"; el.style.zIndex = 10 - Math.round(LANES[i] / 8);
+    field.appendChild(el);
+    const h = { el, p, i, x: 0, tx: 0, speed: 0, dir: 1, fin: false, fat: 0, appetite: .6 + Math.random() * .9, awakeUntil: 0, busy: false };
+    el.addEventListener("click", () => poke(h));
+    return h;
+  });
+
+  function place(h) { h.el.style.transform = `translate3d(${h.x}px,0,0)`; h.el.querySelector(".flip").style.transform = `scale(${h.dir * (1 + h.fat * .42)}, ${1 + h.fat * .2})`; }
+  function layout() {
+    const w = W(), cw = CW(), gap = (w - cw - 40) / hens.length;
+    hens.forEach((h, i) => { h.x = 20 + gap * i + rnd(0, gap * .4); h.tx = h.x; place(h); });
+    finishEl.style.right = (cw * .55) + "px";
+  }
+  function setGait(h, g) { h.el.classList.toggle("walk", g === "walk"); h.el.classList.toggle("run", g === "run"); }
+  function replay(el, cls, ms) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms); }
+
+  function feathers(h, n = 8) {
+    const r = h.el.getBoundingClientRect(), f = field.getBoundingClientRect();
+    for (let k = 0; k < n; k++) {
+      const s = document.createElement("i"); s.className = "feather";
+      s.style.background = k % 3 ? h.p.body : h.p.wing;
+      s.style.left = (r.left - f.left + r.width * rnd(.3, .7)) + "px";
+      s.style.top = (r.top - f.top + r.height * rnd(.2, .6)) + "px";
+      s.style.setProperty("--dx", rnd(-90, 90) + "px"); s.style.setProperty("--dy", rnd(-110, -10) + "px"); s.style.setProperty("--rot", rnd(-300, 300) + "deg");
+      field.appendChild(s); setTimeout(() => s.remove(), 1000);
+    }
+  }
+  function say(html, ms, cls = "") {
+    banner.className = "banner " + cls; banner.innerHTML = html; void banner.offsetWidth; banner.classList.add("show");
+    if (ms) wait(() => banner.classList.remove("show"), ms);
+  }
+
+  function poke(h) {
+    if (h.el.classList.contains("sleep")) { h.el.classList.remove("sleep"); h.awakeUntil = performance.now() + 6000; }
+    replay(h.el, "hop", 560); feathers(h, 7); cluck(h.p.pitch);
+    if (mode === "idle") { hens.forEach(x => x.el.classList.remove("pick")); h.el.classList.add("pick"); pick = h; }
+    else if (mode === "race" && !h.fin) { h.boostUntil = performance.now() + 1100; h.speed *= 1.7; feathers(h, 4); }
+  }
+
+  function goTo(h, x, speed) { h.tx = Math.max(8, Math.min(W() - CW() - 8, x)); h.speed = speed; if (h.tx !== h.x) h.dir = h.tx > h.x ? 1 : -1; }
+
+  let last = performance.now();
+  function tick(now) {
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    hens.forEach(h => {
+      const d = h.tx - h.x;
+      if (Math.abs(d) > 1) {
+        h.x += Math.sign(d) * Math.min(Math.abs(d), h.speed * dt); h.eating = false;
+        setGait(h, h.speed > 140 ? "run" : "walk"); place(h);
+      } else {
+        if (h.el.classList.contains("run") || h.el.classList.contains("walk")) setGait(h, null);
+        if (mode === "idle" && corns.length) {
+          const c = corns[0]; h.eating = true;
+          h.dir = c.x > h.x + CW() / 2 ? 1 : -1; place(h);
+          if (!h.el.classList.contains("peck")) replay(h.el, "peck", 700);
+          c.amount -= dt * 0.5 * h.appetite; h.fat = Math.min(1, h.fat + dt * .09 * h.appetite);
+          c.el.style.setProperty("--s", Math.max(.15, c.amount / c.max).toFixed(2));
+        }
+        if (mode === "race" && !h.fin) {
+          h.fin = true; raceOrder.push(h);
+          if (raceOrder.length === 1) win(h);
+        }
+        if (mode === "run" && Math.abs(h.speed) > 0 && !h.stop) { goTo(h, rnd(10, W()), rnd(220, 380)); }
+      }
+    });
+    hens.forEach(h => { if (h.fat > 0 && !h.eating) { h.fat = Math.max(0, h.fat - dt * .01); place(h); } });
+    if (corns.length && corns[0].amount <= 0) {
+      corns.shift().el.remove(); hens.forEach(h => h.eating = false);
+      if (corns.length) sendToCorn();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- behaviours ---------- */
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+  function lock(v) { document.getElementById("btnRun").disabled = v; document.getElementById("btnRace").disabled = v; }
+
+  function startRun() {
+    if (mode !== "idle") return;
+    clearCorn(); mode = "run"; lock(true); cluck(1.2);
+    hens.forEach(h => { h.stop = false; goTo(h, rnd(10, W()), rnd(220, 380)); });
+    wait(() => { hens.forEach(h => { h.stop = true; h.tx = h.x; }); mode = "idle"; lock(false); }, 5200);
+  }
+
+  function startRace() {
+    if (mode !== "idle") return;
+    clearCorn(); mode = "ready"; lock(true); clearTimers(); raceOrder = [];
+    coop.classList.remove("finished"); coop.classList.add("racing");
+    hens.forEach(h => { h.fin = false; h.el.classList.remove("winner"); goTo(h, 14, 520); });
+    say("3", 0, "count");
+    wait(() => say("2", 0, "count"), 900); wait(() => say("1", 0, "count"), 1800);
+    wait(() => { say(t().go, 900, "count"); mode = "race"; cluck(1.3); surge(); }, 2700);
+  }
+  // each hen changes pace every beat => unpredictable photo-finishes
+  function surge() {
+    if (mode !== "race") return;
+    const end = W() - CW() - 24;
+    hens.forEach(h => { if (!h.fin) { h.dir = 1; goTo(h, end, rnd(130, 330) * (Math.random() < .12 ? 1.6 : 1) * (h.boostUntil > performance.now() ? 1.8 : 1)); } });
+    wait(surge, 380);
+  }
+  function win(h) {
+    h.el.classList.add("winner"); feathers(h, 22); cluck(h.p.pitch); coop.classList.replace("racing", "finished");
+    const msg = pick ? (pick === h ? t().called : t().tryAgain) : "";
+    say(`${t().wins(h.p.name)}<small>${msg}</small>`, 0);
+    wait(() => { // after everyone is done, reset to a relaxed farm
+      mode = "finishing";
+      wait(() => { banner.classList.remove("show"); hens.forEach(x => x.el.classList.remove("winner")); coop.classList.remove("finished"); mode = "idle"; lock(false); layoutSoft(); }, 3200);
+    }, 1800);
+  }
+  function layoutSoft() { hens.forEach((h, i) => { h.dir = -1; goTo(h, 30 + i * (W() - CW() - 60) / hens.length, 90); }); }
+
+  // idle life: lots of strolling, pecking
+  setInterval(() => {
+    if (mode !== "idle" || corns.length || document.hidden) return;
+    const free = hens.filter(h => !h.busy && !h.el.classList.contains("sleep") && Math.abs(h.tx - h.x) < 2);
+    free.sort(() => Math.random() - .5).slice(0, 2).forEach(h => {
+      if (Math.random() < .72) {
+        let d = Math.random() < .5 ? -1 : 1;
+        if (h.x < 120) d = 1; else if (h.x > W() - CW() - 120) d = -1;
+        goTo(h, h.x + d * rnd(90, 280), rnd(38, 120));
+      } else replay(h.el, "peck", 720);
+    });
+  }, 900);
+
+  /* ---------- wire-up ---------- */
+  const KERNEL = '<svg viewBox="0 0 34 22"><g fill="#ffd23f" stroke="#c98d00" stroke-width=".9"><ellipse cx="9" cy="17" rx="4.5" ry="3" transform="rotate(-20 9 17)"/><ellipse cx="17" cy="18" rx="4.5" ry="3"/><ellipse cx="25" cy="17" rx="4.5" ry="3" transform="rotate(20 25 17)"/><ellipse cx="13" cy="11" rx="4.2" ry="2.9" transform="rotate(-35 13 11)"/><ellipse cx="21" cy="11" rx="4.2" ry="2.9" transform="rotate(35 21 11)"/><ellipse cx="17" cy="6" rx="4" ry="2.8"/></g><g fill="#fff6b8"><ellipse cx="16" cy="5" rx="1.6" ry="1"/><ellipse cx="12" cy="10" rx="1.4" ry=".9"/><ellipse cx="20" cy="10" rx="1.4" ry=".9"/></g></svg>';
+  function sendToCorn() {
+    const c = corns[0]; if (!c) return;
+    hens.forEach((h, i) => { h.eating = false; goTo(h, c.x - CW() / 2 + (i - 2) * 22, rnd(250, 340)); });
+  }
+  function clearCorn() { corns.splice(0).forEach(c => c.el.remove()); hens.forEach(h => { h.el.classList.remove("sleep"); h.awakeUntil = performance.now() + 4000; }); }
+  function dropCorn(e) {
+    if (mode !== "idle" || e.target.closest(".chicken, .egg")) return;
+    const r = field.getBoundingClientRect();
+    const x = Math.max(24, Math.min(r.width - 24, e.clientX - r.left));
+    const ground = rnd(14, 56), fall = Math.max(0, (r.bottom - e.clientY) - ground);
+    const el = document.createElement("div"); el.className = "corn"; el.innerHTML = KERNEL;
+    el.style.left = (x - 17) + "px"; el.style.bottom = ground + "px"; el.style.setProperty("--fall", fall + "px");
+    field.appendChild(el);
+    corns.push({ x, el, amount: 6, max: 6 });
+    hens.forEach(h => { h.el.classList.remove("sleep"); h.awakeUntil = performance.now() + 8000; });
+    if (corns.length === 1) sendToCorn();
+    wait(() => cluck(rnd(.9, 1.25)), 320);
+  }
+  field.addEventListener("click", dropCorn);
+  document.getElementById("btnRun").onclick = startRun;
+  document.getElementById("btnRace").onclick = startRace;
+  const sb = document.getElementById("btnSound");
+  sb.onclick = () => { soundOn = !soundOn; sb.textContent = soundOn ? "🔊" : "🔇"; sb.setAttribute("aria-pressed", soundOn); };
+  addEventListener("resize", () => { if (mode === "idle") layout(); });
+  /* ---------- day / night (device clock; add ?sky=night or ?sky=day to test) ---------- */
+  const skyParam = new URLSearchParams(location.search).get("sky");
+  let night = false;
+  const isNight = () => {
+    if (skyParam === "night") return true; if (skyParam === "day") return false;
+    const d = new Date(), m = d.getHours() * 60 + d.getMinutes(); return m < 405 || m >= 1155; // 06:45 - 19:15 is day
+  };
+  const starsEl = document.getElementById("stars");
+  for (let i = 0; i < 46; i++) {
+    const st = document.createElement("i"); st.className = "star";
+    st.style.cssText = `left:${rnd(1, 99)}%;top:${rnd(2, 62)}%;--d:${rnd(0, 4).toFixed(1)}s;--z:${rnd(1.5, 3).toFixed(1)}px`;
+    starsEl.appendChild(st);
+  }
+  const applySky = () => { night = isNight(); coop.classList.toggle("night", night); };
+  setInterval(applySky, 30000); applySky();
+
+  // hens doze off one by one when it is dark and nothing is going on
+  setInterval(() => {
+    const now = performance.now();
+    hens.forEach(h => {
+      const sl = h.el.classList.contains("sleep");
+      if (!night) { if (sl) h.el.classList.remove("sleep"); return; }
+      if (sl || mode !== "idle" || corns.length || h.busy || h.eating || now < h.awakeUntil || Math.abs(h.tx - h.x) > 2) return;
+      if (Math.random() < .5) h.el.classList.add("sleep");
+    });
+  }, 700);
+
+  /* ---------- eggs ---------- */
+  const eggCountEl = document.getElementById("eggCount"), eggPill = document.getElementById("eggPill");
+  const EGG_COL = ["#f8f3e6", "#d9a066", "#7d5a3c", "#f1dfbf", "#9ccfc4"];
+  const eggs = []; let eggTotal = 0;
+  function pop() {
+    if (!soundOn) return;
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      const o = audio.createOscillator(), g = audio.createGain(), t0 = audio.currentTime;
+      o.type = "sine"; o.frequency.setValueAtTime(520, t0); o.frequency.exponentialRampToValueAtTime(980, t0 + .09);
+      g.gain.setValueAtTime(.2, t0); g.gain.exponentialRampToValueAtTime(.0001, t0 + .14);
+      o.connect(g); g.connect(audio.destination); o.start(t0); o.stop(t0 + .16);
+    } catch (e) {}
+  }
+  function sparkle(el, color) {
+    const r = el.getBoundingClientRect(), f = field.getBoundingClientRect();
+    for (let k = 0; k < 7; k++) {
+      const sp = document.createElement("i"); sp.className = "feather";
+      sp.style.cssText = `width:6px;height:6px;border-radius:50%;background:${color};left:${r.left - f.left + r.width / 2}px;top:${r.top - f.top + r.height / 2}px`;
+      sp.style.setProperty("--dx", rnd(-50, 50) + "px"); sp.style.setProperty("--dy", rnd(-70, -10) + "px"); sp.style.setProperty("--rot", "0deg");
+      field.appendChild(sp); setTimeout(() => sp.remove(), 1000);
+    }
+  }
+  function collect(el) {
+    const i = eggs.indexOf(el); if (i < 0) return; eggs.splice(i, 1);
+    sparkle(el, "#ffd84a"); el.classList.add("got"); setTimeout(() => el.remove(), 450);
+    eggCountEl.textContent = ++eggTotal; eggPill.classList.remove("bump"); void eggPill.offsetWidth; eggPill.classList.add("bump"); pop();
+  }
+  function layEgg(h) {
+    h.busy = true; h.tx = h.x; setGait(h, null);
+    replay(h.el, "lay", 1000); cluck(h.p.pitch * 1.25);
+    setTimeout(() => {
+      const cw = CW(), col = EGG_COL[h.i % EGG_COL.length];
+      const ex = Math.max(6, Math.min(W() - 30, h.x + cw / 2 - h.dir * cw * .5 - 11));
+      const el = document.createElement("div"); el.className = "egg";
+      el.innerHTML = `<svg viewBox="0 0 22 28"><path d="M11 2C16 2 20 11 20 18a9 9 0 0 1-18 0C2 11 6 2 11 2Z" fill="${col}"/><path d="M2.3 19c1 5 5 7.5 8.7 7.5s7.700-2.500 8.700-7.500c-4 3-13.400 3-17.400 0Z" fill="#000" opacity=".13"/><ellipse cx="8" cy="10" rx="2.8" ry="4.6" fill="#fff" opacity=".5" transform="rotate(-18 8 10)"/></svg>`;
+      el.style.left = ex + "px"; el.style.bottom = (LANES[h.i] + 2) + "px"; el.style.setProperty("--roll", (-h.dir * 14) + "px");
+      el.addEventListener("click", ev => { ev.stopPropagation(); collect(el); });
+      field.appendChild(el); eggs.push(el); if (eggs.length > 8) eggs.shift().remove();
+      sparkle(el, "#fff3b0");
+    }, 620);
+    setTimeout(() => { h.busy = false; }, 1300);
+  }
+  (function scheduleEgg(first) {
+    setTimeout(() => {
+      if (mode === "idle" && !corns.length && !night && !document.hidden && eggs.length < 6) {
+        const c = hens.filter(h => !h.busy && Math.abs(h.tx - h.x) < 2 && !h.el.classList.contains("sleep"));
+        if (c.length) layEgg(c[Math.floor(Math.random() * c.length)]);
+      }
+      scheduleEgg();
+    }, first ? rnd(4000, 8000) : rnd(9000, 17000));
+  })(true);
+
+  layout(); requestAnimationFrame(tick);
+})();
+</script>
+
+<script>
+/* Chicken cursor: follows the pointer, beak = hotspot, pecks on click */
+(() => {
+  if (!matchMedia("(pointer: fine)").matches) return;
+  const hc = document.getElementById("henCursor"), tilt = hc.firstElementChild, svg = tilt.firstElementChild;
+  const TIP_X = 3, TIP_Y = 18; // beak tip inside the 60px box
+  let x = 0, y = 0, last = 0, deg = 0, seen = false;
+  document.documentElement.classList.add("hen-cursor");
+  // feather scallops drawn over the neck/head for a plumage texture
+  let d = "";
+  for (let r = 0; r < 9; r++) for (let c = 0; c < 11; c++) d += `M${(18 + c * 4.6 + (r % 2) * 2.3).toFixed(1)} ${(14 + r * 5.2).toFixed(1)}q2.3 3.4 4.6 0`;
+  document.getElementById("hcTex").innerHTML =
+    `<path d="${d}" fill="none" stroke="#3a1205" stroke-opacity=".3" stroke-width="1.1" stroke-linecap="round"/>` +
+    `<path d="${d}" transform="translate(0 -1.2)" fill="none" stroke="#ffc27a" stroke-opacity=".3" stroke-width=".8" stroke-linecap="round"/>`;
+
+  addEventListener("mousemove", e => { x = e.clientX; y = e.clientY; if (!seen) { seen = true; last = x; hc.style.opacity = 1; } }, { passive: true });
+  document.addEventListener("mouseleave", () => hc.style.opacity = 0);
+  document.addEventListener("mouseenter", () => { if (seen) hc.style.opacity = 1; });
+  document.addEventListener("mouseover", e => hc.classList.toggle("hot", !!(e.target.closest && e.target.closest("a, button, select, .chicken, .game-card"))));
+
+  addEventListener("mousedown", e => {
+    if (e.button !== 0) return;
+    svg.classList.remove("peck"); void svg.getBoundingClientRect(); svg.classList.add("peck");
+    setTimeout(() => dust(e.clientX, e.clientY), 120);
+  });
+  svg.addEventListener("animationend", () => svg.classList.remove("peck"));
+
+  function dust(px, py) {
+    const cols = ["#8a6a3b", "#c9a36b", "#e8d6a8", "#a98550"];
+    for (let i = 0; i < 6; i++) {
+      const s = document.createElement("i"); s.className = "speck";
+      s.style.left = px + "px"; s.style.top = py + "px"; s.style.background = cols[i % cols.length];
+      s.style.setProperty("--dx", (Math.random() * 60 - 30) + "px");
+      s.style.setProperty("--dy", (-8 - Math.random() * 32) + "px");
+      s.style.setProperty("--rot", "0deg");
+      document.body.appendChild(s); setTimeout(() => s.remove(), 650);
+    }
+  }
+
+  (function frame() {
+    const v = x - last; last = x;
+    deg += (Math.max(-16, Math.min(16, v * .6)) - deg) * .2;
+    hc.style.transform = `translate3d(${x - TIP_X}px, ${y - TIP_Y}px, 0)`;
+    tilt.style.transform = `rotate(${deg}deg)`;
+    requestAnimationFrame(frame);
+  })();
+})();
+</script>
 </body>
 </html>
