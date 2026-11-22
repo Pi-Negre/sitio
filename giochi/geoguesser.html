@@ -18,7 +18,7 @@
 <body>
 
     <div class="game-container">
-        <h1 id="game-title">🗺️ Wedding GeoGuesser</h1>
+        <h1 id="game-title">Wedding GeoGuesser</h1>
         <p id="game-subtitle" class="subtitle">Indovina dove abbiamo scattato questa foto della nostra storia!</p>
 
         <!-- Language selector -->
@@ -33,7 +33,7 @@
         <div id="name-zone" class="name-screen">
             <p id="name-instruction">Inserisci il tuo nome e cognome per iniziare a giocare:</p>
             <input type="text" id="player-name-input" class="input-name" placeholder="Esempio: Mario Rossi" autocomplete="name" maxlength="100"><br>
-            <button class="btn" onclick="startActualGame()" id="btn-start-label">Inizia il Gioco 🚀</button>
+            <button class="btn" onclick="startActualGame()" id="btn-start-label">Inizia il Gioco</button>
         </div>
 
         <!-- Stage 2: play the game -->
@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <button id="action-btn" class="btn" onclick="handleButtonClick()">Invia Risposta 📍</button>
+            <button id="action-btn" class="btn" onclick="handleButtonClick()">Invia Risposta</button>
 
             <div id="result-box" class="result-box">
                 <h3 id="distance-result">Distanza...</h3>
@@ -57,7 +57,7 @@
                 
                 <!-- Leaderboard -->
                 <div id="leaderboard-zone" style="display: none; margin-top: 25px;">
-                    <h3 id="leaderboard-title" class="board-heading">🏆 Top 10 Classifica</h3>
+                    <h3 id="leaderboard-title" class="board-heading">Top 10 Classifica</h3>
                     <table class="leaderboard-table">
                         <thead>
                             <tr>
@@ -75,7 +75,7 @@
         </div>
     </div>
 
-    <a href="index.html" class="back-link" id="link-back">⬅️ Torna all'Area Giochi</a>
+    <a href="index.html" class="back-link" id="link-back">⬅Torna all'Area Giochi</a>
     
     <!-- Load Leaflet before the game script, which uses its map API. -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

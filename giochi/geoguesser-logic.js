@@ -5,12 +5,15 @@ const T = () => window.weddingTranslations[currentLang].geo;
 
 const tappe = [
     { foto: "../assets/images/tappa1.jpeg", lat: 45.491706516674256, lng: 9.1530605076123 },
-    { foto: "../assets/images/tappa2.jpeg", lat: 41.42492065563975, lng: 2.185793910563726 },
-    { foto: "../assets/images/tappa3.jpeg", lat: 37.445704140675474, lng: 24.94366071688098 },
+    { foto: "../assets/images/tappa2.jpeg", lat: 41.40631806702196, lng: 2.1508459723529585 },  
+    { foto: "../assets/images/tappa3.jpeg", lat: 41.40553300088729, lng: 2.1689118949114365 },
     { foto: "../assets/images/tappa4.jpeg", lat: 40.5824, lng: -0.2185 },
     { foto: "../assets/images/tappa5.jpeg", lat: 46.57378272007491, lng: 8.988843794065533 },
-    { foto: "../assets/images/tappa6.jpeg", lat: 47.4979, lng: 19.0402 },
-    { foto: "../assets/images/tappa7.jpeg", lat: 46.42629399216806, lng: 8.307930134573258 }
+    { foto: "../assets/images/tappa6.jpeg", lat: 45.19196783583151, lng: 9.411418395982407 }, 
+    { foto: "../assets/images/tappa7.jpeg", lat: 52.082531273267634, lng: 5.059688996394778 }, 
+    { foto: "../assets/images/tappa8.jpeg", lat: 48.190566390234295, lng: 16.360476276836106 }, 
+    { foto: "../assets/images/tappa9.jpeg", lat: 46.23102427622021, lng: 9.635046733958402 },
+    { foto: "../assets/images/tappa10.jpeg", lat: 41.655948381962645, lng: -0.877957552230067 } 
 ];
 
 let currentStage = 0, currentLang = 'it';
