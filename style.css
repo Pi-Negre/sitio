@@ -184,6 +184,7 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, 
 }
 .rsvp-form input:focus, .rsvp-form select:focus, .rsvp-form textarea:focus { outline: none; border-color: var(--leaf); box-shadow: 0 0 0 3px rgba(74, 106, 47, 0.2); }
 .rsvp-form textarea { min-height: 120px; resize: vertical; }
+.rsvp-form textarea.car-seats-field { height: 4.5em; min-height: 4.5em; resize: none; }
 .rsvp-form .btn { align-self: center; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 
