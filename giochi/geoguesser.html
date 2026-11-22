@@ -34,6 +34,21 @@
             <p id="name-instruction">Inserisci il tuo nome e cognome per iniziare a giocare:</p>
             <input type="text" id="player-name-input" class="input-name" placeholder="Esempio: Mario Rossi" autocomplete="name" maxlength="100"><br>
             <button class="btn" onclick="startActualGame()" id="btn-start-label">Inizia il Gioco</button>
+            <div class="start-leaderboard" id="start-leaderboard-zone">
+                <h3 id="start-leaderboard-title" class="board-heading">Top 10 Classifica</h3>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th id="start-th-position">Pos.</th>
+                            <th id="start-th-name">Invitato</th>
+                            <th id="start-th-score">Errore Totale</th>
+                        </tr>
+                    </thead>
+                    <tbody id="start-leaderboard-body">
+                        <tr><td colspan="3" style="text-align:center;" id="start-loading-text">Caricamento...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Stage 2: play the game -->

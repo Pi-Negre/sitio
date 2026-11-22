@@ -31,6 +31,10 @@ function updateTexts() {
     document.getElementById("th-score").innerText = t.thScore;
     document.getElementById("th-position").innerText = t.position;
     document.getElementById("leaderboard-title").innerText = t.boardTitle;
+    document.getElementById("start-leaderboard-title").innerText = t.boardTitle;
+    document.getElementById("start-th-position").innerText = t.position;
+    document.getElementById("start-th-name").innerText = t.thName;
+    document.getElementById("start-th-score").innerText = t.thScore;
     document.getElementById("player-name-input").placeholder = t.namePlaceholder;
     document.getElementById("current-photo").alt = t.photoAlt;
     document.getElementById("loading-text").innerText = t.loading;
@@ -123,13 +127,17 @@ function escapeHtml(s) {
 }
 
 function caricaClassificaDaGoogleSheet() {
-    const tbody = document.getElementById("leaderboard-body");
-    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${T().loading}</td></tr>`;
+    const bodies = ["leaderboard-body", "start-leaderboard-body"].map(id => document.getElementById(id));
+    bodies.forEach(tbody => { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${T().loading}</td></tr>`; });
     fetch(GOOGLE_SCRIPT_URL).then(r => r.json()).then(data => {
-        tbody.innerHTML = "";
-        if (!Array.isArray(data) || data.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${T().empty}</td></tr>`; return; }
-        data.forEach((row, idx) => { tbody.innerHTML += `<tr><td><strong>${idx + 1}</strong></td><td>${escapeHtml(row.nome)}</td><td>${escapeHtml(row.punteggio)} km</td></tr>`; });
-    }).catch(() => { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${T().error}</td></tr>`; });
+        bodies.forEach(tbody => {
+            tbody.innerHTML = "";
+            if (!Array.isArray(data) || data.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${T().empty}</td></tr>`; return; }
+            data.forEach((row, idx) => { tbody.innerHTML += `<tr><td><strong>${idx + 1}</strong></td><td>${escapeHtml(row.nome)}</td><td>${escapeHtml(row.punteggio)} km</td></tr>`; });
+        });
+    }).catch(() => {
+        bodies.forEach(tbody => { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${T().error}</td></tr>`; });
+    });
 }
 
 document.addEventListener("languageChanged", event => {
@@ -137,4 +145,4 @@ document.addEventListener("languageChanged", event => {
     updateTexts();
     if (hasGuessed && !gameOverState) document.getElementById("anecdote-text").innerText = T().anecdotes[currentStage];
 });
-window.weddingLanguageReady.then(({ language }) => { currentLang = language; updateTexts(); });
+window.weddingLanguageReady.then(({ language }) => { currentLang = language; updateTexts(); caricaClassificaDaGoogleSheet(); });
