@@ -1,0 +1,73 @@
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse at 50% 0, rgba(217, 164, 65, 0.12), transparent 36rem),
+        var(--paper);
+}
+
+.gift-banner {
+    position: relative;
+    padding: 72px 24px 92px;
+    color: #fff;
+    text-align: center;
+    background: linear-gradient(145deg, #3c6036, var(--moss) 58%, #263d25);
+}
+
+.gift-eyebrow {
+    margin-bottom: 14px;
+    color: var(--straw);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+}
+
+.gift-banner h1 {
+    max-width: 18ch;
+    margin: 0 auto;
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 6vw, 3.5rem);
+    line-height: 1.12;
+    text-wrap: balance;
+}
+
+.gift-card {
+    position: relative;
+    max-width: 700px;
+    margin: -42px auto 72px;
+    padding: clamp(32px, 7vw, 58px);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--paper);
+    box-shadow: 0 14px 40px rgba(42, 47, 35, 0.12);
+    text-align: center;
+}
+
+.gift-flower {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 22px;
+    background: url("../assets/images/gelsomino.png") center / contain no-repeat;
+}
+
+.gift-intro {
+    max-width: 38ch;
+    margin: 0 auto 18px;
+    color: var(--moss);
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 3.8vw, 1.7rem);
+    line-height: 1.35;
+}
+
+.gift-details {
+    max-width: 48ch;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 1.05rem;
+}
+
+.gift-card .btn { margin-top: 30px; }
+
+@media (max-width: 600px) {
+    .gift-banner { padding: 68px 20px 76px; }
+    .gift-card { margin: -28px 16px 48px; }
+}
