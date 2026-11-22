@@ -1,5 +1,5 @@
 // Paste the deployed Google Apps Script /exec URL here to enable RSVP submissions.
-        const RSVP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0jAJ3EqsdIt_wEyQf3s-CM9SGQ7Xm51rfMruCpFllTc3dzXqG8Xw0hgTp4KWnVcdwhQ/exec";
+        const RSVP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxjl3CwtzXiZFNHk70O09Pg67Pp5d6tpddO5IxFK1fv1tg1ypPcyf7p1eoPw73Eij2yQ/exec";
 
         (function () {
             const form = document.getElementById("rsvp-form");
