@@ -172,10 +172,12 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, 
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 .rsvp-form .car-seats-field:focus-within { border-color: var(--leaf); box-shadow: 0 0 0 3px rgba(74, 106, 47, 0.2); }
-.rsvp-form .car-seats-field label { display: block; max-width: 470px; }
+.rsvp-form .car-seats-field label { display: block; max-width: 470px; color: #757575; font: inherit; }
 .rsvp-form .car-seats-field input {
     width: 100%; margin-top: 8px; padding: 7px 0 0; background: transparent; border: 0; border-top: 1px solid #e5dcc1; border-radius: 0;
 }
+.rsvp-form .car-seats-field.has-value label { display: none; }
+.rsvp-form .car-seats-field.has-value input { margin-top: 0; padding-top: 0; border-top: 0; }
 .rsvp-form .car-seats-field input:focus { outline: none; box-shadow: none; }
 .rsvp-form input, .rsvp-form select, .rsvp-form textarea {
     font: inherit; color: var(--ink); padding: 13px 14px; background: #fffdf6;

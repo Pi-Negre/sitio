@@ -4,6 +4,8 @@
         (function () {
             const form = document.getElementById("rsvp-form");
             const status = document.getElementById("form-status");
+            const carSeatsInput = form.querySelector('[name="posti_auto"]');
+            const carSeatsField = carSeatsInput.closest(".car-seats-field");
             let language = localStorage.getItem("wedding-language") || localStorage.getItem("selectedLanguage") || "it";
             const messages = { sending: "form_sending", ok: "form_success", error: "form_error", config: "form_config" };
             const say = (key, cls) => {
@@ -11,6 +13,9 @@
                 status.textContent = window.weddingTranslations?.[language]?.[messages[key]] || "";
             };
             document.addEventListener("languageChanged", event => { language = event.detail.language; });
+            const updateCarSeatsField = () => carSeatsField.classList.toggle("has-value", carSeatsInput.value !== "");
+            carSeatsInput.addEventListener("input", updateCarSeatsField);
+            form.addEventListener("reset", () => requestAnimationFrame(updateCarSeatsField));
 
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();
