@@ -40,11 +40,17 @@ function updateTexts() {
     document.getElementById("loading-text").innerText = t.loading;
     document.documentElement.lang = currentLang;
     if (!gameOverState) {
-        document.getElementById("progress-text").innerText = t.progress.replace("{current}", currentStage + 1).replace("{total}", tappe.length);
+        updateProgressText();
         updateActionButtonText();
     } else {
         document.getElementById("distance-result").innerHTML = t.finalScore.replace("{total}", totalDistance);
     }
+}
+
+function updateProgressText() {
+    document.getElementById("progress-text").innerText = T().progress
+        .replace("{current}", currentStage + 1)
+        .replace("{total}", tappe.length);
 }
 
 function updateActionButtonText() {
@@ -61,6 +67,7 @@ function startActualGame() {
     playerName = input;
     document.getElementById("name-zone").style.display = "none";
     document.getElementById("game-zone").style.display = "block";
+    updateProgressText();
     
     initMap();
     setTimeout(() => map.invalidateSize(), 100);
@@ -112,6 +119,7 @@ function resetStageForNext() {
     if(polyline) { map.removeLayer(polyline); polyline = null; }
     map.setView([44.0, 12.0], 4);
     document.getElementById("current-photo").src = tappe[currentStage].foto;
+    updateProgressText();
     document.getElementById("result-box").style.display = "none"; 
     updateActionButtonText();
     updateTexts();
