@@ -30,7 +30,8 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, 
 .hero {
     position: relative;
     overflow: hidden;
-    min-height: 92vh;
+    min-height: 80vh;  /* fallback */
+    min-height: 80dvh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -123,13 +124,13 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, 
     backdrop-filter: blur(8px);
     display: flex; justify-content: center; flex-wrap: wrap;
     gap: 4px 14px;
-    padding: 14px 15px;
+    padding: 18px 15px;
     border-bottom: 1px solid var(--line);
     position: sticky; top: 0; z-index: 100;
     transition: box-shadow 0.3s, padding 0.3s;
 }
-.navbar.scrolled { box-shadow: 0 6px 20px rgba(42, 47, 35, 0.1); padding-top: 10px; padding-bottom: 10px; }
-.navbar a { position: relative; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 0.97rem; padding: 6px 8px; }
+.navbar.scrolled { box-shadow: 0 6px 20px rgba(42, 47, 35, 0.1); padding-top: 12px; padding-bottom: 12px; }
+.navbar a { position: relative; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 1.08rem; padding: 6px 8px; }
 .navbar a::after {
     content: ""; position: absolute; left: 8px; right: 8px; bottom: 2px; height: 2px;
     background: var(--wheat);
@@ -138,7 +139,7 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, 
 }
 .navbar a:hover::after, .navbar a:focus-visible::after { transform: scaleX(1); }
 .navbar a.nav-games { color: var(--leaf); }
-@media (max-width: 520px) { .navbar a { font-size: 0.9rem; padding: 5px 4px; } }
+@media (max-width: 520px) { .navbar a { font-size: 1rem; padding: 5px 4px; } }
 
 /* ---------- Sections & grid ---------- */
 .container { padding: 80px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
