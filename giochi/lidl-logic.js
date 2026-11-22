@@ -22,7 +22,7 @@ function applyUiLanguage() {
   $("restart").textContent = t.restart;
   document.querySelector("#result-box .actions a").textContent = t.home;
   document.querySelector(".back-link").textContent = t.back;
-  if (!$("quiz-game").hidden && !lock) loadQuestion();
+  if (!$("quiz-game").hidden) loadQuestion({ preserveLock: lock });
   if (!$("result-box").hidden) showResult();
 }
 const ICONS = {
@@ -48,7 +48,7 @@ const domande = [
 const $ = id => document.getElementById(id);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const COLORS = ["#0050aa", "#fff000", "#e60a14"];
-let currentQ = 0, lock = false, punteggi = {};
+let currentQ = 0, lock = false, selectedProfile = null, punteggi = {};
 
 function resetScores() { punteggi = Object.fromEntries(Object.keys(T().profiles).map(profile => [profile, 0])); }
 
@@ -67,7 +67,7 @@ function setSteps(done, now) {
   [...$("steps").children].forEach((s, i) => { s.className = i < done ? "done" : (i === now ? "now" : ""); });
 }
 
-function loadQuestion() {
+function loadQuestion({ preserveLock = false } = {}) {
   if (currentQ >= T().questions.length) { startScan(); return; }
   const d = domande[currentQ], card = $("card");
   const question = T().questions[currentQ];
@@ -84,14 +84,22 @@ function loadQuestion() {
     b.innerHTML = `<span class="chip">${"ABCD"[i]}</span><span class="txt"></span>`;
     b.querySelector(".txt").textContent = answer;
     const opt = { profile: answerProfiles[i] };
+    if (preserveLock && lock) {
+      box.classList.add("locked");
+      b.classList.add(opt.profile === selectedProfile ? "chosen" : "dim");
+    }
     b.onclick = ev => choose(b, opt, ev);
     box.appendChild(b);
   });
-  lock = false;
+  if (!preserveLock) {
+    lock = false;
+    selectedProfile = null;
+  }
 }
 
 function choose(btn, opt, ev) {
   if (lock) return; lock = true;
+  selectedProfile = opt.profile;
   const box = $("options-container"); box.classList.add("locked");
   [...box.children].forEach(c => c.classList.add(c === btn ? "chosen" : "dim"));
   const r = btn.getBoundingClientRect();
