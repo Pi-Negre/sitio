@@ -199,7 +199,7 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, 
 .rsvp-form .btn { align-self: center; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 
-.form-status { min-height: 1.6em; text-align: center; font-weight: 600; color: var(--muted); }
+.form-status { min-height: 1.6em; margin-top: 8px; text-align: center; font-weight: 600; color: var(--muted); }
 .form-status.ok { color: #35742a; animation: pop-in .5s cubic-bezier(.3, 1.5, .5, 1); }
 .form-status.err { color: var(--barn); }
 @keyframes pop-in { from { opacity: 0; transform: scale(.9); } }
