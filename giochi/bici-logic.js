@@ -252,7 +252,8 @@ function loadBoard() {
     data.forEach((row, i) => {
       const tr = document.createElement('tr');
       if (row.nome === playerName && Number(row.punteggio) === g.score) tr.className = 'me';
-      [i + 1, row.nome, T()[row.personaggio] || row.personaggio || '', T()[row.citta] || row.citta || '', row.punteggio].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+      const character = row.personaggio ?? row.Personaggio ?? '';
+      [i + 1, row.nome, T()[character] || character, T()[row.citta] || row.citta || '', row.punteggio].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
       b.appendChild(tr);
     });
   }).catch(() => boardMsg('boardError'));
