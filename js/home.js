@@ -22,7 +22,7 @@
                     await fetch(RSVP_SCRIPT_URL, {
                         method: "POST", mode: "no-cors", cache: "no-cache",
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
-                        body: JSON.stringify({ nome: f.get("nome"), email: f.get("email"), presenza: f.get("presenza"), note: f.get("note"), website: f.get("website") })
+                        body: JSON.stringify({ nome: f.get("nome"), presenza: f.get("presenza"), numero_persone: f.get("numero_persone"), canzone: f.get("canzone"), posti_auto: f.get("posti_auto"), note: f.get("note"), website: f.get("website") })
                     });
                     form.reset(); say("ok", "ok");
                 } catch (err) { say("error", "err"); }
