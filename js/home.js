@@ -8,11 +8,19 @@
             const carSeatsField = carSeatsInput.closest(".car-seats-field");
             let language = localStorage.getItem("wedding-language") || localStorage.getItem("selectedLanguage") || "it";
             const messages = { sending: "form_sending", ok: "form_success", error: "form_error", config: "form_config" };
+            let currentMessage = null, currentStatusClass = "";
             const say = (key, cls) => {
-                status.className = "form-status " + (cls || "");
-                status.textContent = window.weddingTranslations?.[language]?.[messages[key]] || "";
+                currentMessage = key;
+                currentStatusClass = cls || "";
+                renderStatus();
             };
-            document.addEventListener("languageChanged", event => { language = event.detail.language; });
+            const renderStatus = () => {
+                status.className = "form-status " + currentStatusClass;
+                status.textContent = currentMessage
+                    ? window.weddingTranslations?.[language]?.[messages[currentMessage]] || ""
+                    : "";
+            };
+            document.addEventListener("languageChanged", event => { language = event.detail.language; renderStatus(); });
             const updateCarSeatsField = () => carSeatsField.classList.toggle("has-value", carSeatsInput.value !== "");
             carSeatsInput.addEventListener("input", updateCarSeatsField);
             form.addEventListener("reset", () => requestAnimationFrame(updateCarSeatsField));

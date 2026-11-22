@@ -17,7 +17,7 @@ const tappe = [
 ];
 
 let currentStage = 0, currentLang = 'it';
-let map, userMarker, realMarker, polyline, selectedLat = null, selectedLng = null, hasGuessed = false, totalDistance = 0, gameOverState = false, playerName = "";
+let map, userMarker, realMarker, polyline, selectedLat = null, selectedLng = null, hasGuessed = false, lastDistance = null, totalDistance = 0, gameOverState = false, playerName = "";
 
 function updateTexts() {
     const t = T();
@@ -38,10 +38,14 @@ function updateTexts() {
     document.getElementById("player-name-input").placeholder = t.namePlaceholder;
     document.getElementById("current-photo").alt = t.photoAlt;
     document.getElementById("loading-text").innerText = t.loading;
+    document.getElementById("start-loading-text").innerText = t.loading;
     document.documentElement.lang = currentLang;
     if (!gameOverState) {
         updateProgressText();
         updateActionButtonText();
+        if (hasGuessed && lastDistance !== null) {
+            document.getElementById("distance-result").innerHTML = t.distText.replace("{dist}", lastDistance);
+        }
     } else {
         document.getElementById("distance-result").innerHTML = t.finalScore.replace("{total}", totalDistance);
     }
@@ -90,13 +94,14 @@ function handleButtonClick() {
         if (selectedLat === null) { alert(t.mapClick); return; }
         hasGuessed = true; const reale = tappe[currentStage];
         const d = calculateDistance(selectedLat, selectedLng, reale.lat, reale.lng);
-        totalDistance += Math.round(d);
+        lastDistance = Math.round(d);
+        totalDistance += lastDistance;
         
         realMarker = L.marker([reale.lat, reale.lng], { icon: L.divIcon({className: 'real-point', html: '📍', iconSize: [30,30], iconAnchor: [15, 30]}) }).addTo(map);
         polyline = L.polyline([[selectedLat, selectedLng], [reale.lat, reale.lng]], {color: '#c8432f', dashArray: '5, 10'}).addTo(map);
         const group = new L.featureGroup([userMarker, realMarker]); map.fitBounds(group.getBounds().pad(0.2));
         
-        document.getElementById("distance-result").innerHTML = t.distText.replace("{dist}", Math.round(d));
+        document.getElementById("distance-result").innerHTML = t.distText.replace("{dist}", lastDistance);
         document.getElementById("anecdote-text").innerText = T().anecdotes[currentStage];
         document.getElementById("result-box").style.display = "block";
         updateActionButtonText();
@@ -113,7 +118,7 @@ function handleButtonClick() {
 }
 
 function resetStageForNext() {
-    hasGuessed = false; selectedLat = null; selectedLng = null;
+    hasGuessed = false; lastDistance = null; selectedLat = null; selectedLng = null;
     if(userMarker) { map.removeLayer(userMarker); userMarker = null; }
     if(realMarker) { map.removeLayer(realMarker); realMarker = null; }
     if(polyline) { map.removeLayer(polyline); polyline = null; }
@@ -161,5 +166,6 @@ document.addEventListener("languageChanged", event => {
     currentLang = event.detail.language;
     updateTexts();
     if (hasGuessed && !gameOverState) document.getElementById("anecdote-text").innerText = T().anecdotes[currentStage];
+    caricaClassificaDaGoogleSheet();
 });
-window.weddingLanguageReady.then(({ language }) => { currentLang = language; updateTexts(); caricaClassificaDaGoogleSheet(); });
+window.weddingLanguageReady.then(({ language }) => { currentLang = language; updateTexts(); });

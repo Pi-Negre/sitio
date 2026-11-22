@@ -369,6 +369,9 @@ function texts() {
   document.querySelectorAll('[data-i]').forEach(e => { e.textContent = tx(e.dataset.i); });
   document.documentElement.lang = lang; document.title = tx('title') + ' - Wedding Edition'; $('lang-select').value = lang; $('player-name').placeholder = tx('namePh');
   $('pad-l').setAttribute('aria-label', tx('padLeft')); $('pad-r').setAttribute('aria-label', tx('padRight'));
+  if ($('name-err').textContent) $('name-err').textContent = tx('nameReq');
+  if (g.mode === 'count') setCount(Math.max(0, Math.ceil(g.cd - 0.4)));
+  if ($('toast').classList.contains('show')) $('toast').textContent = tx('level') + ' ' + g.level;
   if (g.mode !== 'setup') { $('hud-city').textContent = tx(city); g.lastHud = -1; }
   if (g.shown && (g.mode === 'win' || g.mode === 'lose')) showEnd(g.mode === 'win');
 }
@@ -385,7 +388,7 @@ document.querySelectorAll('.choice[data-city]').forEach(b => b.addEventListener(
 $('btn-play').addEventListener('click', startGame);
 $('btn-again').addEventListener('click', () => { resetRun(); });
 $('btn-change').addEventListener('click', toSetup);
-document.addEventListener('languageChanged', event => { lang = event.detail.language; texts(); });
+document.addEventListener('languageChanged', event => { lang = event.detail.language; texts(); loadBoard(); });
 
 const kmap = { ArrowLeft: 'l', a: 'l', A: 'l', ArrowRight: 'r', d: 'r', D: 'r' };
 addEventListener('keydown', e => { if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return; const k = kmap[e.key]; if (k) { g.keys[k] = 1; if (e.key.startsWith('Arrow')) e.preventDefault(); } });
@@ -405,6 +408,5 @@ $('player-name').value = playerName;
 window.weddingLanguageReady.then(({ language }) => {
   lang = language;
   texts();
-  loadBoard();
 });
 })();
