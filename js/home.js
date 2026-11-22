@@ -24,7 +24,7 @@
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
                         body: JSON.stringify({ nome: f.get("nome"), presenza: f.get("presenza"), numero_persone: f.get("numero_persone"), canzone: f.get("canzone"), posti_auto: f.get("posti_auto"), note: f.get("note"), website: f.get("website") })
                     });
-                    form.reset(); say("ok", "ok");
+                    form.reset(); say("ok", "ok"); form.hidden = true;
                 } catch (err) { say("error", "err"); }
                 btn.disabled = false;
             });

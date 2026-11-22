@@ -88,12 +88,15 @@
             </select>
             <input type="number" name="numero_persone" min="1" max="20" step="1" data-i18n-placeholder="form_party_size" placeholder="Se non vieni da solo/a, quanti siete?">
             <input type="text" name="canzone" maxlength="150" data-i18n-placeholder="form_song" placeholder="Scrivi qui una canzone da mettere nella nostra playlist!">
-            <textarea class="car-seats-field" name="posti_auto" rows="2" maxlength="3" inputmode="numeric" data-i18n-placeholder="form_car_seats" placeholder="Sei disponibile a portare qualcuno al ricevimento? Se sì, quanti posti hai in macchina?"></textarea>
+            <div class="car-seats-field">
+                <label for="posti-auto" data-i18n="form_car_seats">Sei disponibile a portare qualcuno al ricevimento? Se sì, quanti posti hai in macchina?</label>
+                <input id="posti-auto" type="number" name="posti_auto" min="0" max="10" step="1">
+            </div>
             <textarea name="note" maxlength="500" data-i18n-placeholder="form_notes" placeholder="Allergie, intolleranze o note particolari..."></textarea>
             <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
             <button type="submit" class="btn" data-i18n="form_submit">Invia Conferma</button>
-            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
     </section>
 
     <footer>
