@@ -24,7 +24,16 @@
 </header>
 
 <main class="quiz-container">
-  <section id="quiz-game">
+  <section id="start-box">
+    <h2 id="start-title"></h2>
+    <p id="start-description"></p>
+    <form id="start-form">
+      <label for="player-name" id="player-name-label"></label>
+      <input id="player-name" name="playerName" type="text" maxlength="80" autocomplete="name" required>
+      <button class="btn" id="start-button" type="submit"></button>
+    </form>
+  </section>
+  <section id="quiz-game" hidden>
     <div class="steps" id="steps" aria-hidden="true"></div>
     <p id="progress"></p>
     <div class="card" id="card">

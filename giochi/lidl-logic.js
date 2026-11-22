@@ -1,6 +1,9 @@
 const svg = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
 let currentLanguage = "it";
 const T = () => window.weddingTranslations[currentLanguage].lidl;
+// Deploy giochi/lidl-sheet.gs as a Google Apps Script web app and paste its /exec URL here.
+const LIDL_SHEET_URL = "";
+let playerName = "", resultSaved = false;
 function applyUiLanguage() {
   const t = T();
   document.documentElement.lang = currentLanguage;
@@ -8,6 +11,11 @@ function applyUiLanguage() {
   $("lang-select").value = currentLanguage;
   document.querySelector(".band h1").textContent = t.title;
   document.querySelector(".band > p").textContent = t.intro;
+  $("start-title").textContent = t.startTitle;
+  $("start-description").textContent = t.startDescription;
+  $("player-name-label").textContent = t.playerName;
+  $("player-name").placeholder = t.playerNamePlaceholder;
+  $("start-button").textContent = t.start;
   $("scan-text").textContent = t.scan;
   document.querySelector(".kicker").textContent = t.product;
   document.querySelector(".match h3").textContent = t.compatibility;
@@ -129,14 +137,40 @@ function showResult() {
     rows.appendChild(row);
   });
 
+  saveResult(p, win);
+
   const tag = $("tag"); tag.classList.remove("show"); void tag.offsetWidth; tag.classList.add("show");
   setTimeout(() => { const r = tag.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 30); }, 900);
   setTimeout(() => rows.querySelectorAll("b").forEach(b => b.style.width = b.dataset.w + "%"), 700);
   window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
 }
 
+function saveResult(product, productKey) {
+  if (!LIDL_SHEET_URL || resultSaved) return;
+  resultSaved = true;
+  const compatibilities = Object.fromEntries(Object.keys(T().profiles).map(key => [
+    T().profiles[key].name,
+    Math.round(punteggi[key] / T().questions.length * 100)
+  ]));
+  fetch(LIDL_SHEET_URL, {
+    method: "POST", mode: "no-cors", cache: "no-cache",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ nome: playerName, prodotto: product.name, profilo: productKey, compatibilita: compatibilities })
+  }).catch(error => console.error("Could not save Lidl result:", error));
+}
+
+$("start-form").addEventListener("submit", event => {
+  event.preventDefault();
+  playerName = $("player-name").value.trim();
+  if (!playerName) { $("player-name").focus(); return; }
+  resultSaved = false;
+  $("start-box").hidden = true;
+  $("quiz-game").hidden = false;
+  loadQuestion();
+});
+
 $("restart").onclick = () => {
-  resetScores(); currentQ = 0; $("result-box").hidden = true; $("quiz-game").hidden = false;
+  resetScores(); currentQ = 0; resultSaved = false; $("result-box").hidden = true; $("quiz-game").hidden = false;
   $("tag").classList.remove("show"); loadQuestion();
 };
 
