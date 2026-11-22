@@ -168,7 +168,7 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, 
 .rsvp-form { max-width: 520px; margin: 32px auto 0; display: flex; flex-direction: column; gap: 14px; text-align: left; }
 .rsvp-form label { line-height: 1.5; }
 .rsvp-form .car-seats-field {
-    padding: 12px 14px; background: #fffdf6; border: 1.5px solid #cfc29a; border-radius: 8px;
+    display: block; width: 100%; padding: 12px 14px; background: #fffdf6; border: 1.5px solid #cfc29a; border-radius: 8px;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 .rsvp-form .car-seats-field:focus-within { border-color: var(--leaf); box-shadow: 0 0 0 3px rgba(74, 106, 47, 0.2); }
