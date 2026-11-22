@@ -2,7 +2,7 @@ const svg = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
 let currentLanguage = "it";
 const T = () => window.weddingTranslations[currentLanguage].lidl;
 // Deploy giochi/lidl-sheet.gs as a Google Apps Script web app and paste its /exec URL here.
-const LIDL_SHEET_URL = "";
+const LIDL_SHEET_URL = "https://script.google.com/macros/s/AKfycbxDCMlxzFT5-rMGmy0OawEu3ygDfBqE-MBdGY_1KqaPfiticDSkdGmFQLtFUy3pU8t4xA/exec";
 let playerName = "", resultSaved = false;
 function applyUiLanguage() {
   const t = T();
