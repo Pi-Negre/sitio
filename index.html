@@ -80,13 +80,16 @@
         
         <form class="rsvp-form" id="rsvp-form">
             <!-- Use data-i18n-placeholder to translate input placeholder text. -->
-            <input type="text" name="nome" autocomplete="name" maxlength="100" data-i18n-placeholder="form_name" placeholder="Nome e Cognome" required>
-            <input type="email" name="email" autocomplete="email" maxlength="120" data-i18n-placeholder="form_email" placeholder="La tua Email" required>
+            <input type="text" name="nome" autocomplete="name" maxlength="100" data-i18n-placeholder="form_name" placeholder="Chi sei/siete?" required>
             <select name="presenza" required>
                 <option value="" disabled selected data-i18n="form_select_default">Parteciperai?</option>
                 <option value="si" data-i18n="form_select_yes">Sì, verrò con gioia!</option>
                 <option value="no" data-i18n="form_select_no">Purtroppo non potrò esserci</option>
             </select>
+            <input type="number" name="numero_persone" min="1" max="20" step="1" data-i18n-placeholder="form_party_size" placeholder="Se non vieni da solo/a, quanti siete?">
+            <input type="text" name="canzone" maxlength="150" data-i18n-placeholder="form_song" placeholder="Scrivi qui una canzone da mettere nella nostra playlist!">
+            <label for="posti-auto" data-i18n="form_car_seats">Sei disponibile a portare qualcuno al ricevimento? Se sì, quanti posti hai in macchina?</label>
+            <input id="posti-auto" type="number" name="posti_auto" min="0" max="20" step="1" placeholder="0">
             <textarea name="note" maxlength="500" data-i18n-placeholder="form_notes" placeholder="Allergie, intolleranze o note particolari..."></textarea>
             <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
             <button type="submit" class="btn" data-i18n="form_submit">Invia Conferma</button>

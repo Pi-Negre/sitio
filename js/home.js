@@ -1,5 +1,5 @@
 // Paste the deployed Google Apps Script /exec URL here to enable RSVP submissions.
-        const RSVP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0jAJ3EqsdIt_wEyQf3s-CM9SGQ7Xm51rfMruCpFllTc3dzXqG8Xw0hgTp4KWnVcdwhQ/exec";
+        const RSVP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxjl3CwtzXiZFNHk70O09Pg67Pp5d6tpddO5IxFK1fv1tg1ypPcyf7p1eoPw73Eij2yQ/exec";
 
         (function () {
             const form = document.getElementById("rsvp-form");
@@ -22,7 +22,7 @@
                     await fetch(RSVP_SCRIPT_URL, {
                         method: "POST", mode: "no-cors", cache: "no-cache",
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
-                        body: JSON.stringify({ nome: f.get("nome"), email: f.get("email"), presenza: f.get("presenza"), note: f.get("note"), website: f.get("website") })
+                        body: JSON.stringify({ nome: f.get("nome"), presenza: f.get("presenza"), numero_persone: f.get("numero_persone"), canzone: f.get("canzone"), posti_auto: f.get("posti_auto"), note: f.get("note"), website: f.get("website") })
                     });
                     form.reset(); say("ok", "ok");
                 } catch (err) { say("error", "err"); }
