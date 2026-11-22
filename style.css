@@ -234,6 +234,23 @@ footer::before {
 @keyframes hop { 0%, 55%, 100% { translate: 0 0; } 70% { translate: 0 -12px; } 85% { translate: 0 0; } }
 @media (max-width: 520px) { .hen { left: 6%; width: 92px; } .chick { left: calc(6% + 100px); } }
 
+/* ---------- Landscape footer ---------- */
+footer.footer-landscape {
+    position: relative;
+    z-index: 2;
+    margin-top: -36px;
+    padding: 0;
+    background: none;
+    line-height: 0;
+}
+footer.footer-landscape::before { display: none; }
+.footer-landscape img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition: none !important; }
