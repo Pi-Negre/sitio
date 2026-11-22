@@ -235,7 +235,7 @@ function finishRun(won) {
 }
 function boardMsg(key) {
   const b = $('board-body'); b.innerHTML = '';
-  const tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 4; td.textContent = tx(key); tr.appendChild(td); b.appendChild(tr);
+  const tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 5; td.textContent = tx(key); tr.appendChild(td); b.appendChild(tr);
 }
 function saveScore(score, won) {
   if (!BICI_SCRIPT_URL) return;
@@ -252,7 +252,8 @@ function loadBoard() {
     data.forEach((row, i) => {
       const tr = document.createElement('tr');
       if (row.nome === playerName && Number(row.punteggio) === g.score) tr.className = 'me';
-      [i + 1, row.nome, T()[row.citta] || row.citta || '', row.punteggio].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+      const character = row.personaggio ?? row.Personaggio ?? '';
+      [i + 1, row.nome, T()[character] || character, T()[row.citta] || row.citta || '', row.punteggio].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
       b.appendChild(tr);
     });
   }).catch(() => boardMsg('boardError'));

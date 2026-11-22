@@ -40,11 +40,25 @@ function updateTexts() {
     document.getElementById("loading-text").innerText = t.loading;
     document.documentElement.lang = currentLang;
     if (!gameOverState) {
-        document.getElementById("progress-text").innerText = t.progress.replace("{current}", currentStage + 1).replace("{total}", tappe.length);
-        document.getElementById("action-btn").innerText = !hasGuessed ? t.btnCheck : (currentStage === tappe.length - 1 ? t.btnFinish : t.btnNext);
+        updateProgressText();
+        updateActionButtonText();
     } else {
         document.getElementById("distance-result").innerHTML = t.finalScore.replace("{total}", totalDistance);
     }
+}
+
+function updateProgressText() {
+    document.getElementById("progress-text").innerText = T().progress
+        .replace("{current}", currentStage + 1)
+        .replace("{total}", tappe.length);
+}
+
+function updateActionButtonText() {
+    const t = T();
+    const label = hasGuessed
+        ? (currentStage === tappe.length - 1 ? t.btnFinish : t.btnNext)
+        : t.btnCheck;
+    document.getElementById("action-btn").innerText = label;
 }
 
 function startActualGame() {
@@ -53,6 +67,7 @@ function startActualGame() {
     playerName = input;
     document.getElementById("name-zone").style.display = "none";
     document.getElementById("game-zone").style.display = "block";
+    updateProgressText();
     
     initMap();
     setTimeout(() => map.invalidateSize(), 100);
@@ -84,7 +99,7 @@ function handleButtonClick() {
         document.getElementById("distance-result").innerHTML = t.distText.replace("{dist}", Math.round(d));
         document.getElementById("anecdote-text").innerText = T().anecdotes[currentStage];
         document.getElementById("result-box").style.display = "block";
-        document.getElementById("action-btn").innerText = (currentStage === tappe.length - 1) ? t.btnFinish : t.btnNext;
+        updateActionButtonText();
     } else {
         if (currentStage < tappe.length - 1) {
             currentStage++; resetStageForNext();
@@ -104,7 +119,9 @@ function resetStageForNext() {
     if(polyline) { map.removeLayer(polyline); polyline = null; }
     map.setView([44.0, 12.0], 4);
     document.getElementById("current-photo").src = tappe[currentStage].foto;
+    updateProgressText();
     document.getElementById("result-box").style.display = "none"; 
+    updateActionButtonText();
     updateTexts();
 }
 
