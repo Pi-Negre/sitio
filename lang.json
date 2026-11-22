@@ -47,6 +47,9 @@
     "g3_text": "Scoprilo con questo test di personalità definitivo e divertente!",
     "play": "Gioca",
     "back": "← Torna al sito principale",
+    "coop_run": "Falli correre",
+    "coop_race": "Via alla gara!",
+    "coop_sound": "Suono",
     "bike": {
       "title": "Bike Escape", "subtitle": "Schiva gli ostacoli e arriva al matrimonio in tempo!", "char": "1. Scegli il personaggio", "city": "2. Scegli l'ambientazione",
       "sposo": "Sposo", "sposoSub": "Giacca blu notte", "sposa": "Sposa", "sposaSub": "Abito e velo", "milano": "Milano", "milanoSub": "Tra Duomo e nebbia", "barcellona": "Barcellona", "barcellonaSub": "Sole e Sagrada Família",
@@ -127,6 +130,9 @@
     "g3_text": "Find out with this ultimate, fun personality test!",
     "play": "Play",
     "back": "← Back to the main site",
+    "coop_run": "Make them run",
+    "coop_race": "Start the race!",
+    "coop_sound": "Sound",
     "bike": {
       "title": "Bike Escape", "subtitle": "Dodge the obstacles and reach the wedding on time!", "char": "1. Choose your character", "city": "2. Choose the setting",
       "sposo": "Groom", "sposoSub": "Midnight blue suit", "sposa": "Bride", "sposaSub": "Dress and veil", "milano": "Milan", "milanoSub": "Duomo and fog", "barcellona": "Barcelona", "barcellonaSub": "Sun and Sagrada Família",
