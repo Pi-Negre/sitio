@@ -121,6 +121,6 @@ animation:fade-up .9s calc(.5s + var(--i)*.14s) cubic-bezier(.2,.8,.2,1) both}
 .g-lidl:hover .icon svg{animation:roll .8s ease-in-out infinite alternate}
 @keyframes roll{to{transform:translateX(3px) rotate(4deg)}}
 
-.back-link{margin:56px 0 48px;animation:fade-up .9s 1s cubic-bezier(.2,.8,.2,1) both}
+.back-link{margin:36px 0 0px;animation:fade-up .9s 1s cubic-bezier(.2,.8,.2,1) both}
 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
