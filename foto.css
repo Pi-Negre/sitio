@@ -6,7 +6,7 @@ body {
 }
 
 .photos-banner {
-    padding: 50px 24px 64px;
+    padding: 40px 24px 48px;
     color: #fff;
     text-align: center;
     background: linear-gradient(145deg, #3c6036, var(--moss) 58%, #263d25);
@@ -57,6 +57,6 @@ body {
 .photos-card .btn { margin-top: 30px; }
 
 @media (max-width: 600px) {
-    .photos-banner { padding: 48px 20px 53px; }
+    .photos-banner { padding: 36px 20px 40px; }
     .photos-card { margin: -28px 16px 48px; }
 }
