@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function copyIban() {
     const iban = document.getElementById("iban").textContent.trim();
 
-    if (iban === "INSERISCI_IL_TUO_IBAN") return;
+    if (iban === "ES2584759123654879874") return;
 
     navigator.clipboard.writeText(iban)
         .then(() => {

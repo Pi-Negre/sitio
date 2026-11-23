@@ -113,7 +113,7 @@ body {
 
 .gift-image {
     overflow: hidden;
-    border-radius: 5px;
+    border-radius: 10px;
     aspect-ratio: 4 / 3;
     background: #eeeae0;
 }
@@ -135,15 +135,15 @@ body {
 }
 
 .gift-caption h3 {
-    color: #30492e;
+    color: #0b0f0a;
     font-family: Georgia, serif;
-    font-size: 22px;
+    font-size: 31px;
     font-weight: normal;
     margin-bottom: 10px;
 }
 
 .gift-caption p {
-    font-size: 14px;
+    font-size: 22px;
     max-width: 390px;
     margin: 0 auto;
 }
@@ -160,9 +160,10 @@ body {
 }
 
 .bank-flower {
-    font-size: 32px;
-    color: #738568;
-    margin-bottom: 12px;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 22px;
+    background: url("../assets/images/gelsomino.png") center / contain no-repeat;
 }
 
 .bank-section > p {
@@ -178,7 +179,7 @@ body {
 }
 
 .bank-details p {
-    color: #52634c;
+    color: #010200;
     line-height: 1.8;
     margin: 15px 0;
     overflow-wrap: anywhere;
