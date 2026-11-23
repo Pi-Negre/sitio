@@ -7,7 +7,7 @@ body {
 
 .gift-banner {
     position: relative;
-    padding: 72px 24px 92px;
+    padding: 50px 24px 64px;
     color: #fff;
     text-align: center;
     background: linear-gradient(145deg, #3c6036, var(--moss) 58%, #263d25);
@@ -68,6 +68,6 @@ body {
 .gift-card .btn { margin-top: 30px; }
 
 @media (max-width: 600px) {
-    .gift-banner { padding: 68px 20px 76px; }
+    .gift-banner { padding: 48px 20px 53px; }
     .gift-card { margin: -28px 16px 48px; }
 }
