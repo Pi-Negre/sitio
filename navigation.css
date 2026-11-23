@@ -10,6 +10,13 @@
   transition: background 0.25s, color 0.25s, transform 0.25s;
 }
 
+.back-link.back-home {
+  --back-link-color: #2f4a2c;
+  --back-link-hover-color: #fff;
+  display: table;
+  margin: 30px auto 0;
+}
+
 .back-link:hover {
   background: var(--back-link-color, var(--ink, #14233a));
   color: var(--back-link-hover-color, #fff);
