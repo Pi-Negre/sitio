@@ -30,7 +30,7 @@ function copyIban() {
     const language = document.documentElement.lang || "it";
     const translations = window.weddingTranslations?.[language] || {};
 
-    if (iban === "INSERISCI_IL_TUO_IBAN") return;
+    if (iban === "ES2584759123654879874") return;
 
     navigator.clipboard.writeText(iban)
         .then(() => {
