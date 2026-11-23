@@ -54,6 +54,13 @@ body {
     text-wrap: balance;
 }
 
+.photo-link {
+    max-width: 48ch;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 1.05rem;
+}
+
 .photos-card .btn { margin-top: 30px; }
 
 @media (max-width: 600px) {
