@@ -21,7 +21,7 @@
       { type: "golden",  scale: 1.10, follow: true,  offset: [0, 0],   path: [.045, .090, 0.0, 0.0, .44, .26, .48] },
       { type: "gandalf", scale: 1.00, follow: true,  offset: [78, -30], path: [.036, .072, 2.1, 1.0, .40, .24, .50] },
       { type: "harpy",   scale: .85,  follow: false,                    path: [.052, .104, 4.0, 2.3, .46, .22, .42] },
-      { type: "gandalf", scale: .62,  follow: false,                    path: [.030, .060, 5.2, 0.6, .42, .20, .62] },
+      { type: "golden", scale: .45,  follow: false,                    path: [.030, .060, 5.2, 0.6, .42, .20, .62] },
       { type: "golden",  scale: .58,  follow: false,                    path: [.040, .080, 1.2, 3.4, .45, .20, .30] }
     ]
   };
