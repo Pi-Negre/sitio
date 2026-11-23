@@ -1,6 +1,6 @@
 /* ============================================================================
    header-flyers.js  -  eagles and "Gandalf on an eagle" flying around the page header
-   Needs: flyers.png next to this file. Add ONE line to your page (before </body>):
+   Add ONE line to your page (before </body>):
        <script src="header-flyers.js" defer></script>
    It builds its own <canvas> inside the header (".band"), so no other markup is required.
    Sprites: Golden Eagle, Harpy Eagle, Gandalf + Great Eagle (cleaned & downscaled into flyers.png).
@@ -9,7 +9,7 @@
   /* ================= CONFIG - edit freely ================= */
   const CONFIG = {
     header: ".band",                       // element that receives the flyers
-    atlas: "flyers.png",                   // sprite atlas, resolved relative to this script
+    atlas: "../assets/images/flyers.png",  // sprite atlas, resolved relative to this script
     scale: { min: .65, max: 1.3, refHeight: 210 },   // flyer size follows the header height
     maxSpeed: 150,                         // px/s while patrolling
     followSpeed: 460,                      // px/s top speed when chasing the cursor
