@@ -150,13 +150,14 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, 
         width: fit-content;
         margin: 0 auto;
         padding: 7px 20px;
-        border: 1px solid var(--line);
+        border: 1px solid transparent;
         border-radius: 999px;
         color: var(--ink);
         font-weight: 600;
         cursor: pointer;
         list-style: none;
     }
+    .mobile-nav[open] summary { border-color: var(--line); }
     .mobile-nav summary::-webkit-details-marker { display: none; }
     .mobile-nav summary::after { content: "☰"; margin-left: 9px; color: var(--moss); }
     .mobile-nav[open] summary::after { content: "×"; font-size: 1.2em; }
