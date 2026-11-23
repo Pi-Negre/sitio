@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Instrument+Sans:wght@400;600&family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../language-switcher.css">
   <link rel="stylesheet" href="games-menu.css">
   <link rel="icon" type="image/png" href="../assets/images/gelsomino_small.png">
@@ -26,31 +26,37 @@
   }
   .coop-head {
     position: relative; z-index: 6; display: flex; flex-wrap: wrap; gap: 12px 20px;
-    align-items: center; justify-content: space-between; padding: 18px 24px 0;
+    align-items: center; justify-content: space-between; padding: 12px 18px 0;
   }
-  .coop-title { margin: 0; font: 700 1.35rem/1.2 "Fraunces", Georgia, serif; color: #fff; text-shadow: 0 2px 0 rgba(20,51,92,.55); }
-  .coop-hint { margin: 2px 0 0; font-size: .9rem; color: #eef6ff; max-width: 46ch; text-shadow: 0 1px 0 rgba(20,51,92,.55); }
-  .coop-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  /* pixel-art UI: notched dark outline + light top / dark bottom edge, same palette as the scene */
+  .coop-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .coop-btn, .egg-count, .banner {
+    --ol: #2a1c16; --bg: #6fae3d; --hi: #9fd45f; --lo: #4a7f27; --ow: 2px;
+    border: 0; border-radius: 0; background: var(--bg);
+    box-shadow: 0 calc(var(--ow) * -1) 0 0 var(--ol), 0 var(--ow) 0 0 var(--ol), calc(var(--ow) * -1) 0 0 0 var(--ol), var(--ow) 0 0 0 var(--ol),
+                inset 0 var(--ow) 0 0 var(--hi), inset 0 calc(var(--ow) * -1.5) 0 0 var(--lo);
+  }
   .coop-btn {
-    font: 700 .95rem "Instrument Sans", sans-serif; cursor: pointer; border: 2px solid #14335c;
-    padding: 10px 16px; border-radius: 4px; color: #fff; background: #1f4e8c;
-    box-shadow: 0 4px 0 #14335c, 0 6px 0 rgba(20,51,92,.18); transition: transform .08s, box-shadow .08s;
+    margin: 2px; padding: 8px 11px; cursor: pointer; color: #fff; text-shadow: 0 1px 0 rgba(30,20,10,.5);
+    font: 700 .8rem/1 "Pixelify Sans", "Instrument Sans", system-ui, sans-serif; letter-spacing: .3px;
+    transition: transform .08s, filter .12s;
   }
-  .coop-btn.race { background: #e8806f; border-color: #b3513f; box-shadow: 0 4px 0 #b3513f, 0 6px 0 rgba(20,51,92,.18); }
-  .coop-btn.ghost { background: #fff; color: #1f4e8c; border-color: #b9cde4; box-shadow: 0 4px 0 #b9cde4, 0 6px 0 rgba(20,51,92,.12); }
-  .coop-btn:hover { transform: translateY(-1px); }
-  .coop-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.25); }
-  .coop-btn:focus-visible, .chicken:focus-visible { outline: 3px solid #f2b632; outline-offset: 3px; }
+  .coop-btn.race { --bg: #e0603f; --hi: #f58a63; --lo: #a8402a; }
+  .coop-btn.ghost { --bg: #b8803f; --hi: #dba66a; --lo: #7f5226; padding: 8px 9px; }
+  .coop-btn:hover { filter: brightness(1.1); }
+  .coop-btn:active { transform: translateY(2px); filter: brightness(.95); }
+  .coop-btn:focus-visible, .chicken:focus-visible { outline: 3px solid #f2b632; outline-offset: 4px; }
   .coop-btn[disabled] { opacity: .55; pointer-events: none; }
 
-  .field { position: relative; height: 210px; margin-top: 6px; }
+  .field { position: relative; height: 192px; margin-top: 6px; }
   .sun { position: absolute; left: 6%; top: -14px; scale: .7; transform-origin: 0 0; filter: drop-shadow(0 0 16px rgba(255,211,77,.55)); }
   .moon { scale: .5; transform-origin: 0 0; }
   .grass { position: absolute; inset: auto 0 0 0; height: 92px; transition: filter 1.5s;
     background: url(grass-strip.png) repeat-x left bottom / auto 92px; }
   .fence { position: absolute; inset: auto 0 74px 0; height: 44px; transition: filter 1.5s;
     background: url(fence-strip.png) repeat-x left top / 47px 44px; }
-  .finish { position: absolute; bottom: 2px; right: 6px; z-index: 1; opacity: 0; transition: opacity .3s; }
+  .finish { position: absolute; bottom: 2px; right: 10px; z-index: 1; width: 60.5px; height: 118px; opacity: 0; transition: opacity .3s;
+    background: url(finish-line.png) no-repeat 0 0 / 100% 100%; }
   .coop.racing .finish, .coop.finished .finish { opacity: 1; }
 
   /* ---- chicken ---- */
@@ -82,15 +88,15 @@
     animation: fly .95s cubic-bezier(.2,.7,.3,1) forwards; }
   @keyframes fly { 0% { transform: translate(0,0) rotate(0); opacity: 1; }
     100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; } }
-  .banner { position: absolute; left: 50%; top: 16px; transform: translate(-50%, -20px) scale(.9); z-index: 8; opacity: 0;
-    padding: 10px 22px; border-radius: 16px; background: #fff; color: #1f4e8c; text-align: center; white-space: nowrap;
-    font: 700 1.3rem "Fraunces", Georgia, serif; box-shadow: 0 10px 30px rgba(20,51,92,.25); transition: all .25s cubic-bezier(.3,1.5,.5,1); pointer-events: none; }
+  .banner { --bg: #f6edd2; --hi: #fffbe8; --lo: #d6c28f; --ow: 3px; position: absolute; left: 50%; top: 16px; transform: translate(-50%, -20px) scale(.9); z-index: 8; opacity: 0;
+    padding: 10px 22px; color: #4a2c1a; text-align: center; white-space: nowrap;
+    font: 700 1.2rem "Pixelify Sans", "Instrument Sans", system-ui, sans-serif; transition: all .25s cubic-bezier(.3,1.5,.5,1); pointer-events: none; }
   .banner.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
-  .banner small { display: block; font: 600 .8rem "Instrument Sans", sans-serif; color: #e8806f; }
+  .banner small { display: block; font: 500 .8rem "Pixelify Sans", "Instrument Sans", sans-serif; color: #b8472b; }
   .banner.count { font-size: 2.6rem; padding: 4px 30px; }
 
   @media (max-width: 600px) {
-    .coop-head { padding: 14px 14px 0; } .field { height: 190px; } .chicken { width: 56px; height: 64px; }
+    .coop-head { padding: 10px 12px 0; } .field { height: 192px; } .chicken { width: 56px; height: 64px; }
     .finish { scale: .78; transform-origin: 100% 100%; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -122,7 +128,8 @@
   .sky-night { position: absolute; inset: 0; z-index: 0; opacity: 0; transition: opacity 1.8s; pointer-events: none; overflow: hidden;
     background: linear-gradient(180deg, #141b33 0%, #192440 36%, #202f50 70%, #2a3860 100%); }
   .coop.night .sky-night { opacity: 1; }
-  #stars { position: absolute; inset: 0; }
+  .stars { position: absolute; inset: 0; overflow: hidden; image-rendering: auto; }
+  .coop .stars, .coop .clouds { bottom: 118px; } /* = fence top, so nothing drifts over fence / grass */
   .star { position: absolute; width: var(--z); height: var(--z); border-radius: 50%; background: #fff; animation: twinkle 3.2s var(--d) infinite ease-in-out; }
   .star.sp { border-radius: 0; background-color: transparent; }
   @keyframes twinkle { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
@@ -139,9 +146,18 @@
   /* ---- drifting clouds (hidden at night) ---- */
   .clouds { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; transition: opacity 1.5s; }
   .coop.night .clouds { opacity: 0; }
-  .cloud { position: absolute; top: var(--y); left: -140px; opacity: .95; animation: drift var(--dur) linear infinite; animation-delay: var(--delay); }
+  .cloud { position: absolute; top: calc((100% - var(--h)) * var(--f)); left: -140px; opacity: .95; animation: drift var(--dur) linear infinite; animation-delay: var(--delay); }
   @keyframes drift { from { left: -140px; } to { left: 100%; } }
   @media (prefers-reduced-motion: reduce) { .cloud { animation: none; left: var(--x); } }
+
+  /* ---- header sky: a copy of the footer sky (clouds by day, stars by night), built by JS ---- */
+  .band, .band.night { background: linear-gradient(180deg, #398fd6 0%, #4ca8e8 34%, #63b8ef 68%, #7ccdf8 100%); }
+  .band > div.band-sky { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; animation: none; }
+  .band.night .sky-night { opacity: 1; }
+  .band.night .clouds { opacity: 0; }
+  .band .clouds { bottom: 0; }
+  .band .cloud { opacity: .8; }
+  .band h1, .band .sub { text-shadow: 0 2px 0 rgba(20,51,92,.45); }
 
   /* ---- sprites from farm-sprites.png (atlas baked at 2x, shown at half size) ---- */
   .sp { background: url(farm-sprites.png) no-repeat 0 0 / 700px 221.5px; }
@@ -154,7 +170,6 @@
   .sp-spk1 { width: 16px; height: 18px; background-position: -492px 0px; }
   .sp-spk2 { width: 20px; height: 22px; background-position: -510px 0px; }
   .sp-spk3 { width: 14px; height: 14.5px; background-position: -532px 0px; }
-  .sp-finish { width: 220px; height: 130px; background-position: 0px -89.5px; }
   .sp-grain { width: 26px; height: 34px; background-position: -222px -89.5px; }
   .sp-egg0 { width: 19px; height: 23.5px; background-position: -250px -89.5px; }
   .sp-egg1 { width: 19px; height: 23.5px; background-position: -271px -89.5px; }
@@ -181,8 +196,9 @@
     75% { transform: translate(0,0) rotate(-10deg); } 88% { transform: translate(0,-6px); } 100% { transform: none; } }
   @keyframes eggwobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-14deg); } 75% { transform: rotate(14deg); } }
   @keyframes eggget { to { transform: translateY(-44px) scale(1.5); opacity: 0; } }
-  .egg-count { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: #1f4e8c; font: 600 .95rem "Instrument Sans", sans-serif;
-    padding: 9px 14px; border-radius: 999px; box-shadow: 0 4px 0 #b9cde4; }
+  .egg-count { --bg: #f6edd2; --hi: #fffbe8; --lo: #d6c28f; display: inline-flex; align-items: center; gap: 6px; margin: 2px; padding: 5px 10px; color: #4a2c1a;
+    font: 700 .85rem/1 "Pixelify Sans", "Instrument Sans", system-ui, sans-serif; }
+  .egg-count .sp { flex: none; margin: -3px 0; }
   .egg-count.bump { animation: bump .35s; }
   @keyframes bump { 50% { transform: scale(1.25); } }
 </style>
@@ -287,14 +303,22 @@
 
   <!-- ===== CHICKEN FOOTER ===== -->
   <footer class="coop" id="coop">
-    <div class="sky-night" aria-hidden="true"><div id="stars"></div></div>
+    <div class="sky-night" aria-hidden="true"><div id="stars" class="stars"></div></div>
+    <div class="clouds" aria-hidden="true">
+      <i class="cloud sp sp-cloud1" style="--h:44px;--f:0.04;--dur:150s;--delay:-35s;--x:8%"></i>
+      <i class="cloud sp sp-cloud2" style="--h:36px;--f:0.55;--dur:115s;--delay:-80s;--x:38%"></i>
+      <i class="cloud sp sp-cloud4" style="--h:35px;--f:0.28;--dur:130s;--delay:-15s;--x:62%"></i>
+      <i class="cloud sp sp-cloud3" style="--h:25px;--f:0.78;--dur:95s;--delay:-60s;--x:80%"></i>
+      <i class="cloud sp sp-cloud1" style="--h:44px;--f:0.62;--dur:170s;--delay:-120s;--x:22%"></i>
+      <i class="cloud sp sp-cloud2" style="--h:36px;--f:0.08;--dur:125s;--delay:-100s;--x:92%"></i>
+    </div>
     <div class="coop-head">
       <div>
           <!--<h2 class="coop-title" data-i18n="coop_title">Il pollaio degli sposi</h2>
         <p class="coop-hint" data-i18n="coop_hint">Tocca l'erba per lanciare il mais, raccogli le uova, scegli la tua campionessa e fai partire la gara!</p>-->
       </div>
       <div class="coop-actions">
-        <span class="egg-count" id="eggPill"><span aria-hidden="true">🥚</span> <b id="eggCount">0</b></span>
+        <span class="egg-count" id="eggPill"><i class="sp sp-egg0" aria-hidden="true"></i> <b id="eggCount">0</b></span>
         <button class="coop-btn" id="btnRun" type="button" data-i18n="coop_run">Falli correre</button>
         <button class="coop-btn race" id="btnRace" type="button" data-i18n="coop_race">Via alla gara!</button>
         <button class="coop-btn ghost" id="btnSound" type="button" aria-pressed="true" data-i18n-aria-label="coop_sound" aria-label="Suono">🔊</button>
@@ -302,19 +326,11 @@
     </div>
 
     <div class="field" id="field">
-      <div class="clouds" aria-hidden="true">
-      <i class="cloud sp sp-cloud1" style="--y:6px;--dur:150s;--delay:-35s;--x:8%"></i>
-      <i class="cloud sp sp-cloud2" style="--y:44px;--dur:115s;--delay:-80s;--x:38%"></i>
-      <i class="cloud sp sp-cloud4" style="--y:50px;--dur:130s;--delay:-15s;--x:62%"></i>
-      <i class="cloud sp sp-cloud3" style="--y:20px;--dur:95s;--delay:-60s;--x:80%"></i>
-      <i class="cloud sp sp-cloud1" style="--y:40px;--dur:170s;--delay:-120s;--x:22%"></i>
-      <i class="cloud sp sp-cloud2" style="--y:2px;--dur:125s;--delay:-100s;--x:92%"></i>
-    </div>
       <div class="sun sp sp-sun" aria-hidden="true"></div>
       <div class="moon sp sp-moon" aria-hidden="true"></div>
       <div class="fence" aria-hidden="true"></div>
       <div class="grass" aria-hidden="true"></div>
-      <div class="finish sp sp-finish" id="finish" aria-hidden="true"></div>
+      <div class="finish" id="finish" aria-hidden="true"></div>
       <div class="banner" id="banner" role="status" aria-live="polite"></div>
     </div>
   </footer>
@@ -545,7 +561,7 @@
   // each hen changes pace every beat => unpredictable photo-finishes
   function surge() {
     if (mode !== "race") return;
-    const end = W() - CW() - 24;
+    const end = W() - CW() - 12 - finishEl.getBoundingClientRect().width; // stop right at the finish line
     hens.forEach(h => { if (!h.fin) { h.dir = 1; goTo(h, end, rnd(130, 330) * (Math.random() < .12 ? 1.6 : 1) * (h.boostUntil > performance.now() ? 1.8 : 1)); } });
     wait(surge, 380);
   }
@@ -610,10 +626,19 @@
   for (let i = 0; i < 44; i++) {
     const st = document.createElement("i"), big = i < 12;
     st.className = big ? "star sp sp-spk" + (1 + i % 3) : "star";
-    st.style.cssText = `left:${rnd(1, 98)}%;top:${rnd(2, 58)}%;--d:${rnd(0, 4).toFixed(1)}s;--z:${rnd(1.5, 3).toFixed(1)}px`;
+    st.style.cssText = `left:${rnd(1, 98)}%;top:${rnd(2, 80)}%;--d:${rnd(0, 4).toFixed(1)}s;--z:${rnd(1.5, 3).toFixed(1)}px`;
     if (!big && i % 3 === 0) st.style.background = "#ffe08a";
     starsEl.appendChild(st);
   }
+  (function buildHeaderSky() {
+    const band = document.querySelector(".band"); if (!band) return;
+    const wrap = document.createElement("div"); wrap.className = "band-sky"; wrap.setAttribute("aria-hidden", "true");
+    ["sky-night", "clouds"].forEach(c => {
+      const src = coop.querySelector("." + c); if (!src) return;
+      const cl = src.cloneNode(true); cl.querySelectorAll("[id]").forEach(n => n.removeAttribute("id")); wrap.appendChild(cl);
+    });
+    band.insertBefore(wrap, band.firstChild);
+  })();
   const applySky = () => {
     night = isNight();
     coop.classList.toggle("night", night);
