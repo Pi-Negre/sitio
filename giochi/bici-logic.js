@@ -235,8 +235,19 @@ function finishRun(won) {
 }
 function boardMsg(key) {
   const b = $('board-body'); b.innerHTML = '';
-  const tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 5; td.textContent = tx(key); tr.appendChild(td); b.appendChild(tr);
+  const tr = document.createElement('tr'), td = document.createElement('td'); td.colSpan = 4; td.textContent = tx(key); tr.appendChild(td); b.appendChild(tr);
 }
+function boardField(row, name) {
+  const wanted = normBoardText(name);
+  const key = Object.keys(row).find(k => normBoardText(k) === wanted || normBoardText(k).startsWith(wanted));
+  return key === undefined ? '' : row[key];
+}
+function boardLabel(value) {
+  const raw = String(value ?? '').trim();
+  const key = Object.keys(T()).find(k => normBoardText(k) === normBoardText(raw));
+  return key ? T()[key] : raw;
+}
+function normBoardText(value) { return String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase(); }
 function saveScore(score, won) {
   if (!BICI_SCRIPT_URL) return;
   fetch(BICI_SCRIPT_URL, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -252,8 +263,7 @@ function loadBoard() {
     data.forEach((row, i) => {
       const tr = document.createElement('tr');
       if (row.nome === playerName && Number(row.punteggio) === g.score) tr.className = 'me';
-      const character = row.personaggio ?? row.Personaggio ?? '';
-      [i + 1, row.nome, T()[character] || character, T()[row.citta] || row.citta || '', row.punteggio].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+      [i + 1, boardField(row, 'nome'), boardLabel(boardField(row, 'citta')), boardField(row, 'punteggio')].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
       b.appendChild(tr);
     });
   }).catch(() => boardMsg('boardError'));
