@@ -130,7 +130,7 @@ a:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, 
     transition: box-shadow 0.3s, padding 0.3s;
 }
 .navbar.scrolled { box-shadow: 0 6px 20px rgba(42, 47, 35, 0.1); padding-top: 12px; padding-bottom: 12px; }
-.mobile-nav { display: contents; }
+.mobile-nav { display: block; }
 .mobile-nav summary { display: none; }
 .nav-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 14px; }
 .mobile-nav:not([open]) > .nav-links { display: flex; }
