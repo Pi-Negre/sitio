@@ -4,7 +4,7 @@
 
 ## Project structure
 
-- `index.html` and `style.css` contain the main wedding site. Its page behavior lives in `js/home.js`.
+- `index.html`, `photos.html`, and `gifts.html` are the main site pages. Shared site styles live in `styles/site.css`, with page-specific styles under `styles/pages/`. Page behavior lives in `js/`.
 - `giochi/` contains the games landing page and individual games. Each page keeps its styles and behavior in clearly named sibling files.
 - `js/language.js` loads the shared translation dictionary from `lang.json`. Add or update Italian and English copy there, including game-specific sections.
 - `language-switcher.css` and `navigation.css` provide shared styles used across pages.

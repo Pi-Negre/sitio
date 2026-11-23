@@ -10,11 +10,18 @@
   transition: background 0.25s, color 0.25s, transform 0.25s;
 }
 
+.back-home-wrap {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+}
+
 .back-link.back-home {
   --back-link-color: #2f4a2c;
   --back-link-hover-color: #fff;
-  display: table;
-  margin: 30px auto 0;
+  display: inline-block;
+  margin: 30px 0 52px;
 }
 
 .back-link:hover {

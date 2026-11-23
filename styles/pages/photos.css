@@ -17,18 +17,20 @@ body {
     color: var(--straw);
     font-family: var(--font-display);
     font-size: 1.1rem;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
 }
 
 .photos-banner h1 {
     font-family: var(--font-display);
     font-size: clamp(2.1rem, 6vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
     line-height: 1.12;
 }
 
 .photos-card {
     max-width: 700px;
-    margin: -42px auto 72px;
+    margin: -42px auto 20px;
     padding: clamp(32px, 7vw, 58px);
     padding-bottom: 0;
     border: 1px solid var(--line);
@@ -42,7 +44,7 @@ body {
     width: 72px;
     height: 72px;
     margin: 0 auto 22px;
-    background: url("assets/images/gelsomino.png") center / contain no-repeat;
+    background: url("../../assets/images/gelsomino.png") center / contain no-repeat;
 }
 
 .photos-intro {
@@ -50,17 +52,19 @@ body {
     margin: 0 auto;
     margin-top: 20px;
     color: var(--muted);
-    /* font-family: var(--font-display);*/
-    font-size: clamp(1rem, 3vw, 1.2rem);
-    /* line-height: 1.45;*/
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
     text-wrap: balance;
 }
 
-.photo-link {
+.photos-link {
     max-width: 48ch;
     margin: 0 auto;
     color: var(--muted);
-    font-size: 1.05rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
 }
 
 .photos-card .btn { margin-top: 30px; }
