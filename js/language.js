@@ -87,6 +87,15 @@ function applyLanguage(language) {
     }
   });
 
+  // Translate image descriptions for screen readers.
+  document.querySelectorAll("[data-i18n-alt]").forEach((element) => {
+    const key = element.dataset.i18nAlt;
+
+    if (dictionary[key] !== undefined) {
+      element.alt = dictionary[key];
+    }
+  });
+
   // Translate metadata used by browser previews and search results.
   document.querySelectorAll("[data-i18n-content]").forEach((element) => {
     const key = element.dataset.i18nContent;
