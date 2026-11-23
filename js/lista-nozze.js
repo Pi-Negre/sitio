@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function copyIban() {
     const iban = document.getElementById("iban").textContent.trim();
+    const language = document.documentElement.lang || "it";
+    const translations = window.weddingTranslations?.[language] || {};
 
     if (iban === "INSERISCI_IL_TUO_IBAN") return;
 
@@ -35,13 +37,13 @@ function copyIban() {
             const button = document.querySelector(".copy-iban");
             const originalText = button.textContent;
 
-            button.textContent = "IBAN copiato! ✓";
+            button.textContent = translations.gifts_copy_success || "IBAN copiato! ✓";
 
             setTimeout(() => {
                 button.textContent = originalText;
             }, 2000);
         })
         .catch(() => {
-            alert("Non è stato possibile copiare l'IBAN.");
+            alert(translations.gifts_copy_error || "Non è stato possibile copiare l'IBAN.");
         });
 }
