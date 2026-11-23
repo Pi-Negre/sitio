@@ -37,15 +37,136 @@
         </details>
     </nav>
 
-    <main class="gift-card">
-        <div class="gift-flower" aria-hidden="true"></div>
-        <p class="gift-intro" data-i18n="gifts_intro">La vostra presenza e il vostro affetto sono già il regalo più bello.</p>
-        <p class="gift-details" data-i18n="gifts_details">Se desiderate farci un pensiero, qui troverete presto i dettagli della nostra lista nozze.</p>
+    <main class="gift-page">
+
+        <section class="gift-intro reveal">
+            <div class="gift-flower" aria-hidden="true"></div>
+            <h2 data-i18n="gifts_intro_title">I nostri piccoli grandi sogni</h2>
+            <p data-i18n="gifts_intro">
+                La vostra presenza è già il regalo più bello.
+                Se vi fa piacere, ecco alcuni dei sogni che
+                vorremmo realizzare insieme.
+            </p>
+        </section>
+
+        <section class="gift-gallery">
+
+            <article class="gift-item reveal">
+                <div class="gift-image">
+                    <img src="../assets/images/viaggio.jpg"
+                        alt="Viaggio di nozze"
+                        loading="lazy">
+                </div>
+                <div class="gift-caption">
+                    <h3 data-i18n="gift_honeymoon">Il nostro viaggio di nozze</h3>
+                    <p data-i18n="gift_honeymoon_desc">
+                        Un viaggio speciale, tra luoghi da scoprire,
+                        nuove avventure e ricordi da custodire per sempre.
+                    </p>
+                </div>
+            </article>
+
+            <article class="gift-item reveal">
+                <div class="gift-image">
+                    <img src="../assets/images/casa.jpg"
+                        alt="La nostra casa"
+                        loading="lazy">
+                </div>
+                <div class="gift-caption">
+                    <h3 data-i18n="gift_home">La nostra casa</h3>
+                    <p data-i18n="gift_home_desc">
+                        Aiutateci a rendere il nostro nido ancora
+                        più accogliente, un piccolo sogno alla volta.
+                    </p>
+                </div>
+            </article>
+
+            <article class="gift-item reveal">
+                <div class="gift-image">
+                    <img src="../assets/images/cena.jpg"
+                        alt="Esperienze speciali"
+                        loading="lazy">
+                </div>
+                <div class="gift-caption">
+                    <h3 data-i18n="gift_experiences">Esperienze da vivere</h3>
+                    <p data-i18n="gift_experiences_desc">
+                        Cene romantiche, piccole avventure e momenti
+                        speciali da condividere insieme.
+                    </p>
+                </div>
+            </article>
+
+            <article class="gift-item reveal">
+                <div class="gift-image">
+                    <img src="../assets/images/sogni.jpg"
+                        alt="I nostri sogni"
+                        loading="lazy">
+                </div>
+                <div class="gift-caption">
+                    <h3 data-i18n="gift_future">Il nostro futuro</h3>
+                    <p data-i18n="gift_future_desc">
+                        Ogni piccolo gesto contribuirà a costruire
+                        il nostro futuro insieme.
+                    </p>
+                </div>
+            </article>
+
+        </section>
+
+        <section class="bank-section reveal">
+
+            <div class="bank-flower" aria-hidden="true">✿</div>
+
+            <h2 data-i18n="gifts_bank_title">
+                Un pensiero per noi
+            </h2>
+
+            <p data-i18n="gifts_bank_desc">
+                Se desiderate farci un regalo, potete contribuire
+                ai nostri sogni attraverso un bonifico bancario.
+            </p>
+
+            <div class="bank-details">
+                <p><strong>Intestatari</strong><br>
+                    Elisa e Giovanni
+                </p>
+
+                <p><strong>IBAN</strong><br>
+                    <span id="iban">INSERISCI_IL_TUO_IBAN</span>
+                </p>
+
+                <p><strong>Causale</strong><br>
+                    Regalo di nozze
+                </p>
+
+                <button class="copy-iban" type="button"
+                        onclick="copyIban()"
+                        data-i18n="gifts_copy_iban">
+                    Copia IBAN
+                </button>
+            </div>
+
+            <p class="thank-you" data-i18n="gifts_thanks">
+                Non ci sono parole per descrivere quanto siamo
+                felici di condividere questo giorno con voi.
+                Grazie per il vostro affetto, per la vostra
+                presenza e per ogni pensiero che vorrete dedicarci.
+            </p>
+
+            <p class="signature">
+                Con amore,<br>
+                <strong>Elisa & Giovanni</strong>
+            </p>
+
+        </section>
         <a class="back-link" href="../index.html" data-i18n="gifts_back">← Torna alla pagina principale</a>
     </main>
 
     <footer class="footer-landscape">
         <img src="../assets/images/blinnenhorn.png" alt="Panorama del Blinnenhorn">
     </footer>
+
+    <script src="../js/lista-nozze.js" defer></script>
+    
 </body>
 </html>

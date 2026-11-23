@@ -71,3 +71,194 @@ body {
     .gift-banner { padding: 36px 20px 40px; }
     .gift-card { margin: -28px 16px 48px; }
 }
+
+
+/* GIFT PAGE */
+
+.gift-page {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 55px 25px 80px;
+}
+
+.gift-intro {
+    max-width: 650px;
+    margin: 0 auto 55px;
+    text-align: center;
+}
+
+.gift-intro h2,
+.bank-section h2 {
+    color: #2f4a2c;
+    font-family: Georgia, serif;
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: normal;
+}
+
+.gift-intro p,
+.gift-caption p {
+    color: #656b5e;
+    line-height: 1.8;
+}
+
+/* PHOTO GALLERY */
+
+.gift-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 45px 35px;
+}
+
+.gift-item {
+    text-align: center;
+}
+
+.gift-image {
+    overflow: hidden;
+    border-radius: 5px;
+    aspect-ratio: 4 / 3;
+    background: #eeeae0;
+}
+
+.gift-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.8s ease;
+}
+
+.gift-item:hover .gift-image img {
+    transform: scale(1.06);
+}
+
+.gift-caption {
+    padding: 17px 12px;
+}
+
+.gift-caption h3 {
+    color: #30492e;
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+.gift-caption p {
+    font-size: 14px;
+    max-width: 390px;
+    margin: 0 auto;
+}
+
+/* BANK DETAILS */
+
+.bank-section {
+    max-width: 650px;
+    margin: 85px auto 0;
+    text-align: center;
+    padding: 45px 30px;
+    background: #f5f3ec;
+    border-radius: 5px;
+}
+
+.bank-flower {
+    font-size: 32px;
+    color: #738568;
+    margin-bottom: 12px;
+}
+
+.bank-section > p {
+    color: #656b5e;
+    line-height: 1.8;
+}
+
+.bank-details {
+    background: #fff;
+    padding: 25px;
+    margin: 30px 0;
+    border: 1px solid #e5e5da;
+}
+
+.bank-details p {
+    color: #52634c;
+    line-height: 1.8;
+    margin: 15px 0;
+    overflow-wrap: anywhere;
+}
+
+.copy-iban {
+    background: #2f4a2c;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    cursor: pointer;
+    transition: background 0.3s ease,
+                transform 0.3s ease;
+}
+
+.copy-iban:hover {
+    background: #526d47;
+    transform: translateY(-2px);
+}
+
+.thank-you {
+    font-family: Georgia, serif;
+    font-style: italic;
+    margin-top: 30px;
+}
+
+.signature {
+    font-family: Georgia, serif;
+    color: #2f4a2c;
+    font-size: 19px;
+    margin-top: 25px;
+    line-height: 1.8;
+}
+
+/* SCROLL ANIMATIONS */
+
+.js-enabled .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+.js-enabled .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 650px) {
+    .gift-page {
+        padding: 35px 18px 55px;
+    }
+
+    .gift-gallery {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .gift-caption h3 {
+        font-size: 21px;
+    }
+
+    .bank-section {
+        padding: 35px 20px;
+        margin-top: 55px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .js-enabled .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .gift-image img,
+    .copy-iban {
+        transition: none;
+    }
+}
