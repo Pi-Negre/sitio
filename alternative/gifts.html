@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-title="gifts_page_title">Un pensiero per noi | Elisa e Giovanni</title>
+    <meta name="theme-color" content="#2f4a2c">
+    <link rel="icon" type="image/png" href="../assets/images/gelsomino_small.png">
+    <script src="../js/language.js" data-language-file="../lang.json" defer></script>
+    <link rel="stylesheet" href="../styles/site.css?v=9">
+    <link rel="stylesheet" href="../language-switcher.css">
+    <link rel="stylesheet" href="../navigation.css?v=2">
+    <link rel="stylesheet" href="../styles/pages/gifts.css">
+</head>
+<body>
+    <div class="lang-switcher">
+        <select id="lang-select" aria-label="Language / Lingua">
+            <option value="it">Italiano</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+
+    <header class="gift-banner">
+        <p class="gift-eyebrow">Elisa <span aria-hidden="true">&amp;</span> Giovanni</p>
+        <h1 data-i18n="gifts_title">Se vi fa piacere farci un regalo</h1>
+    </header>
+
+    <nav class="navbar" aria-label="Navigazione principale">
+        <div class="nav-wide">
+            <a href="index.html#info" data-i18n="nav_info">Informazioni</a>
+            <a href="gifts.html" aria-current="page" data-i18n="nav_gifts">Sogni nel cassetto</a>
+        </div>
+        <details class="mobile-nav">
+            <summary data-i18n="nav_menu">Menu</summary>
+            <div class="nav-links">
+                <a href="index.html#info" data-i18n="nav_info">Informazioni</a>
+                <a href="gifts.html" aria-current="page" data-i18n="nav_gifts">Un pensiero per noi</a>
+            </div>
+        </details>
+    </nav>
+
+    <main class="gift-page">
+        <section class="gift-intro reveal">
+            <h2 data-i18n="gifts_intro_title">I nostri piccoli grandi sogni</h2>
+            <div class="gift-flower" aria-hidden="true"></div>
+            <p data-i18n="gifts_intro">La vostra presenza è già il regalo più bello. Se vi fa piacere, ecco alcuni dei sogni che vorremmo realizzare insieme.</p>
+        </section>
+
+        <section class="gift-gallery">
+            <article class="gift-item reveal">
+                <div class="gift-image"><img src="../assets/images/islanda.jpeg" alt="Viaggio di nozze" data-i18n-alt="gift_honeymoon_alt" loading="lazy"></div>
+                <div class="gift-caption"><h3 data-i18n="gift_honeymoon">Il nostro viaggio di nozze</h3><p data-i18n="gift_honeymoon_desc">Un viaggio speciale, nelle fredde terre Islandesi, per fuggire dalla canicola Catalana. Un sogno nel cassetto since 2020.</p></div>
+            </article>
+            <article class="gift-item reveal">
+                <div class="gift-image"><img src="../assets/images/casa.jpeg" alt="La nostra casa" data-i18n-alt="gift_home_alt" loading="lazy"></div>
+                <div class="gift-caption"><h3 data-i18n="gift_home">La nostra casa</h3><p data-i18n="gift_home_desc">Per rendere la nostra casa ancora più accogliente ed ospitare ancora più amici.</p></div>
+            </article>
+            <article class="gift-item reveal">
+                <div class="gift-image"><img src="../assets/images/manifattura.jpeg" alt="Esperienze speciali" data-i18n-alt="gift_experiences_alt" loading="lazy"></div>
+                <div class="gift-caption"><h3 data-i18n="gift_experiences">Manifattura</h3><p data-i18n="gift_experiences_desc">Attrezzi e laboratori per falegnameria e altro anocora. Non ci stanchiamo mai di costruire e creare, farlo con gli strumenti e le competeenze corrette è sempre utile.</p></div>
+            </article>
+            <article class="gift-item reveal">
+                <div class="gift-image"><img src="../assets/images/montagna.jpeg" alt="La montagna" data-i18n-alt="gift_future_alt" loading="lazy"></div>
+                <div class="gift-caption"><h3 data-i18n="gift_future">La montagna</h3><p data-i18n="gift_future_desc">La montagna è una delle nostre tante passioni. Poterla affrontare in sicurezza è sempre una buona idea.</p></div>
+            </article>
+        </section>
+
+        <section class="bank-section reveal">
+            <h2 data-i18n="gifts_bank_title">Per realizzare i nostri sogni</h2>
+            <div class="gift-flower" aria-hidden="true"></div>
+            <p data-i18n="gifts_bank_desc">Se desiderate farci un regalo, potete contribuire a realizzare ai nostri sogni un mattoncino alla volta. Se volete, inserite nella causale cosa volete donarci, e penseremo a voi.</p>
+            <div class="bank-details">
+                <p><strong data-i18n="gifts_account_holders">Intestatari</strong><br>Elisa</p>
+                <p><strong>IBAN</strong><br><span id="iban">ES2584759123654879874</span></p>
+                <p><strong data-i18n="gifts_reason_label">Causale</strong><br><span data-i18n="gifts_reason">Regalo di nozze. (Se volete anche cosa desiderate regalarci)</span></p>
+                <button class="copy-iban" type="button" onclick="copyIban()" data-i18n="gifts_copy_iban">Copia IBAN</button>
+            </div>
+            <p class="thank-you" data-i18n="gifts_thanks">Non ci sono parole per descrivere quanto siamo felici di condividere questo giorno con voi. Grazie per il vostro affetto, per la vostra presenza e per ogni pensiero che vorrete dedicarci.</p>
+            <p class="signature"><span data-i18n="gifts_signature">Grazie di cuore,</span><br><strong>Elisa e Giovanni</strong></p>
+        </section>
+        <section class="back-home-wrap"><a class="back-link back-home" href="index.html" data-i18n="gifts_back">← Torna alla pagina principale</a></section>
+    </main>
+
+    <footer class="footer-landscape"><img src="../assets/images/blinnenhorn.png" alt="Panorama del Blinnenhorn"></footer>
+    <script src="../js/gifts.js" defer></script>
+</body>
+</html>
