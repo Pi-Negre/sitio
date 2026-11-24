@@ -25,25 +25,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-function copyIban() {
-    const iban = document.getElementById("iban").textContent.trim();
+async function copyIban() {
+    const ibanElement = document.getElementById("iban");
+    const button = document.querySelector(".copy-iban");
+    if (!ibanElement || !button) return;
+
+    const iban = ibanElement.textContent.trim();
     const language = document.documentElement.lang || "it";
     const translations = window.weddingTranslations?.[language] || {};
+    const originalText = button.textContent;
 
-    if (iban === "ES2584759123654879874") return;
+    try {
+        if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(iban);
+        } else {
+            // Clipboard API is unavailable on insecure origins and older browsers.
+            const field = document.createElement("textarea");
+            field.value = iban;
+            field.setAttribute("readonly", "");
+            field.style.position = "fixed";
+            field.style.opacity = "0";
+            document.body.appendChild(field);
+            field.select();
+            const copied = document.execCommand("copy");
+            field.remove();
+            if (!copied) throw new Error("Copy command failed");
+        }
 
-    navigator.clipboard.writeText(iban)
-        .then(() => {
-            const button = document.querySelector(".copy-iban");
-            const originalText = button.textContent;
-
-            button.textContent = translations.gifts_copy_success || "IBAN copiato! ✓";
-
-            setTimeout(() => {
-                button.textContent = originalText;
-            }, 2000);
-        })
-        .catch(() => {
-            alert(translations.gifts_copy_error || "Non è stato possibile copiare l'IBAN.");
-        });
+        button.textContent = translations.gifts_copy_success || "IBAN copiato! ✓";
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 2000);
+    } catch {
+        alert(translations.gifts_copy_error || "Non è stato possibile copiare l'IBAN.");
+    }
 }
