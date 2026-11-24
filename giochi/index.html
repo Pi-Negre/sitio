@@ -547,14 +547,14 @@
   function lock(v) { document.getElementById("btnRun").disabled = v; document.getElementById("btnRace").disabled = v; }
 
   function startRun() {
-    if (mode !== "idle") return;
+    if (mode !== "idle" || window.coopRescue) return;
     clearCorn(); mode = "run"; lock(true); cluck(1.2); assignRunStyles();
     hens.forEach(h => { h.stop = false; goTo(h, rnd(10, W()), rnd(220, 380)); });
     wait(() => { hens.forEach(h => { h.stop = true; h.tx = h.x; }); mode = "idle"; lock(false); }, 5200);
   }
 
   function startRace() {
-    if (mode !== "idle") return;
+    if (mode !== "idle" || window.coopRescue) return;
     clearCorn(); mode = "ready"; lock(true); clearTimers(); raceOrder = []; assignRunStyles();
     coop.classList.remove("finished"); coop.classList.add("racing");
     hens.forEach(h => { h.fin = false; h.el.classList.remove("winner"); goTo(h, 14, 520); });
@@ -601,7 +601,7 @@
   }
   function clearCorn() { corns.splice(0).forEach(c => c.el.remove()); hens.forEach(h => { h.el.classList.remove("sleep"); h.awakeUntil = performance.now() + 4000; }); }
   function dropCorn(e) {
-    if (mode !== "idle" || e.target.closest(".chicken, .egg")) return;
+    if (mode !== "idle" || window.coopRescue || e.target.closest(".chicken, .egg")) return;
     const r = field.getBoundingClientRect();
     const x = Math.max(24, Math.min(r.width - 24, e.clientX - r.left));
     const ground = rnd(14, 56), fall = Math.max(0, (r.bottom - e.clientY) - ground);
@@ -712,6 +712,14 @@
       scheduleEgg();
     }, first ? rnd(4000, 8000) : rnd(9000, 17000));
   })(true);
+
+  /* hook used by header-flyers.js: lets fallen eagles / dragons get rescued by the hens */
+  window.coop = {
+    hens, goTo, place, replay, cluck, feathers,
+    CW, W,
+    get mode() { return mode; },
+    get soundOn() { return soundOn; }
+  };
 
   layout(); requestAnimationFrame(tick);
 })();
